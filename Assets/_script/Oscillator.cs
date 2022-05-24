@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
-// Attempting to make a basic Analog Synthesizer as a base for the music generator
+// Attempting to make a music generator
 
 public class Oscillator : MonoBehaviour
 {
@@ -23,6 +24,13 @@ public class Oscillator : MonoBehaviour
     public float sequenceTime = 1f;
     public float timeNow = 1f;
 
+    public Text consoleText;
+    public Text scaleName;
+
+
+    public string currentKey = "C"; //offset names
+    public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
+    public int currentNoteOffset; //index of which key it is on
 
     //holds the notes in a musical scale
     [SerializeField] private float[] scaleNotes;
@@ -81,6 +89,7 @@ public class Oscillator : MonoBehaviour
         {
             frequency = scaleNotes[freqIndex];
             freqIndex++;
+            consoleText.text =freqIndex+": "+ frequency+"Hz";
 
             if (freqIndex >= scaleNotes.Length - 1)
             {
@@ -132,17 +141,61 @@ public class Oscillator : MonoBehaviour
         }
     }
 
+    public void ChangeScale(string newScale)
+    {
+        currentScale = newScale;
+        scaleName.text = currentKey +" " + currentScale;
+        FindScale(currentNoteOffset);
+    }
+
     // select the notes in the musical scale by formula
     public void FindScale(int offset) //offset is for index of starting note (C4 =0, E4= 6, etc)
     {
-        //assuming the scale has 8 notes
-        //otherwise pentatone (5) or blues scale(7)
+        currentNoteOffset = offset;
+        switch (currentNoteOffset)
+        {
+            case 0:
+                currentKey = "C";
+                break;
+            case 2:
+                currentKey = "D";
+                break;
+            case 4:
+                currentKey = "E";
+                break;
+            case 5:
+                currentKey = "F";
+                break;
+            case 7:
+                currentKey = "G";
+                break;
+        }
+        scaleName.text = currentKey+ " " + currentScale;
+        //assuming the scale has 8 notes + itself on higher octave
+        //otherwise pentatone (5) +1 or blues scale(7) +1
         scaleNotes = new float[9];
 
-        for(int i = 0; i < scaleNotes.Length; i++)
+        switch (currentScale)
         {
-            scaleNotes[i] = frequencies[i * 2 + offset]; //Major scale
+            case "major":
+                for (int i = 0; i < scaleNotes.Length; i++)
+                {
+                    scaleNotes[i] = frequencies[i * 2 + offset]; //Major scale
+                }
+                break;
+            case "minor": //natural minor
+                scaleNotes[0] = frequencies[0 + offset];
+                scaleNotes[1] = frequencies[2 + offset];
+                scaleNotes[2] = frequencies[3 + offset];
+                scaleNotes[3] = frequencies[6 + offset];
+                scaleNotes[4] = frequencies[8 + offset];
+                scaleNotes[5] = frequencies[9 + offset];
+                scaleNotes[6] = frequencies[11 + offset];
+                scaleNotes[7] = frequencies[14 + offset];
+                break;
+
         }
+
     }
 
     //this make sound!
