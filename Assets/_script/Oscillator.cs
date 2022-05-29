@@ -12,6 +12,8 @@ using UnityEngine.UI;
 
 public class Oscillator : MonoBehaviour
 {
+
+    //Sound Generation
     public double frequency = 440.0;
     private double increment;
     private double phase;
@@ -20,16 +22,16 @@ public class Oscillator : MonoBehaviour
     public float gain;  //for "input"
     public float volume = 0.1f; //for "output"
 
+    //reference
     public float[] frequencies; //stores musical Notes!
-    public int freqIndex;
 
+    //Currently playing frequecy 
+    public int freqIndex; //index of currently selected frequency
     public float tempo = 5f; // "bpm" - not related to ts
-
-
-    public float noteDuration = 1f; 
-    
+    public float noteDuration = 1f; //current note duration
     public int noteDurationNowIndex; // refers to the index in the array of ts 
-    public float timeNow = 1f;
+    public float timeNow = 1f; //the timer of currently playing note
+
 
     public Text consoleText;
     public Text scaleName;
@@ -42,6 +44,8 @@ public class Oscillator : MonoBehaviour
     //single-number time signature: 2, 3, 4, 5,   
     // ts array size = ts number * 2
 
+    public int currentRhythmIndex = 0; // refers to ts array first index
+    bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
 
     //ts = time signature, these are array of note durations within 1 measure 
     //hard coding this for now, but write a pattern generator later that "adds up" to its ts //TO DO
@@ -76,7 +80,7 @@ public class Oscillator : MonoBehaviour
         FindScale(0); //C by default
     }
 
-
+    //to do: tune this properly
     //assign numbers to notes
     // 2 octaves of 12 equal temperament
     private void InitializeFrequencies()
@@ -134,13 +138,29 @@ public class Oscillator : MonoBehaviour
             if (noteDurationNowIndex+1 >= ts4.GetLength(1))
             {
                 noteDurationNowIndex = 0;
+                if (autoRhythmIsOn) //loops thru the whole ts array
+                {
+                    ChangeRhythm(ts4.GetLength(0));
+                }
+                
             }
-            // To DO: make this into function
             timeNow = noteDuration;
-
         }
-
     }
+    
+    //loop thru note duration patterns within the same ts group
+    //rn its hard-coded to make it work on a button
+    //to do: make it better? (not need to enter value in inspector/auto detects array length)
+    public void ChangeRhythm(int length) // length of ts array[0] 
+    {
+        currentRhythmIndex++;
+        if(currentRhythmIndex +1 >= length) 
+        {
+            currentRhythmIndex = 0;
+        }
+    }
+
+
 
     private void Beat()
     {
@@ -209,6 +229,9 @@ public class Oscillator : MonoBehaviour
             case 7:
                 currentKey = "G";
                 break;
+            default:
+                Debug.Log("Invalid Key");
+                break;
         }
         scaleName.text = currentKey+ " " + currentScale;
         //assuming the scale has 8 notes + itself on higher octave
@@ -222,6 +245,7 @@ public class Oscillator : MonoBehaviour
                     scaleNotes[i] = frequencies[i * 2 + offset]; //Major scale
                 }
                 break;
+
             case "minor": //natural minor
                 scaleNotes[0] = frequencies[0 + offset];
                 scaleNotes[1] = frequencies[2 + offset];
@@ -231,6 +255,10 @@ public class Oscillator : MonoBehaviour
                 scaleNotes[5] = frequencies[9 + offset];
                 scaleNotes[6] = frequencies[11 + offset];
                 scaleNotes[7] = frequencies[14 + offset];
+                break;
+
+            default:
+                Debug.Log("Invalid Scale");
                 break;
 
         }
