@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 
 
-// Attempting to make a music generator
+// Attempting to make an oscillator based procedural music generator
+// Search "To Do" to see what to do next
+
+//To Do: clean up codes, make it clean and modular 
 
 public class Oscillator : MonoBehaviour
 {
@@ -20,8 +23,12 @@ public class Oscillator : MonoBehaviour
     public float[] frequencies; //stores musical Notes!
     public int freqIndex;
 
-    public float tempo = 5f;
-    public float sequenceTime = 1f;
+    public float tempo = 5f; // "bpm" - not related to ts
+
+
+    public float noteDuration = 1f; 
+    
+    public int noteDurationNowIndex; // refers to the index in the array of ts 
     public float timeNow = 1f;
 
     public Text consoleText;
@@ -32,15 +39,43 @@ public class Oscillator : MonoBehaviour
     public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
     public int currentNoteOffset; //index of which key it is on
 
+    //single-number time signature: 2, 3, 4, 5,   
+    // ts array size = ts number * 2
+
+
+    //ts = time signature, these are array of note durations within 1 measure 
+    //hard coding this for now, but write a pattern generator later that "adds up" to its ts //TO DO
+    //also: play a random
+    // here 1 = 1/4 note; 0 = end; -1 = 1/4 rest. (if negative, then its a rest)  
+
+    //omitting the denominator and assume 1/4 is a "basic" note
+    //This may cause a "delay" note? i'll see if it's audible enough
+
+    public float[,] ts3 =
+        { {1,1,1,-1,0,0},
+          {1,1,0.333f,0.333f,0.334f,0.333f}, 
+          {4,-1,0,0,0,0},
+          {2,1,0.5f,0.5f,-1,0},
+          {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}};
+
+
+    //This may cause a "delay" note? i'll see if it's audible enough
+    public float[,] ts4 =
+        { {1,1,1,1,-1,0,0,0},
+          {1,1,0.333f,0.333f,0.334f,0.333f,0.333f,0.334f}, // "fixed" 1/12 notes , this adds perfectly to 1 measure
+          {4,-1,0,0,0,0,0,0},
+          {2,1,0.5f,0.5f,-1,0,0,0},
+          {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}}; //leaving out "rest" for now 
+
     //holds the notes in a musical scale
-    [SerializeField] private float[] scaleNotes;
+    [SerializeField] private float[] scaleNotes; //change this to int index of float array frequecy
 
     private void Start()
     {
-
         InitializeFrequencies();
         FindScale(0); //C by default
     }
+
 
     //assign numbers to notes
     // 2 octaves of 12 equal temperament
@@ -78,27 +113,30 @@ public class Oscillator : MonoBehaviour
         gain = volume;
     }
 
-    
+    //To Do: clean this into modular functions
     private void Update()
     {
-
-        
-        //basic beat 
         timeNow -= tempo * Time.deltaTime;
+
         if (timeNow <= 0)
         {
             frequency = scaleNotes[freqIndex];
             freqIndex++;
-            consoleText.text =freqIndex+": "+ frequency+"Hz";
+            consoleText.text = freqIndex + ": " + frequency + "Hz";
 
             if (freqIndex >= scaleNotes.Length - 1)
             {
                 freqIndex = 0;
             }
 
-            timeNow = sequenceTime;
+            // To DO: make this into function
+            noteDuration = ts4[3, noteDurationNowIndex];
+            timeNow = noteDuration;
+
 
         }
+
+
 
     }
 
@@ -108,7 +146,7 @@ public class Oscillator : MonoBehaviour
         if (timeNow <= 0)
         {
 
-            timeNow = sequenceTime;
+            timeNow = noteDuration;
             if (gain == volume)
             {
                 gain = 0;
@@ -174,7 +212,6 @@ public class Oscillator : MonoBehaviour
         //assuming the scale has 8 notes + itself on higher octave
         //otherwise pentatone (5) +1 or blues scale(7) +1
         scaleNotes = new float[9];
-
         switch (currentScale)
         {
             case "major":
