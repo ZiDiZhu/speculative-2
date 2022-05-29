@@ -129,14 +129,16 @@ public class Oscillator : MonoBehaviour
                 freqIndex = 0;
             }
 
+            noteDuration = ts4[1, ++noteDurationNowIndex];
+
+            if (noteDurationNowIndex+1 >= ts4.GetLength(1))
+            {
+                noteDurationNowIndex = 0;
+            }
             // To DO: make this into function
-            noteDuration = ts4[3, noteDurationNowIndex];
             timeNow = noteDuration;
 
-
         }
-
-
 
     }
 
