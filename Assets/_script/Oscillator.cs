@@ -33,6 +33,8 @@ public class Oscillator : MonoBehaviour
     public string currentKey = "C"; //offset names
     public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
 
+    bool isPlaying = true;
+
     public int currentRhythmIndex = 0; // refers to ts array first index
     bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
 
@@ -66,8 +68,12 @@ public class Oscillator : MonoBehaviour
 
     private void Update()
     {
+
         //LoopScale_Temp();
-        PlayRandomNotes();
+        if (isPlaying) //it doesn't stop volume
+        {
+            PlayRandomNotes(); 
+        }
     }
 
     public void Play()
@@ -75,11 +81,21 @@ public class Oscillator : MonoBehaviour
 
     }
 
-    //change value with slider // make this into an enum (dropdown menu) later
+    
     public void VolumeSlider(Slider slider)
     {
         volume = slider.value * 0.1f;
         gain = volume;
+    }
+
+    public void TempoSlider(Slider slider)
+    {
+        tempo = slider.value;
+    }
+
+    public void TogglePlaying()
+    {
+        isPlaying = !isPlaying;
     }
     
 
