@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,47 +11,34 @@ using UnityEngine.UI;
 public class Oscillator : MonoBehaviour
 {
 
-    //Sound Generation
-    public double frequency = 440.0;
+    //Sound Generation "Raw" variales
+    public double frequency = 440; // Currently Playing
     private double increment;
     private double phase;
     private double sampling_frequency = 48000.0;
-
-    public float gain;  //for "input"
-    public float volume = 0.1f; //for "output"
-
-    //reference
-    public float[] frequencies; //stores musical Notes!
-
-    //Currently playing frequecy 
-    public int freqIndex; //index of currently selected frequency
-    public float tempo = 5f; // "bpm" - not related to ts
+    public float gain;  //"raw" volume
     public float noteDuration = 1f; //current note duration
     public int noteDurationNowIndex; // refers to the index in the array of ts 
     public float timeNow = 1f; //the timer of currently playing note
+    public int freqIndex; //index of currently selected frequency
+    public int currentNoteOffset; //index of which key it is on 
 
-
+    //in-scene console
     public Text consoleText;
     public Text scaleName;
 
-
+    //Adjustable Stats 
+    public float volume;
+    public float tempo = 5f; // "bpm" 
     public string currentKey = "C"; //offset names
     public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
-    public int currentNoteOffset; //index of which key it is on
-
-    //single-number time signature: 2, 3, 4, 5,   
-    // ts array size = ts number * 2
 
     public int currentRhythmIndex = 0; // refers to ts array first index
     bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
 
-    //ts = time signature, these are array of note durations within 1 measure 
-    //hard coding this for now, but write a pattern generator later that "adds up" to its ts //TO DO
-    //also: play a random
-    // here 1 = 1/4 note; 0 = end; -1 = 1/4 rest. (if negative, then its a rest)  
-
-    //omitting the denominator and assume 1/4 is a "basic" note
-    //This may cause a "delay" note? i'll see if it's audible enough
+    // here 1 = standard note; 0 = empty; -1= end  
+    //static reference
+    public float[] frequencies; //stores musical Notes!
 
     public float[,] ts3 =
         { {1,1,1,-1,0,0},
@@ -61,64 +46,68 @@ public class Oscillator : MonoBehaviour
           {4,-1,0,0,0,0},
           {2,1,0.5f,0.5f,-1,0},
           {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}};
-
-
-    //This may cause a "delay" note? i'll see if it's audible enough
+    
     public float[,] ts4 =
         { {1,1,1,1,-1,0,0,0},
           {1,1,0.333f,0.333f,0.334f,0.333f,0.333f,0.334f}, // "fixed" 1/12 notes , this adds perfectly to 1 measure
           {4,-1,0,0,0,0,0,0},
           {2,1,0.5f,0.5f,-1,0,0,0},
-          {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}}; //leaving out "rest" for now 
+          {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}}; 
 
     //holds the notes in a musical scale
-    [SerializeField] private float[] scaleNotes; //change this to int index of float array frequecy
+    [SerializeField] private float[] scaleNotes; // 0 = empty
 
     private void Start()
     {
         InitializeFrequencies();
+        gain = volume;
         FindScale(0); //C by default
     }
 
-    //to do: tune this properly
-    //assign numbers to notes
-    // 2 octaves of 12 equal temperament
-    private void InitializeFrequencies()
+    private void Update()
     {
-        frequencies = new float[24];
-        //C4-B4
-        frequencies[0] = 262; //C4
-        frequencies[1] = 277; //CS4
-        frequencies[2] = 294; //D4
-        frequencies[3] = 311; //DS4
-        frequencies[4] = 330; //E4
-        frequencies[5] = 349; //F4
-        frequencies[6] = 370; //FS4
-        frequencies[7] = 392; //G4
-        frequencies[8] = 415; //GS4
-        frequencies[9] = 440; //A4
-        frequencies[10] = 466; //AS4
-        frequencies[11] = 494; //B4
-
-        //C5-B5
-        frequencies[12] = 523; //C5
-        frequencies[13] = 554; //CS5
-        frequencies[14] = 587; //D5
-        frequencies[15] = 622; //DS5
-        frequencies[16] = 659; //E5
-        frequencies[17] = 698; //F5
-        frequencies[18] = 740; //FS5
-        frequencies[19] = 784; //G5
-        frequencies[20] = 831; //GS5
-        frequencies[21] = 880; //A5
-        frequencies[22] = 932; //AS5
-        frequencies[23] = 988; //B5
-
-        gain = volume;
+        //LoopScale_Temp();
+        PlayRandomNotes();
     }
 
-    //To Do: clean this into modular functions
-    private void Update()
+    public void Play()
+    {
+
+    }
+
+    //change value with slider // make this into an enum (dropdown menu) later
+    public void VolumeSlider(Slider slider)
+    {
+        volume = slider.value * 0.1f;
+        gain = volume;
+    }
+    
+
+    public void PlayRandomNotes()
+    {
+        timeNow -= tempo * Time.deltaTime;
+
+        if (timeNow <= 0)
+        {
+            frequency = scaleNotes[Random.Range(0,scaleNotes.Length-1)];
+            consoleText.text = freqIndex + ": " + frequency + "Hz";
+
+            noteDuration = ts4[1, ++noteDurationNowIndex];
+
+            if (noteDurationNowIndex + 1 >= ts4.GetLength(1))
+            {
+                noteDurationNowIndex = 0;
+                if (autoRhythmIsOn) //loops thru the whole ts array
+                {
+                    ChangeRhythm(ts4.GetLength(0));
+                }
+
+            }
+            timeNow = noteDuration;
+        }
+    }
+
+    public void LoopScale_Temp()
     {
         timeNow -= tempo * Time.deltaTime;
 
@@ -128,25 +117,26 @@ public class Oscillator : MonoBehaviour
             freqIndex++;
             consoleText.text = freqIndex + ": " + frequency + "Hz";
 
-            if (freqIndex >= scaleNotes.Length - 1)
+            if (scaleNotes[freqIndex]==0)
             {
                 freqIndex = 0;
             }
 
             noteDuration = ts4[1, ++noteDurationNowIndex];
 
-            if (noteDurationNowIndex+1 >= ts4.GetLength(1))
+            if (noteDurationNowIndex + 1 >= ts4.GetLength(1))
             {
                 noteDurationNowIndex = 0;
                 if (autoRhythmIsOn) //loops thru the whole ts array
                 {
                     ChangeRhythm(ts4.GetLength(0));
                 }
-                
+
             }
             timeNow = noteDuration;
         }
     }
+
     
     //loop thru note duration patterns within the same ts group
     //rn its hard-coded to make it work on a button
@@ -179,7 +169,6 @@ public class Oscillator : MonoBehaviour
 
                 frequency = scaleNotes[freqIndex];
                 freqIndex++;
-
                 if (freqIndex >= scaleNotes.Length - 1)
                 {
                     freqIndex = 0;
@@ -269,24 +258,48 @@ public class Oscillator : MonoBehaviour
     private void OnAudioFilterRead(float[] data, int channels)
     {
         increment = frequency * 2.0 * Mathf.PI / sampling_frequency;
-
         for (int i = 0; i < data.Length; i += channels)
         {
             phase += increment;
             data[i] = (float)(gain * Mathf.Sin((float)phase));
-
-            //make sure playing in stereo 
-            if (channels == 2)
-            {
-                data[i + 1] = data[i];
-            }
+            if (channels == 2)//stereo
+            {data[i + 1] = data[i];}
 
             if (phase > (Mathf.PI * 2))
-            {
-                phase = 0.0;
-            }
+            {phase = 0.0;}
         }
 
+    }
+
+    private void InitializeFrequencies()
+    {
+        frequencies = new float[24];
+        //C4-B4
+        frequencies[0] = 262; //C4
+        frequencies[1] = 277; //CS4
+        frequencies[2] = 294; //D4
+        frequencies[3] = 311; //DS4
+        frequencies[4] = 330; //E4
+        frequencies[5] = 349; //F4
+        frequencies[6] = 370; //FS4
+        frequencies[7] = 392; //G4
+        frequencies[8] = 415; //GS4
+        frequencies[9] = 440; //A4
+        frequencies[10] = 466; //AS4
+        frequencies[11] = 494; //B4
+        //C5-B5
+        frequencies[12] = 523; //C5
+        frequencies[13] = 554; //CS5
+        frequencies[14] = 587; //D5
+        frequencies[15] = 622; //DS5
+        frequencies[16] = 659; //E5
+        frequencies[17] = 698; //F5
+        frequencies[18] = 740; //FS5
+        frequencies[19] = 784; //G5
+        frequencies[20] = 831; //GS5
+        frequencies[21] = 880; //A5
+        frequencies[22] = 932; //AS5
+        frequencies[23] = 988; //B5
     }
 
 }
