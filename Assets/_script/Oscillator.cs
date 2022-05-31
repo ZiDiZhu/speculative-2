@@ -32,6 +32,7 @@ public class Oscillator : MonoBehaviour
     public float tempo = 5f; // "bpm" 
     public string currentKey = "C"; //offset names
     public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
+    public string waveForm = "sin"; //square, saw, tri
 
     bool isPlaying = true;
 
@@ -96,6 +97,11 @@ public class Oscillator : MonoBehaviour
     public void TogglePlaying()
     {
         isPlaying = !isPlaying;
+    }
+
+    public void ChangeWaveFrom(string wave)
+    {
+        waveForm = wave; //type in inspector
     }
     
 
@@ -273,11 +279,34 @@ public class Oscillator : MonoBehaviour
     //this make sound!
     private void OnAudioFilterRead(float[] data, int channels)
     {
+        
         increment = frequency * 2.0 * Mathf.PI / sampling_frequency;
         for (int i = 0; i < data.Length; i += channels)
         {
             phase += increment;
-            data[i] = (float)(gain * Mathf.Sin((float)phase));
+            if(waveForm == "sin")//sin wave
+            {
+                data[i] = (float)(gain * Mathf.Sin((float)phase)); 
+            }else if(waveForm == "square")//square wave
+            {
+                if(gain*Mathf.Sin((float)phase)>=0)
+                {
+                    data[i] = (float)gain*0.6f;
+                }
+                else
+                {
+                    data[i] = -(float)gain*0.6f;
+                }
+            }else if(waveForm == "tri")//triangle wave
+            {
+                data[i] = (float)(gain * (double)Mathf.PingPong((float)phase, 1.0f));
+            }
+            else
+            {
+                Debug.Log("Invalid waveForm");
+            }
+
+
             if (channels == 2)//stereo
             {data[i + 1] = data[i];}
 
