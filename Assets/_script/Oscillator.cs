@@ -11,6 +11,11 @@ using UnityEngine.UI;
 public class Oscillator : MonoBehaviour
 {
 
+    //visuals
+    public Color[] skinColor;
+    public Material skinMat;
+
+
     //Sound Generation "Raw" variales
     public double frequency = 440; // Currently Playing
     private double increment;
@@ -73,8 +78,16 @@ public class Oscillator : MonoBehaviour
         //LoopScale_Temp();
         if (isPlaying) //it doesn't stop volume
         {
-            PlayRandomNotes(); 
+            PlayRandomNotes();
+            
         }
+    }
+
+    //experimental visuals
+    public void ChangeSkinColor(int index)
+    {
+        skinMat.color = skinColor[index%4];
+        skinMat.SetColor("_EmissionColor", skinMat.color);
     }
 
     public void Play()
@@ -112,6 +125,10 @@ public class Oscillator : MonoBehaviour
         if (timeNow <= 0)
         {
             frequency = scaleNotes[Random.Range(0,scaleNotes.Length-1)];
+
+            //visuals
+            ChangeSkinColor(Random.Range(0, 3));
+
             consoleText.text = freqIndex + ": " + frequency + "Hz";
 
             noteDuration = ts4[1, ++noteDurationNowIndex];
@@ -172,45 +189,6 @@ public class Oscillator : MonoBehaviour
         }
     }
 
-
-
-    private void Beat()
-    {
-        //intermittent
-        if (timeNow <= 0)
-        {
-
-            timeNow = noteDuration;
-            if (gain == volume)
-            {
-                gain = 0;
-            }
-            else if (gain != volume)
-            {
-                gain = volume;
-
-                frequency = scaleNotes[freqIndex];
-                freqIndex++;
-                if (freqIndex >= scaleNotes.Length - 1)
-                {
-                    freqIndex = 0;
-                }
-            }
-        }
-    }
-
-    private void BasicInput()
-    {
-        //testing: press space to make sound
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            gain = volume;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            gain = 0;
-        }
-    }
 
     public void ChangeScale(string newScale)
     {
