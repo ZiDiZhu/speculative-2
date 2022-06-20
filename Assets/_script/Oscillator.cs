@@ -11,7 +11,8 @@ using UnityEngine.UI;
 public class Oscillator : MonoBehaviour
 {
 
-    //visuals
+    //robot 
+    public GameObject robot;
     public Color[] skinColor;
     public Material skinMat;
 
@@ -70,6 +71,7 @@ public class Oscillator : MonoBehaviour
         InitializeFrequencies();
         gain = volume;
         FindScale(0); //C by default
+        robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
     }
 
     private void Update()
@@ -105,11 +107,17 @@ public class Oscillator : MonoBehaviour
     public void TempoSlider(Slider slider)
     {
         tempo = slider.value;
+        robot.GetComponent<Animator>().speed = tempo;
     }
 
     public void TogglePlaying()
     {
         isPlaying = !isPlaying;
+
+        if (!isPlaying)
+            robot.GetComponent<Animator>().speed = 0;
+        else
+            robot.GetComponent<Animator>().speed = tempo;
     }
 
     public void ChangeWaveFrom(string wave)
