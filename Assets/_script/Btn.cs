@@ -4,43 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+//this script should be attached to each button of the dialpad
+//child(0) text = id; child(1) text = letters (values set in UI)
+
 public class Btn : MonoBehaviour
 {
-    private Button button;
 
     public string id;
-    public string[] letter;
+    public char[]letter;
+
+    public string rawLetters;
 
     private void Awake()
     {
-        button = GetComponent<Button>();
-        gameObject.GetComponentInChildren<Text>().text = id;
+        id = gameObject.transform.GetChild(0).GetComponent<Text>().text;
+        gameObject.name = id;
+
+        rawLetters = gameObject.transform.GetChild(1).GetComponent<Text>().text;
     }
 
     void Start()
     {
-        button.onClick.AddListener(TaskOnClick);
-        button.onClick.AddListener(delegate { TaskWithParameters("Hello"); });
-        button.onClick.AddListener(() => ButtonClicked(42));
-        button.onClick.AddListener(TaskOnClick);
+        //assign letters to button
+        rawLetters = rawLetters.Replace(" ", string.Empty);
+        letter = rawLetters.ToCharArray();
     }
 
 
-    void TaskOnClick()
-    {
-        //Output this to console when Button1 or Button3 is clicked
-        Debug.Log("You have clicked the button!");
-    }
-
-    void TaskWithParameters(string message)
-    {
-        //Output this to console when the Button2 is clicked
-        Debug.Log(message);
-    }
-
-    void ButtonClicked(int buttonNo)
-    {
-        //Output this to console when the Button3 is clicked
-        Debug.Log("Button clicked = " + buttonNo);
-    }
 }
