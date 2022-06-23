@@ -29,6 +29,8 @@ public class Oscillator : MonoBehaviour
     public int freqIndex; //index of currently selected frequency
     public int currentNoteOffset; //index of which key it is on 
 
+    public int currentMode = 0;
+
     //in-scene console
     public Text consoleText;
     public Text scaleName;
@@ -77,12 +79,18 @@ public class Oscillator : MonoBehaviour
     private void Update()
     {
 
-        //LoopScale_Temp();
         if (isPlaying) //it doesn't stop volume
         {
-            PlayRandomNotes();
-            
+            Play(currentMode);
         }
+    }
+
+    public void ChangeMode()
+    {
+        currentMode++;
+        if (currentMode >= 3)
+            currentMode = 0;//temp
+        Debug.Log("Mode "+ currentMode);
     }
 
     //experimental visuals
@@ -92,9 +100,38 @@ public class Oscillator : MonoBehaviour
         skinMat.SetColor("_EmissionColor", skinMat.color);
     }
 
-    public void Play()
+    public void Play(int mode)
     {
+        switch (mode)
+        {
+            case 0:
+                Metronome();
+                break;
+            case 1:
+                LoopScale_Temp();
+                break;
+            case 2:
+                PlayRandomNotes();
+                break;
+            default:
+                break;
+        }
+    }
 
+    //maybe this can use a stop-motion-like animation
+    public void Metronome()
+    {
+        timeNow -= tempo * Time.deltaTime;
+        if (timeNow <= 0)
+        {
+            frequency = 80; //arbitrary frequency
+            noteDuration = 0.5f;
+            timeNow = noteDuration;
+            if (gain == 0)
+                gain = volume;
+            else
+                gain = 0;
+        }
     }
 
     
@@ -164,7 +201,7 @@ public class Oscillator : MonoBehaviour
             freqIndex++;
             consoleText.text = freqIndex + ": " + frequency + "Hz";
 
-            if (scaleNotes[freqIndex]==0)
+            if (scaleNotes[freqIndex]==0 ||freqIndex+1 >=scaleNotes.Length)
             {
                 freqIndex = 0;
             }

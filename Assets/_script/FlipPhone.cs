@@ -43,6 +43,7 @@ public class FlipPhone : MonoBehaviour
 
     void ButtonClicked(int index)
     {
+
         if(lastButtonId != btn[index].id)
         {
             isTypingNew = true;

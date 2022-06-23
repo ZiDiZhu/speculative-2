@@ -923,7 +923,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: change rhythm
+  m_Text: change mode
 --- !u!222 &349052769
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1564,7 +1564,7 @@ GameObject:
   - component: {fileID: 700931113}
   - component: {fileID: 700931112}
   m_Layer: 5
-  m_Name: Change Rhythm Button
+  m_Name: Change Mode Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1636,8 +1636,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 876573091}
         m_TargetAssemblyTypeName: Oscillator, Assembly-CSharp
-        m_MethodName: ChangeRhythm
-        m_Mode: 3
+        m_MethodName: ChangeMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1977,6 +1977,7 @@ MonoBehaviour:
   timeNow: 1
   freqIndex: 0
   currentNoteOffset: 0
+  currentMode: 0
   consoleText: {fileID: 1932127197}
   scaleName: {fileID: 1031509175}
   volume: 0.1

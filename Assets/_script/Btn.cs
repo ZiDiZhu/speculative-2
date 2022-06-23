@@ -26,7 +26,8 @@ public class Btn : MonoBehaviour
     void Start()
     {
         //assign letters to button
-        rawLetters = rawLetters.Replace(" ", string.Empty);
+        if(id !="0")
+            rawLetters = rawLetters.Replace(" ", string.Empty);
         letter = rawLetters.ToCharArray();
     }
 
