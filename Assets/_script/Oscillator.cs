@@ -27,7 +27,10 @@ public class Oscillator : MonoBehaviour
     public int noteDurationNowIndex; // refers to the index in the array of ts 
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
+    
     public int currentNoteOffset; //index of which key it is on 
+    public int currentKeyIndex;
+    public string[] scale = { "C", "D", "E", "F", "G" };
 
     public int currentMode = 0;
 
@@ -72,8 +75,8 @@ public class Oscillator : MonoBehaviour
     {
         InitializeFrequencies();
         gain = volume;
-        FindScale(0); //C by default
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
+        FindScale("C");
     }
 
     private void Update()
@@ -235,39 +238,41 @@ public class Oscillator : MonoBehaviour
     }
 
 
-    public void ChangeScale(string newScale)
+    public void ChangeScale()
     {
-        currentScale = newScale;
-        scaleName.text = currentKey +" " + currentScale;
-        FindScale(currentNoteOffset);
+        currentKeyIndex++;
+        if (currentKeyIndex >= scale.Length)
+            currentKeyIndex = 0;
+
+        currentKey= scale[currentKeyIndex];
+        FindScale(currentKey);
     }
 
     // select the notes in the musical scale by formula
-    public void FindScale(int offset) //offset is for index of starting note (C4 =0, E4= 6, etc)
+    public void FindScale(string scalename) 
     {
-        currentNoteOffset = offset;
-        switch (currentNoteOffset)
+        switch (scalename)
         {
-            case 0:
-                currentKey = "C";
+            case "C":
+                currentNoteOffset = 0;
                 break;
-            case 2:
-                currentKey = "D";
+            case "D":
+                currentNoteOffset = 2;
                 break;
-            case 4:
-                currentKey = "E";
+            case "E":
+                currentNoteOffset = 4;
                 break;
-            case 5:
-                currentKey = "F";
+            case "F":
+                currentNoteOffset = 5;
                 break;
-            case 7:
-                currentKey = "G";
+            case "G":
+                currentNoteOffset = 7;
                 break;
             default:
                 Debug.Log("Invalid Key");
                 break;
         }
-        scaleName.text = currentKey+ " " + currentScale;
+        scaleName.text = "Key: "+ currentKey;
         //assuming the scale has 8 notes + itself on higher octave
         //otherwise pentatone (5) +1 or blues scale(7) +1
         scaleNotes = new float[9];
@@ -276,19 +281,19 @@ public class Oscillator : MonoBehaviour
             case "major":
                 for (int i = 0; i < scaleNotes.Length; i++)
                 {
-                    scaleNotes[i] = frequencies[i * 2 + offset]; //Major scale
+                    scaleNotes[i] = frequencies[i * 2 + currentNoteOffset]; //Major scale
                 }
                 break;
 
             case "minor": //natural minor
-                scaleNotes[0] = frequencies[0 + offset];
-                scaleNotes[1] = frequencies[2 + offset];
-                scaleNotes[2] = frequencies[3 + offset];
-                scaleNotes[3] = frequencies[6 + offset];
-                scaleNotes[4] = frequencies[8 + offset];
-                scaleNotes[5] = frequencies[9 + offset];
-                scaleNotes[6] = frequencies[11 + offset];
-                scaleNotes[7] = frequencies[14 + offset];
+                scaleNotes[0] = frequencies[0 + currentNoteOffset];
+                scaleNotes[1] = frequencies[2 + currentNoteOffset];
+                scaleNotes[2] = frequencies[3 + currentNoteOffset];
+                scaleNotes[3] = frequencies[6 + currentNoteOffset];
+                scaleNotes[4] = frequencies[8 + currentNoteOffset];
+                scaleNotes[5] = frequencies[9 + currentNoteOffset];
+                scaleNotes[6] = frequencies[11 + currentNoteOffset];
+                scaleNotes[7] = frequencies[14 + currentNoteOffset];
                 break;
 
             default:
