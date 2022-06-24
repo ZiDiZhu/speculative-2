@@ -30,10 +30,11 @@ public class Oscillator : MonoBehaviour
     
 
     public int currentMode = 0;
+    public Text modeText;
 
     //in-scene console
     public Text consoleText;
-    public Text scaleName;
+    
 
     //Adjustable Stats 
     public float volume;
@@ -43,9 +44,12 @@ public class Oscillator : MonoBehaviour
     public int currentNoteOffset; //index of which key it is on 
     public int currentKeyIndex;
     public string[] key = { "C", "D", "E", "F", "G" };
+    public Text keyName;
 
-    public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
+    public string currentScale = "major"; 
     public string[] scale = { "major", "minor"};
+    public int scaleIndex = 0;
+    public Text scaleName;
 
     public string waveForm = "sin"; //square, saw, tri
     public string[] waveform = { "sin", "square", "tri" };
@@ -115,9 +119,7 @@ public class Oscillator : MonoBehaviour
     }
 
 
-    //loop thru note duration patterns within the same ts group
-    //rn its hard-coded to make it work on a button
-    //to do: make it better? (not need to enter value in inspector/auto detects array length)
+    // to fix
     public void ChangeRhythm(int length) // length of ts array[0] 
     {
         currentRhythmIndex++;
@@ -128,19 +130,29 @@ public class Oscillator : MonoBehaviour
     }
 
 
-    public void ChangeScale()
+    public void ChangeKey()
     {
         currentKeyIndex = NextItemIndexInArray(currentKeyIndex, key);
         currentKey = key[currentKeyIndex];
         FindScale(currentKey);
+        keyName.text = "Key: " + currentKey;
+    }
+
+    public void ChangeScale()
+    {
+        scaleIndex = NextItemIndexInArray(scaleIndex,scale);
+        currentScale = scale[scaleIndex];
+        FindScale(currentKey);
+        scaleName.text = "Scale: "+ currentScale;
     }
 
     public void ChangeMode()
     {
+        gain = volume; //prevent when switch mode when gain = 0
         currentMode++;
         if (currentMode >= 3)
             currentMode = 0;//temp
-        Debug.Log("Mode "+ currentMode);
+        modeText.text = "Mode "+ currentMode;
     }
 
     //experimental visuals
@@ -169,12 +181,13 @@ public class Oscillator : MonoBehaviour
     }
 
     //maybe this can use a stop-motion-like animation
+    //also: make it DOOM doom doom doom (1 loud e less loud, indicating the time signature of 4/4)
     public void Metronome()
     {
         timeNow -= tempo * Time.deltaTime;
         if (timeNow <= 0)
         {
-            frequency = 80; //arbitrary frequency
+            frequency = scaleNotes[0]; //arbitrary frequency
             noteDuration = 0.5f;
             timeNow = noteDuration;
             if (gain == 0)
@@ -291,7 +304,6 @@ public class Oscillator : MonoBehaviour
                 Debug.Log("Invalid Key");
                 break;
         }
-        scaleName.text = "Key: "+ currentKey;
         //assuming the scale has 8 notes + itself on higher octave
         //otherwise pentatone (5) +1 or blues scale(7) +1
         scaleNotes = new float[9];
