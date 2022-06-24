@@ -28,9 +28,6 @@ public class Oscillator : MonoBehaviour
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
     
-    public int currentNoteOffset; //index of which key it is on 
-    public int currentKeyIndex;
-    public string[] scale = { "C", "D", "E", "F", "G" };
 
     public int currentMode = 0;
 
@@ -41,9 +38,19 @@ public class Oscillator : MonoBehaviour
     //Adjustable Stats 
     public float volume;
     public float tempo = 5f; // "bpm" 
+
     public string currentKey = "C"; //offset names
+    public int currentNoteOffset; //index of which key it is on 
+    public int currentKeyIndex;
+    public string[] key = { "C", "D", "E", "F", "G" };
+
     public string currentScale = "major"; //minor, pentaMajor, pentaMinor, blues  
+    public string[] scale = { "major", "minor"};
+
     public string waveForm = "sin"; //square, saw, tri
+    public string[] waveform = { "sin", "square", "tri" };
+    public int currentwaveformIndex = 0;
+    public Text waveName;
 
     bool isPlaying = true;
 
@@ -68,7 +75,7 @@ public class Oscillator : MonoBehaviour
           {2,1,0.5f,0.5f,-1,0,0,0},
           {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}}; 
 
-    //holds the notes in a musical scale
+    //holds the notes in a musical key
     [SerializeField] private float[] scaleNotes; // 0 = empty
 
     private void Start()
@@ -86,6 +93,46 @@ public class Oscillator : MonoBehaviour
         {
             Play(currentMode);
         }
+    }
+
+    //general purpose
+    //loops through an array and get the next index 
+    public int NextItemIndexInArray(int currentIndex, string[] a)
+    {
+        int index = currentIndex + 1;
+        if (index >= a.Length)
+        {
+            index = 0;
+        }
+        return index;
+    }
+
+    public void ChangeWaveform()
+    {
+        currentwaveformIndex = NextItemIndexInArray(currentwaveformIndex, waveform);
+        waveForm = waveform[currentwaveformIndex];
+        waveName.text = waveForm + " wave";
+    }
+
+
+    //loop thru note duration patterns within the same ts group
+    //rn its hard-coded to make it work on a button
+    //to do: make it better? (not need to enter value in inspector/auto detects array length)
+    public void ChangeRhythm(int length) // length of ts array[0] 
+    {
+        currentRhythmIndex++;
+        if (currentRhythmIndex + 1 >= length)
+        {
+            currentRhythmIndex = 0;
+        }
+    }
+
+
+    public void ChangeScale()
+    {
+        currentKeyIndex = NextItemIndexInArray(currentKeyIndex, key);
+        currentKey = key[currentKeyIndex];
+        FindScale(currentKey);
     }
 
     public void ChangeMode()
@@ -160,10 +207,6 @@ public class Oscillator : MonoBehaviour
             robot.GetComponent<Animator>().speed = tempo;
     }
 
-    public void ChangeWaveFrom(string wave)
-    {
-        waveForm = wave; //type in inspector
-    }
     
 
     public void PlayRandomNotes()
@@ -222,30 +265,6 @@ public class Oscillator : MonoBehaviour
             }
             timeNow = noteDuration;
         }
-    }
-
-    
-    //loop thru note duration patterns within the same ts group
-    //rn its hard-coded to make it work on a button
-    //to do: make it better? (not need to enter value in inspector/auto detects array length)
-    public void ChangeRhythm(int length) // length of ts array[0] 
-    {
-        currentRhythmIndex++;
-        if(currentRhythmIndex +1 >= length) 
-        {
-            currentRhythmIndex = 0;
-        }
-    }
-
-
-    public void ChangeScale()
-    {
-        currentKeyIndex++;
-        if (currentKeyIndex >= scale.Length)
-            currentKeyIndex = 0;
-
-        currentKey= scale[currentKeyIndex];
-        FindScale(currentKey);
     }
 
     // select the notes in the musical scale by formula
