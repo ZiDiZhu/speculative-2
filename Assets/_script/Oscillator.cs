@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class Oscillator : MonoBehaviour
 {
-
     //robot 
     public GameObject robot;
     public Color[] skinColor;
@@ -27,7 +26,6 @@ public class Oscillator : MonoBehaviour
     public int noteDurationNowIndex; // refers to the index in the array of ts 
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
-    
 
     public int currentMode = 0;
     public Text modeText;
