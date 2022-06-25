@@ -113,7 +113,6 @@ public class Oscillator : MonoBehaviour
     {
         currentwaveformIndex = NextItemIndexInArray(currentwaveformIndex, waveform);
         waveForm = waveform[currentwaveformIndex];
-        waveName.text = waveForm + " wave";
     }
 
 
@@ -133,7 +132,6 @@ public class Oscillator : MonoBehaviour
         currentKeyIndex = NextItemIndexInArray(currentKeyIndex, key);
         currentKey = key[currentKeyIndex];
         FindScale(currentKey);
-        keyName.text = "Key: " + currentKey;
     }
 
     public void ChangeScale()
@@ -141,7 +139,6 @@ public class Oscillator : MonoBehaviour
         scaleIndex = NextItemIndexInArray(scaleIndex,scale);
         currentScale = scale[scaleIndex];
         FindScale(currentKey);
-        scaleName.text = "Scale: "+ currentScale;
     }
 
     public void ChangeMode()
@@ -150,7 +147,19 @@ public class Oscillator : MonoBehaviour
         currentMode++;
         if (currentMode >= 3)
             currentMode = 0;//temp
-        modeText.text = "Mode "+ currentMode;
+
+        switch (currentMode)
+        {
+            case 0:
+                robot.GetComponent<Animator>().Play("Base Layer.TPose", 0, tempo);
+                break;
+            case 1:
+                robot.GetComponent<Animator>().Play("Base Layer.Flair", 0, tempo);
+                break;
+            case 2:
+                robot.GetComponent<Animator>().Play("Base Layer.Dance", 0, tempo);
+                break;
+        }
     }
 
     //experimental visuals
@@ -182,6 +191,7 @@ public class Oscillator : MonoBehaviour
     //also: make it DOOM doom doom doom (1 loud e less loud, indicating the time signature of 4/4)
     public void Metronome()
     {
+        
         timeNow -= tempo * Time.deltaTime;
         if (timeNow <= 0)
         {
@@ -189,9 +199,15 @@ public class Oscillator : MonoBehaviour
             noteDuration = 0.5f;
             timeNow = noteDuration;
             if (gain == 0)
+            {
                 gain = volume;
+            }
             else
+            {
                 gain = 0;
+                ChangeSkinColor(Random.Range(0, 3));
+            }
+                
         }
     }
 

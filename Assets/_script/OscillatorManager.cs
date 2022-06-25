@@ -17,6 +17,26 @@ public class OscillatorManager : MonoBehaviour
     public Text waveText;
     public Text scaleText;
 
+    public Color gray; //to show it's off
+
+    public void ToggleOnOff()
+    {
+
+        //flip on/off
+        myOscillatorList[selectedOscIndex].enabled = !myOscillatorList[selectedOscIndex].enabled;
+
+        myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled = !myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled;
+
+        if (!myOscillatorList[selectedOscIndex].enabled)
+        {
+            myOscillatorList[selectedOscIndex].skinMat.SetColor("_EmissionColor", gray);
+        }
+        else
+        {
+            myOscillatorList[selectedOscIndex].ChangeSkinColor(1);
+        }
+
+    }
 
     public void ChangeWaveform()
     {
