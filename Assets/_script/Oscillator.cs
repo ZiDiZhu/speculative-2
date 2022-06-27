@@ -28,7 +28,6 @@ public class Oscillator : MonoBehaviour
     public int freqIndex; //index of currently selected frequency
 
     public int currentMode = 0;
-    public Text modeText;
 
     //in-scene console
     public Text consoleText;
@@ -42,17 +41,14 @@ public class Oscillator : MonoBehaviour
     public int currentNoteOffset; //index of which key it is on 
     public int currentKeyIndex;
     public string[] key = { "C", "D", "E", "F", "G" };
-    public Text keyName;
 
     public string currentScale = "major"; 
     public string[] scale = { "major", "minor"};
     public int scaleIndex = 0;
-    public Text scaleName;
 
     public string waveForm = "sin"; //square, saw, tri
     public string[] waveform = { "sin", "square", "tri" };
     public int currentwaveformIndex = 0;
-    public Text waveName;
 
     bool isPlaying = true;
 
@@ -211,18 +207,6 @@ public class Oscillator : MonoBehaviour
         }
     }
 
-    
-    public void VolumeSlider(Slider slider)
-    {
-        volume = slider.value * 0.1f;
-        gain = volume;
-    }
-
-    public void TempoSlider(Slider slider)
-    {
-        tempo = slider.value;
-        robot.GetComponent<Animator>().speed = tempo;
-    }
 
     public void TogglePlaying()
     {

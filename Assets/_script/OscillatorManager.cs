@@ -17,6 +17,8 @@ public class OscillatorManager : MonoBehaviour
     public Text waveText;
     public Text scaleText;
 
+    public Slider volumeSlider,tempoSlider;
+
     public Color gray; //to show it's off
 
     public void ToggleOnOff()
@@ -35,6 +37,11 @@ public class OscillatorManager : MonoBehaviour
         {
             myOscillatorList[selectedOscIndex].ChangeSkinColor(1);
         }
+
+    }
+
+    public void AddOsc(GameObject newOsc)
+    {
 
     }
 
@@ -62,6 +69,18 @@ public class OscillatorManager : MonoBehaviour
         UpdateUI(myOscillatorList[selectedOscIndex]);
     }
 
+    public void VolumeSlider(Slider slider)
+    {
+        myOscillatorList[selectedOscIndex].volume = slider.value * 0.1f;
+        myOscillatorList[selectedOscIndex].gain = myOscillatorList[selectedOscIndex].volume;
+    }
+
+    public void TempoSlider(Slider slider)
+    {
+        myOscillatorList[selectedOscIndex].tempo = slider.value;
+        myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().speed = myOscillatorList[selectedOscIndex].tempo;
+    }
+
     //go to next oscillator
     public void SelectNextOsc()
     {
@@ -87,6 +106,9 @@ public class OscillatorManager : MonoBehaviour
         modeText.text = "Mode "+ osc.currentMode;
         keyText.text = osc.currentKey+" Key";
         scaleText.text = osc.currentScale;
+
+        volumeSlider.value = myOscillatorList[selectedOscIndex].volume*10;
+        tempoSlider.value = myOscillatorList[selectedOscIndex].tempo;
     }
 
     //quick Sync to the first oscillator 

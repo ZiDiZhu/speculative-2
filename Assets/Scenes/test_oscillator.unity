@@ -161,6 +161,8 @@ MonoBehaviour:
   keyText: {fileID: 964882365}
   waveText: {fileID: 675872361}
   scaleText: {fileID: 1228981256}
+  volumeSlider: {fileID: 1788771164}
+  tempoSlider: {fileID: 1106971295}
   gray: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 0}
 --- !u!4 &118531156
 Transform:
@@ -1625,7 +1627,6 @@ MonoBehaviour:
   timeNow: 1
   freqIndex: 0
   currentMode: 0
-  modeText: {fileID: 349052768}
   consoleText: {fileID: 1932127197}
   volume: 0.1
   tempo: 3
@@ -1638,20 +1639,17 @@ MonoBehaviour:
   - E
   - F
   - G
-  keyName: {fileID: 964882365}
   currentScale: major
   scale:
   - major
   - minor
   scaleIndex: 0
-  scaleName: {fileID: 1228981256}
   waveForm: sin
   waveform:
   - sin
   - square
   - tri
   currentwaveformIndex: 0
-  waveName: {fileID: 675872361}
   currentRhythmIndex: 0
   frequencies: []
   scaleNotes: []
@@ -1950,8 +1948,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 876573091}
-        m_TargetAssemblyTypeName: Oscillator, Assembly-CSharp
+      - m_Target: {fileID: 118531155}
+        m_TargetAssemblyTypeName: OscillatorManager, Assembly-CSharp
         m_MethodName: TempoSlider
         m_Mode: 2
         m_Arguments:
@@ -3351,7 +3349,6 @@ MonoBehaviour:
   timeNow: 1
   freqIndex: 0
   currentMode: 0
-  modeText: {fileID: 349052768}
   consoleText: {fileID: 1932127197}
   volume: 0.1
   tempo: 3
@@ -3364,20 +3361,17 @@ MonoBehaviour:
   - E
   - F
   - G
-  keyName: {fileID: 0}
   currentScale: major
   scale:
   - major
   - minor
   scaleIndex: 0
-  scaleName: {fileID: 1228981256}
   waveForm: sin
   waveform:
   - sin
   - square
   - tri
   currentwaveformIndex: 0
-  waveName: {fileID: 675872361}
   currentRhythmIndex: 0
   frequencies: []
   scaleNotes: []
@@ -3486,8 +3480,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 876573091}
-        m_TargetAssemblyTypeName: Oscillator, Assembly-CSharp
+      - m_Target: {fileID: 118531155}
+        m_TargetAssemblyTypeName: OscillatorManager, Assembly-CSharp
         m_MethodName: VolumeSlider
         m_Mode: 2
         m_Arguments:
