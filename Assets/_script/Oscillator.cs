@@ -78,6 +78,8 @@ public class Oscillator : MonoBehaviour
 
     private void Start()
     {
+        robot = gameObject.transform.GetChild(0).gameObject;
+
         InitializeFrequencies();
         gain = volume;
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
