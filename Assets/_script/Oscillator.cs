@@ -50,7 +50,8 @@ public class Oscillator : MonoBehaviour
     public string[] waveform = { "sin", "square", "tri" };
     public int currentwaveformIndex = 0;
 
-    bool isPlaying = true;
+    public bool isPlaying = true;
+    public bool isHolding = true;
 
     public int currentRhythmIndex = 0; // refers to ts array first index
     bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
@@ -78,10 +79,15 @@ public class Oscillator : MonoBehaviour
 
     private void Start()
     {
-        robot = gameObject.transform.GetChild(0).gameObject;
+        Initiate();
+    }
 
+    public void Initiate()
+    {
+        robot = gameObject.transform.GetChild(0).gameObject;
         InitializeFrequencies();
         gain = volume;
+        robot.GetComponent<Animator>().enabled = true;
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
         FindScale("C");
     }
@@ -212,9 +218,9 @@ public class Oscillator : MonoBehaviour
 
     public void TogglePlaying()
     {
-        isPlaying = !isPlaying;
+        isHolding = !isHolding;
 
-        if (!isPlaying)
+        if (!isHolding)
             robot.GetComponent<Animator>().speed = 0;
         else
             robot.GetComponent<Animator>().speed = tempo;
@@ -233,7 +239,6 @@ public class Oscillator : MonoBehaviour
             //visuals
             ChangeSkinColor(Random.Range(0, 3));
 
-            consoleText.text = freqIndex + ": " + frequency + "Hz";
 
             noteDuration = ts4[1, ++noteDurationNowIndex];
 
@@ -256,14 +261,15 @@ public class Oscillator : MonoBehaviour
 
         if (timeNow <= 0)
         {
-            frequency = scaleNotes[freqIndex];
-            freqIndex++;
-            consoleText.text = freqIndex + ": " + frequency + "Hz";
-
-            if (scaleNotes[freqIndex]==0 ||freqIndex+1 >=scaleNotes.Length)
+            if (scaleNotes[freqIndex] == 0 || freqIndex +1 >= scaleNotes.Length)
             {
                 freqIndex = 0;
             }
+
+            frequency = scaleNotes[freqIndex];
+            freqIndex++;
+
+            
 
             noteDuration = ts4[1, ++noteDurationNowIndex];
 
@@ -338,39 +344,44 @@ public class Oscillator : MonoBehaviour
     //this make sound!
     private void OnAudioFilterRead(float[] data, int channels)
     {
-        
-        increment = frequency * 2.0 * Mathf.PI / sampling_frequency;
-        for (int i = 0; i < data.Length; i += channels)
+
+        if (isPlaying)
         {
-            phase += increment;
-            if(waveForm == "sin")//sin wave
+            increment = frequency * 2.0 * Mathf.PI / sampling_frequency;
+            for (int i = 0; i < data.Length; i += channels)
             {
-                data[i] = (float)(gain * Mathf.Sin((float)phase)); 
-            }else if(waveForm == "square")//square wave
-            {
-                if(gain*Mathf.Sin((float)phase)>=0)
+                phase += increment;
+                if (waveForm == "sin")//sin wave
                 {
-                    data[i] = (float)gain*0.6f;
+                    data[i] = (float)(gain * Mathf.Sin((float)phase));
+                }
+                else if (waveForm == "square")//square wave
+                {
+                    if (gain * Mathf.Sin((float)phase) >= 0)
+                    {
+                        data[i] = (float)gain * 0.6f;
+                    }
+                    else
+                    {
+                        data[i] = -(float)gain * 0.6f;
+                    }
+                }
+                else if (waveForm == "tri")//triangle wave
+                {
+                    data[i] = (float)(gain * (double)Mathf.PingPong((float)phase, 1.0f));
                 }
                 else
                 {
-                    data[i] = -(float)gain*0.6f;
+                    Debug.Log("Invalid waveForm");
                 }
-            }else if(waveForm == "tri")//triangle wave
-            {
-                data[i] = (float)(gain * (double)Mathf.PingPong((float)phase, 1.0f));
+
+
+                if (channels == 2)//stereo
+                { data[i + 1] = data[i]; }
+
+                if (phase > (Mathf.PI * 2))
+                { phase = 0.0; }
             }
-            else
-            {
-                Debug.Log("Invalid waveForm");
-            }
-
-
-            if (channels == 2)//stereo
-            {data[i + 1] = data[i];}
-
-            if (phase > (Mathf.PI * 2))
-            {phase = 0.0;}
         }
 
     }

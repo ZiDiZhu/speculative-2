@@ -6,6 +6,8 @@ using UnityEngine.UI;
 //manages multiple oscillators
 public class OscillatorManager : MonoBehaviour
 {
+    public GameObject oscPrefab;
+
     public List<Oscillator> myOscillatorList; //it's a list because I think it might be easier for adding/removing oscillators in game
 
     public int selectedOscIndex =0;
@@ -21,21 +23,29 @@ public class OscillatorManager : MonoBehaviour
 
     public Color gray; //to show it's off
 
+    public void CreateNewOsc()
+    {
+        GameObject temp;
+        temp = Instantiate(oscPrefab, new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)),Quaternion.identity);
+        myOscillatorList.Add(temp.GetComponent<Oscillator>());
+        
+    }
+
     public void ToggleOnOff()
     {
 
-        //flip on/off
-        myOscillatorList[selectedOscIndex].enabled = !myOscillatorList[selectedOscIndex].enabled;
+        //flip on/off the audio
+        myOscillatorList[selectedOscIndex].isPlaying = !myOscillatorList[selectedOscIndex].isPlaying;
 
-        myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled = !myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled;
-
-        if (!myOscillatorList[selectedOscIndex].enabled)
+        if (!myOscillatorList[selectedOscIndex].isPlaying)
         {
             myOscillatorList[selectedOscIndex].skinMat.SetColor("_EmissionColor", gray);
+            myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = false;
         }
         else
         {
             myOscillatorList[selectedOscIndex].ChangeSkinColor(1);
+            myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = true;
         }
 
     }

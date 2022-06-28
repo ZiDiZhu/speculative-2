@@ -53,12 +53,12 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0.97479534, a: 0}
   skinMat: {fileID: 2100000, guid: b0970e153db16e743a523c47768dc751, type: 2}
   frequency: 440
-  gain: 0
+  gain: 0.1
   noteDuration: 1
   noteDurationNowIndex: 0
   timeNow: 1
   freqIndex: 0
-  currentMode: 0
+  currentMode: 2
   consoleText: {fileID: 0}
   volume: 0.1
   tempo: 3
@@ -76,15 +76,50 @@ MonoBehaviour:
   - major
   - minor
   scaleIndex: 0
-  waveForm: sin
+  waveForm: square
   waveform:
   - sin
   - square
   - tri
-  currentwaveformIndex: 0
+  currentwaveformIndex: 1
+  isPlaying: 1
+  isHolding: 1
   currentRhythmIndex: 0
-  frequencies: []
-  scaleNotes: []
+  frequencies:
+  - 262
+  - 277
+  - 294
+  - 311
+  - 330
+  - 349
+  - 370
+  - 392
+  - 415
+  - 440
+  - 466
+  - 494
+  - 523
+  - 554
+  - 587
+  - 622
+  - 659
+  - 698
+  - 740
+  - 784
+  - 831
+  - 880
+  - 932
+  - 988
+  scaleNotes:
+  - 262
+  - 294
+  - 330
+  - 370
+  - 415
+  - 466
+  - 523
+  - 587
+  - 659
 --- !u!82 &2234979304006259642
 AudioSource:
   m_ObjectHideFlags: 0
@@ -251,6 +286,10 @@ PrefabInstance:
     - target: {fileID: 7757336880504898896, guid: 02f22a3278554b2439054645d4876649, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0.00000006239861
+      objectReference: {fileID: 0}
+    - target: {fileID: 7757336880571979792, guid: 02f22a3278554b2439054645d4876649, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7794923603419521288, guid: 02f22a3278554b2439054645d4876649, type: 3}
       propertyPath: m_RootOrder
