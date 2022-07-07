@@ -50,8 +50,8 @@ public class Oscillator : MonoBehaviour
     public string[] waveform = { "sin", "square", "tri" };
     public int currentwaveformIndex = 0;
 
-    public bool isPlaying = true;
-    public bool isHolding = true;
+    public bool isPlaying = false;
+    public bool isHolding = true; //output 1 continuous frequency
 
     public int currentRhythmIndex = 0; // refers to ts array first index
     bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
@@ -90,6 +90,15 @@ public class Oscillator : MonoBehaviour
         robot.GetComponent<Animator>().enabled = true;
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
         FindScale("C");
+
+        CreateNewMaterial();
+
+    }
+
+    public void CreateNewMaterial()
+    {
+        robot.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = this.GetComponent<MeshRenderer>().material;
+        skinMat= robot.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
     }
 
     private void Update()
@@ -359,11 +368,11 @@ public class Oscillator : MonoBehaviour
                 {
                     if (gain * Mathf.Sin((float)phase) >= 0)
                     {
-                        data[i] = (float)gain * 0.6f;
+                        data[i] = (float)gain * 0.2f;
                     }
                     else
                     {
-                        data[i] = -(float)gain * 0.6f;
+                        data[i] = -(float)gain * 0.2f;
                     }
                 }
                 else if (waveForm == "tri")//triangle wave

@@ -10,6 +10,7 @@ public class OscillatorManager : MonoBehaviour
 
     public List<Oscillator> myOscillatorList; //it's a list because I think it might be easier for adding/removing oscillators in game
 
+
     public int selectedOscIndex =0;
 
     //Shared UI for oscillators
@@ -28,7 +29,8 @@ public class OscillatorManager : MonoBehaviour
         GameObject temp;
         temp = Instantiate(oscPrefab, new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)),Quaternion.identity);
         myOscillatorList.Add(temp.GetComponent<Oscillator>());
-        
+        SelectNextOsc();//quick fix to get rid of outline 
+        selectedOscIndex = myOscillatorList.Count - 1;//select the one just created
     }
 
     public void ToggleOnOff()
@@ -40,12 +42,12 @@ public class OscillatorManager : MonoBehaviour
         if (!myOscillatorList[selectedOscIndex].isPlaying)
         {
             myOscillatorList[selectedOscIndex].skinMat.SetColor("_EmissionColor", gray);
-            myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = false;
+            //myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = false;
         }
         else
         {
             myOscillatorList[selectedOscIndex].ChangeSkinColor(1);
-            myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = true;
+            //myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = true;
         }
 
     }
@@ -94,7 +96,6 @@ public class OscillatorManager : MonoBehaviour
     //go to next oscillator
     public void SelectNextOsc()
     {
-        myOscillatorList[selectedOscIndex].robot.GetComponent<Outline>().enabled = false; //turn off outline of last item
 
         int index = selectedOscIndex+1;
         if(index >= myOscillatorList.Count)
@@ -103,6 +104,11 @@ public class OscillatorManager : MonoBehaviour
         }
         selectedOscIndex = index;
         UpdateUI(myOscillatorList[selectedOscIndex]);
+
+        for (int i=0; i <myOscillatorList.Count; i++)
+        {
+            myOscillatorList[i].robot.GetComponent<Outline>().enabled = false;
+        } //turn off outline for everyone else
 
         myOscillatorList[selectedOscIndex].robot.GetComponent<Outline>().enabled = true;
 
