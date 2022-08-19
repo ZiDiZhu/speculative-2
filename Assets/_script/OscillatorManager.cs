@@ -19,6 +19,7 @@ public class OscillatorManager : MonoBehaviour
     public Text keyText;
     public Text waveText;
     public Text scaleText;
+    public Text rangeText;
 
     public Slider volumeSlider,tempoSlider;
 
@@ -55,6 +56,12 @@ public class OscillatorManager : MonoBehaviour
     public void AddOsc(GameObject newOsc)
     {
 
+    }
+
+    public void ChangeRange()
+    {
+        myOscillatorList[selectedOscIndex].ChangeRange();
+        UpdateUI(myOscillatorList[selectedOscIndex]);
     }
 
     public void ChangeWaveform()
@@ -122,6 +129,7 @@ public class OscillatorManager : MonoBehaviour
         modeText.text = "Mode "+ osc.currentMode;
         keyText.text = osc.currentKey+" Key";
         scaleText.text = osc.currentScale;
+        rangeText.text = osc.range;
 
         volumeSlider.value = myOscillatorList[selectedOscIndex].volume*10;
         tempoSlider.value = myOscillatorList[selectedOscIndex].tempo;

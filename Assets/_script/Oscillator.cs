@@ -27,10 +27,7 @@ public class Oscillator : MonoBehaviour
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
 
-    public int currentMode = 0;
-
-    //in-scene console
-    public Text consoleText;
+    public int currentMode = 2;
     
 
     //Adjustable Stats 
@@ -45,6 +42,8 @@ public class Oscillator : MonoBehaviour
     public string currentScale = "major"; 
     public string[] scale = { "major", "minor"};
     public int scaleIndex = 0;
+
+    public string range = "mid";
 
     public string waveForm = "sin"; //square, saw, tri
     public string[] waveform = { "sin", "square", "tri" };
@@ -85,7 +84,7 @@ public class Oscillator : MonoBehaviour
     public void Initiate()
     {
         robot = gameObject.transform.GetChild(0).gameObject;
-        InitializeFrequencies();
+        InitializeFrequencies(range);
         gain = volume;
         robot.GetComponent<Animator>().enabled = true;
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
@@ -395,35 +394,111 @@ public class Oscillator : MonoBehaviour
 
     }
 
-    private void InitializeFrequencies()
+    public void ChangeRange()
     {
-        frequencies = new float[24];
-        //C4-B4
-        frequencies[0] = 262; //C4
-        frequencies[1] = 277; //CS4
-        frequencies[2] = 294; //D4
-        frequencies[3] = 311; //DS4
-        frequencies[4] = 330; //E4
-        frequencies[5] = 349; //F4
-        frequencies[6] = 370; //FS4
-        frequencies[7] = 392; //G4
-        frequencies[8] = 415; //GS4
-        frequencies[9] = 440; //A4
-        frequencies[10] = 466; //AS4
-        frequencies[11] = 494; //B4
-        //C5-B5
-        frequencies[12] = 523; //C5
-        frequencies[13] = 554; //CS5
-        frequencies[14] = 587; //D5
-        frequencies[15] = 622; //DS5
-        frequencies[16] = 659; //E5
-        frequencies[17] = 698; //F5
-        frequencies[18] = 740; //FS5
-        frequencies[19] = 784; //G5
-        frequencies[20] = 831; //GS5
-        frequencies[21] = 880; //A5
-        frequencies[22] = 932; //AS5
-        frequencies[23] = 988; //B5
+        if (range == "low")
+        {
+            range = "mid";
+        }else if (range == "mid")
+        {
+            range = "high";
+        }else if (range == "high")
+        {
+            range = "low";
+        }
+        InitializeFrequencies(range);
+        FindScale(currentKey);
+    }
+
+    private void InitializeFrequencies(string range)
+    {
+        if (range == "mid")
+        {
+
+            frequencies = new float[24];
+            //C4-B5
+            frequencies[0] = 262; //C4
+            frequencies[1] = 277; //CS4
+            frequencies[2] = 294; //D4
+            frequencies[3] = 311; //DS4
+            frequencies[4] = 330; //E4
+            frequencies[5] = 349; //F4
+            frequencies[6] = 370; //FS4
+            frequencies[7] = 392; //G4
+            frequencies[8] = 415; //GS4
+            frequencies[9] = 440; //A4
+            frequencies[10] = 466; //AS4
+            frequencies[11] = 494; //B4
+                                   //C5-B5
+            frequencies[12] = 523; //C5
+            frequencies[13] = 554; //CS5
+            frequencies[14] = 587; //D5
+            frequencies[15] = 622; //DS5
+            frequencies[16] = 659; //E5
+            frequencies[17] = 698; //F5
+            frequencies[18] = 740; //FS5
+            frequencies[19] = 784; //G5
+            frequencies[20] = 831; //GS5
+            frequencies[21] = 880; //A5
+            frequencies[22] = 932; //AS5
+            frequencies[23] = 988; //B5
+        }else if (range == "high")
+        {
+            //C6-B7
+            frequencies[0] = 1047; //C6
+            frequencies[1] = 1109; //CS6
+            frequencies[2] = 1175; //D6
+            frequencies[3] = 1245; //DS6
+            frequencies[4] = 1319; //E6
+            frequencies[5] = 1397; //F6
+            frequencies[6] = 1480; //FS6
+            frequencies[7] = 1568; //G6
+            frequencies[8] = 1661; //GS6
+            frequencies[9] = 1760; //A6
+            frequencies[10] = 1865; //AS6
+            frequencies[11] = 1976; //B6
+                                   
+            frequencies[12] = 2093; //C7
+            frequencies[13] = 2217; //CS7
+            frequencies[14] = 2349; //D7
+            frequencies[15] = 2489; //DS7
+            frequencies[16] = 2637; //E7
+            frequencies[17] = 2794; //F7
+            frequencies[18] = 2960; //FS7
+            frequencies[19] = 3136; //G7
+            frequencies[20] = 3322; //GS7
+            frequencies[21] = 3520; //A7
+            frequencies[22] = 3729; //AS7
+            frequencies[23] = 3951; //B7
+        }else if (range == "low")
+        {
+            //C2-B3
+            frequencies[0] = 65; //C2
+            frequencies[1] = 69; //CS2
+            frequencies[2] = 73; //D2
+            frequencies[3] = 78; //DS2
+            frequencies[4] = 82; //E2
+            frequencies[5] = 87; //F2
+            frequencies[6] = 93; //FS2
+            frequencies[7] = 98; //G2
+            frequencies[8] = 104; //GS2
+            frequencies[9] = 110; //A2
+            frequencies[10] = 117; //AS2
+            frequencies[11] = 123; //B2
+
+            frequencies[12] = 131; //C3
+            frequencies[13] = 139; //CS3
+            frequencies[14] = 147; //D3
+            frequencies[15] = 156; //DS3
+            frequencies[16] = 165; //E3
+            frequencies[17] = 175; //F3
+            frequencies[18] = 185; //FS3
+            frequencies[19] = 196; //G3
+            frequencies[20] = 208; //GS3
+            frequencies[21] = 220; //A3
+            frequencies[22] = 233; //AS3
+            frequencies[23] = 247; //B3
+        }
     }
 
 }
