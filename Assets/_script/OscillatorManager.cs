@@ -43,14 +43,28 @@ public class OscillatorManager : MonoBehaviour
         if (!myOscillatorList[selectedOscIndex].isPlaying)
         {
             myOscillatorList[selectedOscIndex].skinMat.SetColor("_EmissionColor", gray);
-            //myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = false;
+            myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled = false;
         }
         else
         {
             myOscillatorList[selectedOscIndex].ChangeSkinColor(1);
-            //myOscillatorList[selectedOscIndex].GetComponent<Animator>().enabled = true;
+            myOscillatorList[selectedOscIndex].robot.GetComponent<Animator>().enabled = true;
         }
 
+    }
+
+    public void Kill()
+    {
+        ToggleOnOff();
+        StartCoroutine(Wait());
+        
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3);
+        Destroy(myOscillatorList[selectedOscIndex].gameObject);
+        myOscillatorList.RemoveAt(selectedOscIndex);
     }
 
     public void AddOsc(GameObject newOsc)
@@ -168,7 +182,7 @@ public class OscillatorManager : MonoBehaviour
         {
             if (myOscillatorList[i] != null)
             {
-                myOscillatorList[i].tempo = tempo;
+                myOscillatorList[i].tempo = tempo*0.5f;
                 myOscillatorList[i].timeNow = myOscillatorList[i - 1].timeNow;
             }
 

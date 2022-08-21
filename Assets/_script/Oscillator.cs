@@ -89,7 +89,6 @@ public class Oscillator : MonoBehaviour
         {
             OscillatorManager manager = FindObjectOfType<OscillatorManager>();
             manager.Select();
-            Debug.Log("aaaaaaaaaaaaaaaaaaaa");
         }
     }
 
@@ -109,6 +108,7 @@ public class Oscillator : MonoBehaviour
         FindScale("C");
 
         CreateNewMaterial();
+        ChangeMode();
 
     }
 
