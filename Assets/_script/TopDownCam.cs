@@ -16,6 +16,18 @@ public class TopDownCam : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        gameObject.transform.position = new Vector3(transform.position.x + (x*speed*Time.deltaTime),8,transform.position.z+(z * speed*Time.deltaTime));
+        gameObject.transform.position = new Vector3(transform.position.x + (x*speed*Time.deltaTime),8,transform.localPosition.z+(z * speed*Time.deltaTime));
+
+
+        //Rotate();
+    }
+
+    //TO DO: fix the problem where rotation doesnt chage movement direction
+    void Rotate()
+    {
+        if(Input.GetKey(KeyCode.Q))
+            transform.eulerAngles += new Vector3(0, 1, 0);
+        if (Input.GetKey(KeyCode.E))
+            transform.eulerAngles += new Vector3(0, -1, 0);
     }
 }

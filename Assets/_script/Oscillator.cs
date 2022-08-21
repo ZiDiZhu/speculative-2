@@ -28,7 +28,6 @@ public class Oscillator : MonoBehaviour
     public int freqIndex; //index of currently selected frequency
 
     public int currentMode = 2;
-    
 
     //Adjustable Stats 
     public float volume;
@@ -42,6 +41,7 @@ public class Oscillator : MonoBehaviour
     public string currentScale = "major"; 
     public string[] scale = { "major", "minor"};
     public int scaleIndex = 0;
+    public bool hovering = false;
 
     public string range = "mid";
 
@@ -79,6 +79,24 @@ public class Oscillator : MonoBehaviour
     private void Start()
     {
         Initiate();
+    }
+
+    private void OnMouseOver()
+    {
+        ChangeSkinColor(0);
+        hovering = true;
+        if (Input.GetMouseButtonDown(0))
+        {
+            OscillatorManager manager = FindObjectOfType<OscillatorManager>();
+            manager.Select();
+            Debug.Log("aaaaaaaaaaaaaaaaaaaa");
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        hovering = false;
+        ChangeSkinColor(2);
     }
 
     public void Initiate()
@@ -217,7 +235,7 @@ public class Oscillator : MonoBehaviour
             else
             {
                 gain = 0;
-                ChangeSkinColor(Random.Range(0, 3));
+                //ChangeSkinColor(Random.Range(0, 3));
             }
                 
         }
@@ -245,7 +263,7 @@ public class Oscillator : MonoBehaviour
             frequency = scaleNotes[Random.Range(0,scaleNotes.Length-1)];
 
             //visuals
-            ChangeSkinColor(Random.Range(0, 3));
+            //ChangeSkinColor(Random.Range(0, 3));
 
 
             noteDuration = ts4[1, ++noteDurationNowIndex];

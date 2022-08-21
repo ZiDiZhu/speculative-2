@@ -117,8 +117,33 @@ public class OscillatorManager : MonoBehaviour
             myOscillatorList[i].robot.GetComponent<Outline>().enabled = false;
         } //turn off outline for everyone else
 
+        for (int i = 0; i < myOscillatorList.Count; i++)
+        {
+            myOscillatorList[i].robot.GetComponent<Outline>().enabled = false;
+        } //turn off outline for everyone else
+
         myOscillatorList[selectedOscIndex].robot.GetComponent<Outline>().enabled = true;
 
+    }
+
+    public void Select()
+    {
+
+        for (int i = 0; i < myOscillatorList.Count; i++)
+        {
+            if(myOscillatorList[i].hovering == true)
+            {
+                selectedOscIndex = i;
+            }
+        } 
+
+        for (int i = 0; i < myOscillatorList.Count; i++)
+        {
+            myOscillatorList[i].robot.GetComponent<Outline>().enabled = false;
+        } //turn off outline for everyone else
+
+        myOscillatorList[selectedOscIndex].robot.GetComponent<Outline>().enabled = true;
+        UpdateUI(myOscillatorList[selectedOscIndex]);
     }
 
     public void UpdateUI(Oscillator osc)
