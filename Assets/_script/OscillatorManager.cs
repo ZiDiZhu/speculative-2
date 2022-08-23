@@ -12,6 +12,7 @@ public class OscillatorManager : MonoBehaviour
 
 
     public int selectedOscIndex =0;
+    public bool selected;
 
     //Shared UI for oscillators
     public Text selectedOscText;

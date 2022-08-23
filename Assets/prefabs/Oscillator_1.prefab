@@ -60,7 +60,7 @@ MonoBehaviour:
   noteDurationNowIndex: 0
   timeNow: 1
   freqIndex: 0
-  currentMode: 2
+  currentMode: 1
   volume: 0.1
   tempo: 3
   currentKey: 
@@ -88,6 +88,7 @@ MonoBehaviour:
   isPlaying: 1
   isHolding: 1
   currentRhythmIndex: 0
+  autoRhythmIsOn: 0
   frequencies: []
   scaleNotes: []
 --- !u!82 &4658658651980184195

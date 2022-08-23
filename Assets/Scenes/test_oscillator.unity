@@ -156,6 +156,7 @@ MonoBehaviour:
   myOscillatorList:
   - {fileID: 1777580230}
   selectedOscIndex: 0
+  selected: 0
   selectedOscText: {fileID: 1389502314}
   modeText: {fileID: 349052768}
   keyText: {fileID: 964882365}
@@ -1776,7 +1777,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Key: C'
+  m_Text: Change Key
 --- !u!222 &964882366
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1908,7 +1909,7 @@ MonoBehaviour:
   m_MinValue: 1
   m_MaxValue: 10
   m_WholeNumbers: 0
-  m_Value: 5
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3886,6 +3887,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4658658651980184192, guid: 37600e065f1a5db4baee7f591af5aaea, type: 3}
+      propertyPath: currentMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4658658651980184193, guid: 37600e065f1a5db4baee7f591af5aaea, type: 3}
       propertyPath: m_RootOrder
       value: 4

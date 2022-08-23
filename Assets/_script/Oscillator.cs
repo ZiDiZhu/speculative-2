@@ -27,7 +27,7 @@ public class Oscillator : MonoBehaviour
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
 
-    public int currentMode = 2;
+    public int currentMode = 1;
 
     //Adjustable Stats 
     public float volume;
@@ -53,18 +53,11 @@ public class Oscillator : MonoBehaviour
     public bool isHolding = true; //output 1 continuous frequency
 
     public int currentRhythmIndex = 0; // refers to ts array first index
-    bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
+    public bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
 
     // here 1 = standard note; 0 = empty; -1= end  
     //static reference
     public float[] frequencies; //stores musical Notes!
-
-    public float[,] ts3 =
-        { {1,1,1,-1,0,0},
-          {1,1,0.333f,0.333f,0.334f,0.333f}, 
-          {4,-1,0,0,0,0},
-          {2,1,0.5f,0.5f,-1,0},
-          {0.5f,0.5f,0.5f,0.5f,0.5f,0.5f}};
     
     public float[,] ts4 =
         { {1,1,1,1,-1,0,0,0},
@@ -104,11 +97,22 @@ public class Oscillator : MonoBehaviour
         InitializeFrequencies(range);
         gain = volume;
         robot.GetComponent<Animator>().enabled = true;
+
+        tempo = Random.Range(1, 10);//Randomize tempo
+
         robot.GetComponent<Animator>().speed = tempo; //dance to the tempo
-        FindScale("C");
+
+        //random Key
+        currentKeyIndex = Random.Range(0, 4);
+        currentKey = key[currentKeyIndex];
+        FindScale(currentKey);
+
+        //random wave
+        currentwaveformIndex = Random.Range(0, waveform.Length);
+        waveForm = waveform[currentwaveformIndex];
 
         CreateNewMaterial();
-        ChangeMode();
+        ChangeMode(); //go to next - quicc solution to animation problem
 
     }
 
@@ -242,7 +246,7 @@ public class Oscillator : MonoBehaviour
     }
 
 
-    public void TogglePlaying()
+    public void ToggleHolding()
     {
         isHolding = !isHolding;
 
