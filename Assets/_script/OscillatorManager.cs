@@ -14,6 +14,8 @@ public class OscillatorManager : MonoBehaviour
     public int selectedOscIndex =0;
     public bool selected;
 
+    public RTSCamera rtsCam;
+
     //Shared UI for oscillators
     public Text selectedOscText;
     public Text modeText;
@@ -29,10 +31,11 @@ public class OscillatorManager : MonoBehaviour
     public void CreateNewOsc()
     {
         GameObject temp;
-        temp = Instantiate(oscPrefab, new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)),Quaternion.identity);
+        temp = Instantiate(oscPrefab, new Vector3(Random.Range(-10, 10), myOscillatorList[0].transform.position.y, Random.Range(-10, 10)),Quaternion.identity);
         myOscillatorList.Add(temp.GetComponent<Oscillator>());
         SelectNextOsc();//quick fix to get rid of outline 
         selectedOscIndex = myOscillatorList.Count - 1;//select the one just created
+        rtsCam.Focus(myOscillatorList[selectedOscIndex].transform);
     }
 
     public void ToggleOnOff()
@@ -141,7 +144,7 @@ public class OscillatorManager : MonoBehaviour
 
     }
 
-    public void Select()
+    public void Select() //TODO: click directly to select
     {
 
         for (int i = 0; i < myOscillatorList.Count; i++)

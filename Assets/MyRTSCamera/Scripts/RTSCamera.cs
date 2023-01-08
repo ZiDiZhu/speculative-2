@@ -250,6 +250,11 @@ public class RTSCamera : MonoBehaviour
 		}
 	}
 
+	public void Focus(Transform fTransform)
+    {
+		focusTransform = fTransform;
+    }
+
 	void CheckInputs()
 	{
 		if (mouseButtonMove == mouseButtonRotate)
