@@ -13,7 +13,7 @@ public class Oscillator : MonoBehaviour
     //robot 
     public GameObject robot;
     public Color[] skinColor;
-    public Material skinMat;
+    public Material skinMat,shirtMat;
 
 
     //Sound Generation "Raw" variales
@@ -111,7 +111,13 @@ public class Oscillator : MonoBehaviour
         currentwaveformIndex = Random.Range(0, waveform.Length);
         waveForm = waveform[currentwaveformIndex];
 
+        //random range
+        int n = Random.Range(1, 3);
+        for (int i = 0; i < n; i++)
+            ChangeRange();
+
         CreateNewMaterial();
+        NewClothesMaterial();
         ChangeMode(); //go to next - quicc solution to animation problem
 
     }
@@ -120,6 +126,12 @@ public class Oscillator : MonoBehaviour
     {
         robot.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = this.GetComponent<MeshRenderer>().material;
         skinMat= robot.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material;
+    }
+
+    public void NewClothesMaterial()
+    {
+        robot.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>().material = this.GetComponent<MeshRenderer>().material;
+        shirtMat = robot.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>().material;
     }
 
     private void Update()
@@ -199,8 +211,8 @@ public class Oscillator : MonoBehaviour
     //experimental visuals
     public void ChangeSkinColor(int index)
     {
-        skinMat.color = skinColor[index%4];
-        skinMat.SetColor("_EmissionColor", skinMat.color);
+        shirtMat.color = skinColor[index%4];
+        shirtMat.SetColor("_EmissionColor", shirtMat.color);
     }
 
     public void Play(int mode)
@@ -267,7 +279,7 @@ public class Oscillator : MonoBehaviour
             frequency = scaleNotes[Random.Range(0,scaleNotes.Length-1)];
 
             //visuals
-            //ChangeSkinColor(Random.Range(0, 3));
+            ChangeSkinColor(Random.Range(0, skinColor.Length));
 
 
             noteDuration = ts4[1, ++noteDurationNowIndex];
