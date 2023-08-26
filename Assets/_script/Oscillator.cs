@@ -15,23 +15,23 @@ public class Oscillator : MonoBehaviour
     public Color[] skinColor;
     public Material skinMat,shirtMat;
 
-
     //Sound Generation "Raw" variales
     public double frequency = 440; // Currently Playing
     private double increment;
     private double phase;
     private double sampling_frequency = 48000.0;
+
     public float gain;  //"raw" volume
     public float noteDuration = 1f; //current note duration
     public int noteDurationNowIndex; // refers to the index in the array of ts 
     public float timeNow = 1f; //the timer of currently playing note
     public int freqIndex; //index of currently selected frequency
 
-    public int currentMode = 1;
+    public int currentMode = 1; //changes how it generates sequence
 
     //Adjustable Stats 
     public float volume;
-    public float tempo = 5f; // "bpm" 
+    public float tempo = 5f; // speed
 
     public string currentKey = "C"; //offset names
     public int currentNoteOffset; //index of which key it is on 
@@ -50,7 +50,7 @@ public class Oscillator : MonoBehaviour
     public int currentwaveformIndex = 0;
 
     public bool isPlaying = false;
-    public bool isHolding = true; //output 1 continuous frequency
+    public bool paused = true; //output 1 continuous frequency
 
     public int currentRhythmIndex = 0; // refers to ts array first index
     public bool autoRhythmIsOn = false; //TOGGLE to automatically loop through ts array
@@ -237,7 +237,6 @@ public class Oscillator : MonoBehaviour
     //also: make it DOOM doom doom doom (1 loud e less loud, indicating the time signature of 4/4)
     public void Metronome()
     {
-        
         timeNow -= tempo * Time.deltaTime;
         if (timeNow <= 0)
         {
@@ -258,14 +257,14 @@ public class Oscillator : MonoBehaviour
     }
 
 
-    public void ToggleHolding()
+    public void TogglePause()
     {
-        isHolding = !isHolding;
-
-        if (!isHolding)
-            robot.GetComponent<Animator>().speed = 0;
+        paused = !paused;
+        if (!paused)
+            Object.FindObjectOfType<OscillatorManager>().tempoSlider.value = 5f;
         else
-            robot.GetComponent<Animator>().speed = tempo;
+            Object.FindObjectOfType<OscillatorManager>().tempoSlider.value = 0f;
+
     }
 
     
