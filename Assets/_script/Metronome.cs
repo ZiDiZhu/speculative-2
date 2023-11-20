@@ -65,4 +65,13 @@ public class Metronome : MonoBehaviour
             n++;
         }
     }
+
+    public void setBPM(double value){
+        bpm = value;
+    }
+
+    public void addBPM(float value)
+    {
+        setBPM(bpm+value);
+    }
 }

@@ -12,7 +12,7 @@ public enum Key{
     B
 }
 
-
+[CreateAssetMenu(fileName = "New Musical Note", menuName = "Musical Note")]
 public class NoteData : ScriptableObject
 {
     public Key key;
