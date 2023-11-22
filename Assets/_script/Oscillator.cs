@@ -17,7 +17,7 @@ public class Oscillator : MonoBehaviour
 
     //Sound Generation "Raw" variales
     public double frequency = 440; // Currently Playing
-    private double increment;
+    private double increment; 
     private double phase;
     private double sampling_frequency = 48000.0;
 

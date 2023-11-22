@@ -33,8 +33,8 @@ public class OscillatorManager : MonoBehaviour
         GameObject temp;
         temp = Instantiate(oscPrefab, new Vector3(Random.Range(-10, 10), myOscillatorList[0].transform.position.y, Random.Range(-10, 10)),Quaternion.identity);
         myOscillatorList.Add(temp.GetComponent<Oscillator>());
-        SelectNextOsc();//quick fix to get rid of outline 
-        selectedOscIndex = myOscillatorList.Count - 1;//select the one just created
+        SelectNextOsc();
+        selectedOscIndex = myOscillatorList.Count - 1;
         rtsCam.Focus(myOscillatorList[selectedOscIndex].transform);
     }
 

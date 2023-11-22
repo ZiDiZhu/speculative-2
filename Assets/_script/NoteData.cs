@@ -18,4 +18,5 @@ public class NoteData : ScriptableObject
     public Key key;
     public int octave;
     public float frequency;
+    public float duration;
 }
