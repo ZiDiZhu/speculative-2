@@ -1122,7 +1122,7 @@ MonoBehaviour:
   noteNamePrefix: C
   numOctaves: 8
   duration: 1
-  baseFrequency: 440
+  baseFrequency: 16.35
   noteDataScriptableObj: {fileID: 11400000, guid: e25be51ef5c29f341b163dc37384ccc3, type: 2}
 --- !u!4 &1716575500
 Transform:
