@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: UniversalMall
   m_EditorClassIdentifier: 
   name: Universal Mall
+  description: 'The downtown shopping mall. '
   neighbors:
   - connectedNode: {fileID: 11400000, guid: 7d4e7e225d7b12246b0d81a140cb6d1f, type: 2}
     weight: 1
   - connectedNode: {fileID: 11400000, guid: cb766de67dbd67b46b749fb8cc66a3b8, type: 2}
     weight: 1
+  mapSprite: {fileID: 0}
   unitsOnNode: []

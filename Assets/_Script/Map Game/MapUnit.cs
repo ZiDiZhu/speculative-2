@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MapUnit : MonoBehaviour
 {
-    public MapNodeData currentNode;
+    public MapNode currentNode;
     public MapGraph map; // Reference to the map
 
-    public void MoveToNode(MapNodeData node)
+    public void MoveToNode(MapNode node)
     {
         if (currentNode != null)
         {
@@ -25,7 +25,7 @@ public class MapUnit : MonoBehaviour
         }
 
         // Use the map's FindPathBetweenNodes method to find the path
-        List<MapNodeData> path = map.FindPathBetweenNodes(currentNode, targetNode);
+        List<MapNodeData> path = map.data.FindPathBetweenNodes(currentNode.nodeData, targetNode);
 
         return path;
     }

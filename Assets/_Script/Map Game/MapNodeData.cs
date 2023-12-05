@@ -6,6 +6,8 @@ using UnityEngine;
 public class MapNodeData : ScriptableObject
 {
     public string name;
+    [TextArea(5,7)] public string description;
+
     public List<Edge> neighbors;
     public Sprite mapSprite;
 
@@ -15,15 +17,6 @@ public class MapNodeData : ScriptableObject
         name = n;
     }
 
-    public void OnUnitEnter(MapUnit unit)
-    {
-        unitsOnNode.Add(unit);
-    }
-
-    public void OnUnitExit(MapUnit unit)
-    {
-        unitsOnNode.Remove(unit);
-    }
 }
 
 [System.Serializable]
