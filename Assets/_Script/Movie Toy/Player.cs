@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
+    
     public float speed;
     private Vector3 moveDirection;
     public Animator anim;
@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cc = GetComponent<CharacterController>();
+        cc = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
     }
 

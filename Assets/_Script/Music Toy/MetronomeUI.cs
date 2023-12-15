@@ -6,8 +6,8 @@ using TMPro;
 public class MetronomeUI : MonoBehaviour
 {
     public Metronome metronome; 
-
     public Text tempoText;
+    
 
     private void Awake()
     {
