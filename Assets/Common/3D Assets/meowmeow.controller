@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WALK
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -40,7 +40,7 @@ AnimatorStateMachine:
     m_Position: {x: 333, y: 197, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6462350609824595029}
-    m_Position: {x: 330, y: 120, z: 0}
+    m_Position: {x: 290, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8251774869618012323}
     m_Position: {x: 560, y: 120, z: 0}

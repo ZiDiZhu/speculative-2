@@ -8,9 +8,15 @@ public class Player : MonoBehaviour
     public float speed;
     private Vector3 moveDirection;
     public Animator anim;
+    public enum PlayerState
+    {
+        IDLE,
+        WALK
+    }
+    [SerializeField] private PlayerState state;
 
     private CharacterController cc;
-    // Start is called before the first frame update
+
     void Start()
     {
         cc = GetComponentInChildren<CharacterController>();
@@ -22,10 +28,26 @@ public class Player : MonoBehaviour
     {
         Move();
         Turn();
-        if (moveDirection.magnitude == 0) { anim.SetFloat("Blend", 0f); }
+
+        if (moveDirection.magnitude == 0)
+        {
+            if (state == PlayerState.IDLE)
+            {
+                return;
+            }
+
+            state = PlayerState.IDLE;
+            anim.CrossFade(state.ToString(), 0.2f); // Smoothly transition to IDLE state
+        }
         else
         {
-            anim.SetFloat("Blend", 1f);
+            if (state == PlayerState.WALK)
+            {
+                return;
+            }
+
+            state = PlayerState.WALK;
+            anim.CrossFade(state.ToString(), 0.2f); // Smoothly transition to WALK state
         }
     }
 
@@ -43,7 +65,9 @@ public class Player : MonoBehaviour
 
     private void Turn()
     {
-        if (moveDirection.magnitude == 0) { return; }
+        if (moveDirection.magnitude == 0){
+            return;
+        }
 
         var rotation = Quaternion.LookRotation(moveDirection);
         this.GetComponent<Transform>().rotation = Quaternion.RotateTowards(transform.rotation, rotation, speed);
