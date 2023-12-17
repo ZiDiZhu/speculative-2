@@ -6,9 +6,10 @@ public class Moveable : MonoBehaviour
 {
     public float origibalYpos;
     private Player player;
-
+    private Outline outline;
     private void Start()
     {
+        outline = GetComponentInChildren<Outline>();
         origibalYpos = transform.position.y;
     }
 
@@ -20,6 +21,7 @@ public class Moveable : MonoBehaviour
             Player player = other.GetComponent<Player>();
             player.canCarry = true;
             player.moveableObjectInRange = gameObject;
+            if(outline!=null)outline.enabled = true;
         }
     }
 
@@ -30,6 +32,7 @@ public class Moveable : MonoBehaviour
         {
             if (player == null) player = other.GetComponent<Player>();
             player.canCarry = false;
+            if (outline != null) outline.enabled = false;
         }
     }
 }
