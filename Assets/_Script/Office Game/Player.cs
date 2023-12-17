@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -116,6 +117,13 @@ public class Player : MonoBehaviour
     public void Carry(Transform obj)
     {
         //pick up object
+        anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+        StartCoroutine(WaitForPickup(0.8f,obj));
+    }
+
+    IEnumerator WaitForPickup(float duration, Transform obj)
+    {
+        yield return new WaitForSeconds(duration);
         obj.position = carry.position;
         obj.SetParent(carry);
     }
@@ -124,12 +132,19 @@ public class Player : MonoBehaviour
     {   
         //put down object
         if(carry.childCount!=0){
-            Transform ca = carry.GetChild(0);
 
+            anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+            Transform ca = carry.GetChild(0);
             carry.DetachChildren();
-            Debug.Log("Putting down object");
-            ca.position = new Vector3(ca.position.x, ca.GetComponent<Moveable>().origibalYpos, ca.position.z);
+            StartCoroutine(WaitForPutDown(0.4f, ca));
+
         }
         
+    }
+    IEnumerator WaitForPutDown(float duration,Transform ca)
+    {
+        yield return new WaitForSeconds(duration);
+        ca.position = new Vector3(ca.position.x, ca.GetComponent<Moveable>().origibalYpos, ca.position.z);
+
     }
 }
