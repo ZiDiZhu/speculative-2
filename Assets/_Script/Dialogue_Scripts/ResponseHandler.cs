@@ -75,7 +75,7 @@ public class ResponseHandler : MonoBehaviour
             dialogueUI.dialogueObject = response.NextDialogue;
             dialogueUI.ShowDialogue(dialogueUI.dialogueObject);
         }
-        else
+        else //clsoe dialogue box
         {
             Debug.Log("no response dialogue");
             dialogueUI.CloseDialogueBox();
