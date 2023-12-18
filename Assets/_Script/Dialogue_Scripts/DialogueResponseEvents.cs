@@ -10,9 +10,4 @@ public class DialogueResponseEvents : MonoBehaviour
 
     public ResponseEvent[] Events => events;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
