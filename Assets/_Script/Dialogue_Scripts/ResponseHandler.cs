@@ -12,13 +12,18 @@ public class ResponseHandler : MonoBehaviour
 
     [SerializeField] private ResponseEvent[] responseEvents;
 
-    private DialogueUI dialogueUI;
+    [SerializeField]private DialogueUI dialogueUI;
     private List<GameObject> tempResponseButtons = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        dialogueUI = GetComponent<DialogueUI>();
+    }
+
+    public void AddResponseEvent(ResponseEvent[] responseEvents)
+    {
+        this.responseEvents = responseEvents;
     }
 
     public void ShowResponses(Response[] responses){
@@ -39,7 +44,6 @@ public class ResponseHandler : MonoBehaviour
 
             tempResponseButtons.Add(responseButton);
 
-            responseBoxHeight += responseButtonTemplate.sizeDelta.y;
         }
 
         responseBox.sizeDelta = new Vector2(responseBox.sizeDelta.x, responseBoxHeight);
@@ -52,39 +56,35 @@ public class ResponseHandler : MonoBehaviour
 
         Debug.Log("Picked Response");
 
-        //close the response box
-        responseBox.gameObject.SetActive(false);
-
-
         //destroy the response buttons
         foreach (GameObject button in tempResponseButtons)
         {
             Destroy(button);
         }
 
-        tempResponseButtons.Clear();
+        //if (responseEvents != null && responseIndex <= responseEvents.Length)
+        //{
+        //    responseEvents[responseIndex].OnPickedResponse?.Invoke();
+        //}
+        
 
-        if (responseEvents != null && responseIndex <= responseEvents.Length)
+        //if a response has a following dialogue, show it
+        if (response.NextDialogue!=null)
         {
-            responseEvents[responseIndex].OnPickedResponse?.Invoke();
-        }
-
-        responseEvents = null;
-
-
-        if (response.NextDialogue)
-        {
-            Debug.Log("warning:response dialogue");
-            //dialogueUI.CloseDialogueBox();
-            //dialogueUI.ShowDialogue(response.DialogueObject);
+            Debug.Log("response dialogue");
+            dialogueUI.dialogueObject = response.NextDialogue;
+            dialogueUI.ShowDialogue(dialogueUI.dialogueObject);
         }
         else
         {
             Debug.Log("no response dialogue");
-            
             dialogueUI.CloseDialogueBox();
-            dialogueUI.canClose = true;
         }
+
+        //close the response box
+        tempResponseButtons.Clear();
+        responseEvents = null;
+        responseBox.gameObject.SetActive(false);
 
     }
 }

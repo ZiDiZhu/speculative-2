@@ -8,11 +8,12 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private RectTransform dialogueBox;
     [SerializeField] private TextMeshProUGUI textLabel;
 
+    public DialogueObject dialogueObject;
+
     public bool isOpen { get; set; }
     private ResponseHandler responseHandler;
     [SerializeField] private TypewriterEffect typewriterEffect;
 
-    public bool canClose = false;
 
 
     // Start is called before the first frame update
@@ -20,6 +21,9 @@ public class DialogueUI : MonoBehaviour
     {
         if(responseHandler==null)responseHandler = GetComponent<ResponseHandler>();
         if(typewriterEffect==null)typewriterEffect = GetComponent<TypewriterEffect>();
+
+        //responseHandler.AddResponseEvent();
+        ShowDialogue(dialogueObject);
     }
 
     public void CloseDialogueBox(){
@@ -48,8 +52,7 @@ public class DialogueUI : MonoBehaviour
             responseHandler.ShowResponses(dialogueObject.Responses);
         }
         else{
-            dialogueBox.gameObject.SetActive(false);
-            isOpen = false;
+            CloseDialogueBox();
         }
     }
 
