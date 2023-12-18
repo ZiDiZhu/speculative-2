@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
         IDLE_CARRY,
         WALK,
         WALK_CARRY,
+        TALK
     }
     [SerializeField] private PlayerState state;
 
