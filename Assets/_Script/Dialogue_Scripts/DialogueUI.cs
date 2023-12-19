@@ -53,6 +53,7 @@ public class DialogueUI : MonoBehaviour
 
     public void ShowDialogue(DialogueObject dialogueObject){
         if (isOpen&&!isNewDialogue) return;
+        isNewDialogue = false;
         dialogueBox.gameObject.SetActive(true);
         isOpen = true;
         StartCoroutine(StepThroughDialogue(dialogueObject));

@@ -56,6 +56,7 @@ public class ResponseHandler : MonoBehaviour
 
         Debug.Log("Picked Response");
         CloseResponseBox();
+        dialogueUI.isNewDialogue = true;
 
         //if (responseEvents != null && responseIndex <= responseEvents.Length)
         //{
