@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="Dialogue/DialogueObject")]
 public class DialogueObject : ScriptableObject
 {
+    [SerializeField] private bool isPlayerSpeaking;
     [SerializeField][TextArea] private string[] dialogue;
     [SerializeField] private Response[] responses;
     

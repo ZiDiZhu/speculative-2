@@ -18,7 +18,7 @@ public class ResponseHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dialogueUI = GetComponent<DialogueUI>();
+        if(dialogueUI==null)dialogueUI = GetComponent<DialogueUI>();
     }
 
     public void AddResponseEvent(ResponseEvent[] responseEvents)
@@ -55,18 +55,13 @@ public class ResponseHandler : MonoBehaviour
     {
 
         Debug.Log("Picked Response");
-
-        //destroy the response buttons
-        foreach (GameObject button in tempResponseButtons)
-        {
-            Destroy(button);
-        }
+        CloseResponseBox();
 
         //if (responseEvents != null && responseIndex <= responseEvents.Length)
         //{
         //    responseEvents[responseIndex].OnPickedResponse?.Invoke();
         //}
-        
+
 
         //if a response has a following dialogue, show it
         if (response.NextDialogue!=null)
@@ -81,10 +76,17 @@ public class ResponseHandler : MonoBehaviour
             dialogueUI.CloseDialogueBox();
         }
 
-        //close the response box
+        
+    }
+
+    public void CloseResponseBox()
+    {
+        foreach (GameObject button in tempResponseButtons)
+        {
+            Destroy(button);
+        }
         tempResponseButtons.Clear();
         responseEvents = null;
         responseBox.gameObject.SetActive(false);
-
     }
 }
