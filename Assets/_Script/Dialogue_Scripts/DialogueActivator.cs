@@ -5,6 +5,8 @@ using UnityEngine;
 //is a gameObject has a dialogue which can be activated by the player
 public class DialogueActivator : MonoBehaviour
 {
+
+        
     public DialogueObject dialogueObject;
 
     private DialogueUI dialogueUI;
@@ -32,6 +34,8 @@ public class DialogueActivator : MonoBehaviour
         {
             if (outline != null) outline.enabled = false;
             dialogueUI.dialogueObject = null;
+            dialogueUI.CloseDialogueBox();
+            
         }
     }
     

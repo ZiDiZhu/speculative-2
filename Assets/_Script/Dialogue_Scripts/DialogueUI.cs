@@ -61,12 +61,12 @@ public class DialogueUI : MonoBehaviour
     
     private IEnumerator StepThroughDialogue(DialogueObject dialogueObject){
         for(int i = 0; i < dialogueObject.Dialogue.Length; i++){
-            string dialogue = dialogueObject.Dialogue[i];
+            string dialogue = dialogueObject.SpeakerName+": \n"+ dialogueObject.Dialogue[i];
             yield return typewriterEffect.Run(dialogue, textLabel);
             if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.HasResponses) break;
             yield return new WaitWhile(() => typewriterEffect.isRunnnig); 
             Debug.Log("Done Typing, Waiting for input");
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E));
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E)||Input.GetKeyDown(KeyCode.Space));
             
         }
         if(dialogueObject.HasResponses){

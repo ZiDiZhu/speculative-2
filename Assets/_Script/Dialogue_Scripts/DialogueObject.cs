@@ -6,10 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="Dialogue/DialogueObject")]
 public class DialogueObject : ScriptableObject
 {
-    [SerializeField] private bool isPlayerSpeaking;
+    [SerializeField]private string speakerName; //the name of the speaker
     [SerializeField][TextArea] private string[] dialogue;
     [SerializeField] private Response[] responses;
-    
+
+    public string SpeakerName => speakerName; //reference to the speaker name
     public string[] Dialogue => dialogue; //reference to the dialogue array
     public Response[] Responses => responses; //reference to the responses array
     public bool HasResponses =>Responses !=null &&responses.Length > 0; //returns true if there are responses

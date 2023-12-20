@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f8a124aedb26194581a961ad562cc49, type: 3}
-  m_Name: glitchbot_0A 1
+  m_Name: glitchbot_0A 3
   m_EditorClassIdentifier: 
   speakerName: z-bot
   dialogue:
-  - Oh, uh, don't mind me. just standing here.
   - ...
-  - Actually I think I broke my bones. can't move my body.
+  - something
+  - ...
+  - did it work?
   responses:
-  - responseText: ...
-    nextDialogue: {fileID: 0}
+  - responseText: yea thanks
+    nextDialogue: {fileID: 11400000, guid: aee9b9069a29af649b89a3bb690ffb23, type: 2}
     isEndDialogue: 1
-  - responseText: Do you need help?
-    nextDialogue: {fileID: 11400000, guid: 8a18555c719352b4d935b48fcf232603, type: 2}
+  - responseText: ...
+    nextDialogue: {fileID: 11400000, guid: 365160ab778615e488ffee6e646db4b0, type: 2}
     isEndDialogue: 0

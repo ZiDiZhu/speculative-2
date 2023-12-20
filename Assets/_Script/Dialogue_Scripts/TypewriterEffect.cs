@@ -26,7 +26,7 @@ public class TypewriterEffect : MonoBehaviour
     private void Update()
     {
         if(isRunnnig){
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.Space))
             {
                 Debug.Log("Skip Typing");
                 SkipTyping(textLabel,textToType);

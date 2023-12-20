@@ -19,6 +19,7 @@ public class ResponseHandler : MonoBehaviour
     void Start()
     {
         if(dialogueUI==null)dialogueUI = GetComponent<DialogueUI>();
+        responseButtonTemplate.gameObject.SetActive(false);
     }
 
     public void AddResponseEvent(ResponseEvent[] responseEvents)
@@ -69,12 +70,12 @@ public class ResponseHandler : MonoBehaviour
         {
             Debug.Log("response dialogue");
             dialogueUI.dialogueObject = response.NextDialogue;
-            dialogueUI.ShowDialogue(dialogueUI.dialogueObject);
         }
-        else //clsoe dialogue box
-        {
-            Debug.Log("no response dialogue");
+
+        if(response.IsEndDialogue||response.NextDialogue==null){
             dialogueUI.CloseDialogueBox();
+        }else{
+            dialogueUI.ShowDialogue(dialogueUI.dialogueObject);
         }
 
         

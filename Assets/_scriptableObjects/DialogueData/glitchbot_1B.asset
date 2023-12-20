@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8a124aedb26194581a961ad562cc49, type: 3}
   m_Name: glitchbot_1B
   m_EditorClassIdentifier: 
+  speakerName: z-bot (broken bone)
   dialogue:
   - ...
-  - no, i'll be fine.
+  - i'll be fine.
   responses: []

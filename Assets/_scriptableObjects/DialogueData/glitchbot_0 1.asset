@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8a124aedb26194581a961ad562cc49, type: 3}
   m_Name: glitchbot_0 1
   m_EditorClassIdentifier: 
+  speakerName: z-bot
   dialogue:
   - 'Hey. '
   - ...
@@ -23,4 +24,7 @@ MonoBehaviour:
     isEndDialogue: 0
   - responseText: ...
     nextDialogue: {fileID: 11400000, guid: 365160ab778615e488ffee6e646db4b0, type: 2}
-    isEndDialogue: 1
+    isEndDialogue: 0
+  - responseText: This is a dialogue test, try to say something
+    nextDialogue: {fileID: 11400000, guid: 97e660d6f2c52504dae3f43c77ea16d3, type: 2}
+    isEndDialogue: 0
