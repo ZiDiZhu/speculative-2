@@ -10,6 +10,11 @@ public class Moveable : MonoBehaviour
     private void Start()
     {
         outline = GetComponentInChildren<Outline>();
+        if (outline == null) outline = GetComponent<Outline>(); 
+
+
+        if (outline != null) outline.enabled = false;
+
         origibalYpos = transform.position.y;
     }
 
