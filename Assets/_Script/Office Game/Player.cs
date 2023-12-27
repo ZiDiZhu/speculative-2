@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     public bool canCarry; // Can the player carry an object?
     public GameObject moveableObjectInRange; // The object the player is currently in range of
 
+    public InputPromptDisplay inputPromptDisplay;
+
     public enum PlayerState
     {
         IDLE,
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
     {
         cc = GetComponentInChildren<CharacterController>();
         anim = GetComponentInChildren<Animator>();
+        if (inputPromptDisplay == null) inputPromptDisplay = FindObjectOfType<InputPromptDisplay>();
     }
 
     // Update is called once per frame
@@ -131,6 +134,8 @@ public class Player : MonoBehaviour
     {
         //pick up object
         anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+        inputPromptDisplay.pickUp.SetActive(false);
+        inputPromptDisplay.putDown.SetActive(true);
         StartCoroutine(WaitForPickup(0.8f,obj));
     }
     IEnumerator WaitForPickup(float duration, Transform obj)
@@ -147,6 +152,8 @@ public class Player : MonoBehaviour
         if(carry.childCount!=0){
 
             anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+            inputPromptDisplay.putDown.SetActive(false);
+            inputPromptDisplay.pickUp.SetActive(true);
             Transform ca = carry.GetChild(0);
             carry.DetachChildren();
             StartCoroutine(WaitForPutDown(0.4f, ca));

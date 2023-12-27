@@ -7,12 +7,13 @@ public class Moveable : MonoBehaviour
     public float origibalYpos;
     private Player player;
     private Outline outline;
+    private InputPromptDisplay inputPromptDisplay;
     private void Start()
     {
         outline = GetComponentInChildren<Outline>();
         if (outline == null) outline = GetComponent<Outline>(); 
-
-
+        if (inputPromptDisplay ==null)inputPromptDisplay= FindObjectOfType<InputPromptDisplay>();
+    
         if (outline != null) outline.enabled = false;
 
         origibalYpos = transform.position.y;
@@ -27,6 +28,10 @@ public class Moveable : MonoBehaviour
             player.canCarry = true;
             player.moveableObjectInRange = gameObject;
             if(outline!=null)outline.enabled = true;
+            if (inputPromptDisplay != null)
+            {
+                inputPromptDisplay.pickUp.SetActive(true);
+            }
         }
     }
 
@@ -38,6 +43,10 @@ public class Moveable : MonoBehaviour
             if (player == null) player = other.GetComponent<Player>();
             player.canCarry = false;
             if (outline != null) outline.enabled = false;
+            if (inputPromptDisplay != null)
+            {
+                inputPromptDisplay.pickUp.SetActive(false);
+            }
         }
     }
 }
