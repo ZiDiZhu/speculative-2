@@ -1,31 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
-
+public enum ActionType { ATTACK, MAGIC, ITEM, DEFEND, RUN }
 public class BattleSystem : MonoBehaviour
 {
 
     public BattleState state;
-    public Character[] partyMembers;
-    public Character[] enemies;
+    public ActionType actionType;
+    public List<Character> partyMembers = new List<Character>();
+    public List<Character> enemies = new List<Character>();
 
-    private int currentPartyMember;
-    private int currentEnemy;   
+    public int turnCount = 0;
 
-    public delegate void ActionDelegate(Character target);
-    public ActionDelegate[] turnActions;
+    public delegate void ActionDelegate(Character actor);
+    public List<ActionDelegate> turnActions = new List<ActionDelegate>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
+    public List<Character> turnActionTargets = new List<Character>(); //sometimes the same action can be used on multiple targets
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        state = BattleState.START;
-        currentPartyMember = 0;
+        state = BattleState.PLAYERTURN;
 
-        turnActions = new ActionDelegate[partyMembers.Length];
-        AddTurnAction();
+        TestAddTurnAction();
         ExecuteTurnActions();
     }
 
@@ -36,47 +37,64 @@ public class BattleSystem : MonoBehaviour
     }
 
     void ExecuteTurnActions(){
-        foreach(ActionDelegate action in turnActions){
-            action(enemies[currentEnemy]);
+
+        for(int i = 0; i < turnActions.Count; i++){
+            Character target = enemies[0];
+
+            //target exceeds list length, default to first enemy in the list
+            if (i<turnActionTargets.Count){
+                target = turnActionTargets[i];
+            }
+
+            //do the thing
+            turnActions[i](target);
+            
+            //check if target is dead
+            if(target.currentHP<=0){
+                Debug.Log(target.characterName + " has died");
+                enemies.Remove(target);
+                partyMembers.Remove(target);
+                turnActionTargets.RemoveAll(x => x == target);
+            }
+
+            //check if all enemies are dead
+            if(enemies.Count==0){
+                Debug.Log("You win!");
+                state = BattleState.WON;
+                turnActions.Clear();
+                turnActionTargets.Clear();
+                turnCount++;
+                return;
+            }
+
+            //check if all party members are dead
+            if(partyMembers.Count==0){
+                Debug.Log("You lose!");
+                state = BattleState.LOST;
+                return;
+            }
+            
+        }
+
+        turnActions.Clear();
+        turnActionTargets.Clear();  
+        turnCount++;
+    }
+
+    void AddTurnAction(Character actor, ActionType actionType, Character target){
+        
+        if(actionType==ActionType.ATTACK){
+            turnActions.Add(new ActionDelegate(actor.Attack));
+            turnActionTargets.Add(target);
         }
     }
 
-    public void AddTurnAction(){
-        turnActions[currentPartyMember] = new ActionDelegate(partyMembers[currentPartyMember].Attack);
+    public void TestAddTurnAction(){
+        AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
+        AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
     }
 
-    IEnumerator SetupBattle()
-    {
-        // Initialize your party members and enemies
-        // Set up UI elements
-        // Transition to the player's turn
-        yield return new WaitForSeconds(2f); // Add delay for animations or transitions
-        state = BattleState.PLAYERTURN;
-        PlayerTurn();
-    }
 
-    public void StartBattle()
-    {
-        StartCoroutine(SetupBattle());
-    }
 
-    public void PlayerTurn(){
-        // Display UI for the player to select an action
-        // Display UI for the player to select a target
-        // Transition to the enemy's turn
-        Debug.Log("Player's Turn");
-        state = BattleState.ENEMYTURN;
-        EnemyTurn();
-    }
-
-    public void EnemyTurn(){
-        // Select a random action
-        // Select a random target
-        // Perform the action
-        // Transition to the player's turn
-        Debug.Log("Enemy's Turn");
-        state = BattleState.PLAYERTURN;
-        PlayerTurn();
-    }
 
 }

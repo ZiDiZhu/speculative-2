@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class Character : MonoBehaviour
 {
 
@@ -17,7 +16,7 @@ public class Character : MonoBehaviour
     public int magic;   
     public int magicDefense;    
     public int agility; 
-    public int luck;    
+    public int luck; 
 
     
     // Start is called before the first frame update
@@ -62,21 +61,42 @@ public class Character : MonoBehaviour
 
 
     public void Attack(Character target){
-        int damage = strength - target.defense;
+
+        string output = characterName + " attacks " + target.characterName+". ";
+
+        int damage = strength * 10 ;
+        int criticalHitRoll = UnityEngine.Random.Range(0,100);
+        if(criticalHitRoll < luck*strength){ // Critical Hit - luck, strength 
+            damage *= 2;
+            output += "Critical Hit! ";
+        }
         if(damage < 1&&target.currentHP>1){
             damage = 1;
         }
-        target.TakeDamage(damage);
-        Debug.Log(characterName + " attacked " + target.characterName + " for " + damage + " damage.");
-    }
 
-
-    public void TakeDamage(int damage){
-        currentHP -= damage;
-        if(currentHP < 0){
-            Debug.Log(characterName + " died.");
+        int random2 = UnityEngine.Random.Range(0, 150);
+        if (random2 < target.luck*target.agility)
+        {
+            damage = 0;
+            output+= target.characterName + " dodged the attack!";
         }
+        else
+        {
+            damage -= target.defense;
+            if (damage < 0)
+            {
+                damage = 0;
+            }
+        }
+        target.currentHP -= damage;
+        output += target.characterName + " took " + damage + " damage. HP:" +target.currentHP +"/"+target.maxHP+". ";
+        if (target.currentHP <= 0)
+        {
+            output += target.characterName + " has been defeated.";
+        }
+        Debug.Log(output);
     }
+
 
     public void Heal(int heal){
         currentHP += heal;
