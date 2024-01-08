@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
-public enum ActionType { ATTACK, MAGIC, ITEM, DEFEND, RUN }
 public class BattleSystem : MonoBehaviour
 {
 
@@ -25,16 +24,14 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         state = BattleState.PLAYERTURN;
-
-        TestAddTurnAction();
+        //test - player turn
+        TestAddTurnAction1();
         ExecuteTurnActions();
+        //test - enemy turn
+        TestAddTurnAction2();
+        ExecuteTurnActions();   
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void ExecuteTurnActions(){
 
@@ -51,10 +48,13 @@ public class BattleSystem : MonoBehaviour
             
             //check if target is dead
             if(target.currentHP<=0){
+                target.characterState = CharacterState.DEAD;
                 Debug.Log(target.characterName + " has died");
                 enemies.Remove(target);
                 partyMembers.Remove(target);
                 turnActionTargets.RemoveAll(x => x == target);
+                //TODO: track dead characters 
+                //Destroy(target);
             }
 
             //check if all enemies are dead
@@ -82,17 +82,38 @@ public class BattleSystem : MonoBehaviour
     }
 
     void AddTurnAction(Character actor, ActionType actionType, Character target){
-        
-        if(actionType==ActionType.ATTACK){
+
+        if (actor == null){ return; }
+
+        //Add delegate actioins to the turnActions list
+        if (actionType == ActionType.ATTACK)
+        {
             turnActions.Add(new ActionDelegate(actor.Attack));
             turnActionTargets.Add(target);
         }
+        else if (actionType == ActionType.MAGIC)
+        {
+            turnActions.Add(new ActionDelegate(actor.MagicAttack));
+            turnActionTargets.Add(target);
+        }
+
+
     }
 
-    public void TestAddTurnAction(){
+    public void TestAddTurnAction1(){
+        state = BattleState.PLAYERTURN;
         AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
-        AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
+        AddTurnAction(partyMembers[1], ActionType.MAGIC, enemies[0]);
+        AddTurnAction(partyMembers[2], ActionType.MAGIC, enemies[0]);
     }
+
+    public void TestAddTurnAction2()
+    {
+        state = BattleState.ENEMYTURN;
+        foreach(Character enemy in enemies){
+            AddTurnAction(enemy, ActionType.ATTACK, partyMembers[0]);
+        }
+    }   
 
 
 

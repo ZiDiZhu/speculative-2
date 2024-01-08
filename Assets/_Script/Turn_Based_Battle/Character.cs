@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CharacterType { PARTYMEMBER, ENEMY, NPC }
+public enum CharacterState { NORMAL, DEAD }
+
 public class Character : MonoBehaviour
 {
 
@@ -18,6 +21,8 @@ public class Character : MonoBehaviour
     public int agility; 
     public int luck; 
 
+    public CharacterType characterType;
+    public CharacterState characterState;
     
     // Start is called before the first frame update
     void Start()
@@ -63,7 +68,6 @@ public class Character : MonoBehaviour
     public void Attack(Character target){
 
         string output = characterName + " attacks " + target.characterName+". ";
-
         int damage = strength * 10 ;
         int criticalHitRoll = UnityEngine.Random.Range(0,100);
         if(criticalHitRoll < luck*strength){ // Critical Hit - luck, strength 
@@ -73,7 +77,6 @@ public class Character : MonoBehaviour
         if(damage < 1&&target.currentHP>1){
             damage = 1;
         }
-
         int random2 = UnityEngine.Random.Range(0, 150);
         if (random2 < target.luck*target.agility)
         {
@@ -96,6 +99,43 @@ public class Character : MonoBehaviour
         }
         Debug.Log(output);
     }
+
+    public void MagicAttack(Character target){
+        string output = characterName + " casts a spell on " + target.characterName+". ";
+        int damage = magic * 10 ;
+        int criticalHitRoll = UnityEngine.Random.Range(0,100);
+        if (criticalHitRoll < luck * magic)
+        { // Critical Hit - luck, strength
+            damage *= 2;
+            output += "Critical Hit! ";
+        }
+        if (damage < 1 && target.currentHP > 1)
+        {
+            damage = 1;
+        }
+        int random2 = UnityEngine.Random.Range(0, 150);
+        if (random2 < target.luck * target.agility)
+        {
+            damage = 0;
+            output += target.characterName + " dodged the attack!";
+        }
+        else
+        {
+            damage -= target.magicDefense;
+            if (damage < 0)
+            {
+                damage = 0;
+            }
+        }
+        target.currentHP -= damage;
+        output += target.characterName + " took " + damage + " damage. HP:" + target.currentHP + "/" + target.maxHP + ". ";
+        if (target.currentHP <= 0)
+        {
+            output += target.characterName + " has been defeated.";
+        }
+        Debug.Log(output);
+    }
+    
 
 
     public void Heal(int heal){
