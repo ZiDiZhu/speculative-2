@@ -16,8 +16,6 @@ public class Character : MonoBehaviour
     public int currentMP;   
     public int strength;
     public int defense;
-    public int magic;   
-    public int magicDefense;    
     public int agility; 
     public int luck; 
     public CharacterType characterType;
@@ -32,7 +30,7 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        damage = strength * 10;
     }
 
     // Update is called once per frame
@@ -49,8 +47,6 @@ public class Character : MonoBehaviour
         currentMP = 10;
         strength = 10;
         defense = 10;
-        magic = 10;
-        magicDefense = 10;
         agility = 10;
         luck = 10;
     }   
@@ -63,8 +59,6 @@ public class Character : MonoBehaviour
         currentMP = mp;
         strength = str;
         defense = def;
-        magic = mag;
-        magicDefense = mdef;
         agility = agi;
         luck = luk;
     }
@@ -75,15 +69,11 @@ public class Character : MonoBehaviour
         switch (action.actionType)
         {
             case ActionType.ATTACK:
-                damage = strength * 10;
-                damage = (int)(damage * action.multiplyDamage);
+                damage += (int)(damage * action.multiplyDamage);
                 damage += action.addDamage;
                 Attack(target);
-                damage = 0;
-                Heal(action.addHealing);
-                break;
-            case ActionType.MAGIC:
-                MagicAttack(target);
+                //Heal(action.addHealing);
+                damage = strength * 10; //reset damage
                 break;
             case ActionType.HEAL:
                 //Heal(action.power);
@@ -101,6 +91,8 @@ public class Character : MonoBehaviour
 
     //basic from of attack that doesn't require an actionData
     public void Attack(Character target){
+
+        damage = strength * 10; //reset damage
 
         string output = characterName + " attacks " + target.characterName+". ";
         //TODO: Improve calculation logic
@@ -121,54 +113,21 @@ public class Character : MonoBehaviour
         else
         {
             damage -= target.defense;
+            target.currentHP -= damage;
             if (damage < 0)
             {
                 damage = 0;
             }
         }
-        target.currentHP -= damage;
+       
         output += target.characterName + " took " + damage + " damage. HP:" +target.currentHP +"/"+target.maxHP+". ";
         if (target.currentHP <= 0)
         {
             output += target.characterName + " has been defeated.";
         }
         Debug.Log(output);
-    }
 
-    public void MagicAttack(Character target){
-        string output = characterName + " casts a spell on " + target.characterName+". ";
-        damage += magic * 10 ;
-        int criticalHitRoll = UnityEngine.Random.Range(0,100);
-        if (criticalHitRoll < luck * magic)
-        { // Critical Hit - luck, strength
-            damage *= 2;
-            output += "Critical Hit! ";
-        }
-        if (damage < 1 && target.currentHP > 1)
-        {
-            damage = 1;
-        }
-        int random2 = UnityEngine.Random.Range(0, 150);
-        if (random2 < target.luck * target.agility)
-        {
-            damage = 0;
-            output += target.characterName + " dodged the attack!";
-        }
-        else
-        {
-            damage -= target.magicDefense;
-            if (damage < 0)
-            {
-                damage = 0;
-            }
-        }
-        target.currentHP -= damage;
-        output += target.characterName + " took " + damage + " damage. HP:" + target.currentHP + "/" + target.maxHP + ". ";
-        if (target.currentHP <= 0)
-        {
-            output += target.characterName + " has been defeated.";
-        }
-        Debug.Log(output);
+        damage = strength * 10; //reset damage
     }
     
 

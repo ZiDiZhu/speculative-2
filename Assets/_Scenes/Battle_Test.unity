@@ -159,8 +159,6 @@ MonoBehaviour:
   currentMP: 100
   strength: 7
   defense: 4
-  magic: 4
-  magicDefense: 4
   agility: 8
   luck: 6
   characterType: 0
@@ -219,8 +217,6 @@ MonoBehaviour:
   currentMP: 80
   strength: 4
   defense: 8
-  magic: 8
-  magicDefense: 7
   agility: 6
   luck: 3
   characterType: 0
@@ -332,8 +328,6 @@ MonoBehaviour:
   currentMP: 50
   strength: 5
   defense: 5
-  magic: 5
-  magicDefense: 5
   agility: 5
   luck: 5
   characterType: 0
@@ -390,8 +384,6 @@ MonoBehaviour:
   currentMP: 80
   strength: 6
   defense: 5
-  magic: 7
-  magicDefense: 6
   agility: 7
   luck: 7
   characterType: 0
@@ -531,11 +523,9 @@ MonoBehaviour:
   currentHP: 30
   maxMP: 60
   currentMP: 60
-  strength: 2
+  strength: 1
   defense: 2
-  magic: 2
-  magicDefense: 2
-  agility: 7
+  agility: 3
   luck: 2
   characterType: 0
   characterState: 0
@@ -591,8 +581,6 @@ MonoBehaviour:
   currentMP: 50
   strength: 3
   defense: 2
-  magic: 8
-  magicDefense: 10
   agility: 3
   luck: 4
   characterType: 0

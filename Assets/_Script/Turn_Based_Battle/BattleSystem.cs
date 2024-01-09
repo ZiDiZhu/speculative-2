@@ -33,6 +33,8 @@ public class BattleSystem : MonoBehaviour
     }
 
 
+    // Take a turn actions (from the turnActions list) for all members on one side of the battle
+    // Checks if the target is dead after each action and removes them from the battle if they are
     void ExecuteTurnActions(){
 
         for(int i = 0; i < turnActions.Count; i++){
@@ -91,11 +93,6 @@ public class BattleSystem : MonoBehaviour
             turnActions.Add(new ActionDelegate(actor.Attack));
             turnActionTargets.Add(target);
         }
-        else if (actionType == ActionType.MAGIC)
-        {
-            turnActions.Add(new ActionDelegate(actor.MagicAttack));
-            turnActionTargets.Add(target);
-        }
 
 
     }
@@ -103,8 +100,8 @@ public class BattleSystem : MonoBehaviour
     public void TestAddTurnAction1(){
         state = BattleState.PLAYERTURN;
         AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
-        AddTurnAction(partyMembers[1], ActionType.MAGIC, enemies[0]);
-        AddTurnAction(partyMembers[2], ActionType.MAGIC, enemies[0]);
+        AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
+        AddTurnAction(partyMembers[2], ActionType.ATTACK, enemies[0]);
     }
 
     public void TestAddTurnAction2()

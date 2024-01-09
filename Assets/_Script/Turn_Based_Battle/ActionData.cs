@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 
 //TODO: think about how to handle composed actions (e.g. attack + heal)
-public enum ActionType { ATTACK, MAGIC, HEAL, ITEM, DEFEND, FLEE }
+public enum ActionType { ATTACK, HEAL, ITEM, DEFEND, FLEE }
 public enum TargetType { SINGLE_ENEMY, SINGLE_ALLY , SELF, ALL_ALLY, ALL_ENEMY, ANY, NONE }
 
 [CreateAssetMenu(fileName = "new action data", menuName = "Turn Based Battle/Action Data")]
@@ -29,10 +29,6 @@ public class ActionData : ScriptableObject
         if (actionType == ActionType.ATTACK)
         {
 
-        }
-        else if (actionType == ActionType.MAGIC)
-        {
-            
         }
         else if (actionType == ActionType.ITEM)
         {
