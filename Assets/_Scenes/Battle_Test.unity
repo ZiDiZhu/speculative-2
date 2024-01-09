@@ -163,6 +163,12 @@ MonoBehaviour:
   magicDefense: 4
   agility: 8
   luck: 6
+  characterType: 0
+  characterState: 0
+  actions:
+  - {fileID: 11400000, guid: 38e144013de0b8144afc89169f390b14, type: 2}
+  - {fileID: 11400000, guid: 6b3ef961a0b668b4382d5299557e98c5, type: 2}
+  damage: 0
 --- !u!4 &53258016
 Transform:
   m_ObjectHideFlags: 0
@@ -217,6 +223,10 @@ MonoBehaviour:
   magicDefense: 7
   agility: 6
   luck: 3
+  characterType: 0
+  characterState: 0
+  actions: []
+  damage: 0
 --- !u!4 &644379605
 Transform:
   m_ObjectHideFlags: 0
@@ -326,6 +336,10 @@ MonoBehaviour:
   magicDefense: 5
   agility: 5
   luck: 5
+  characterType: 0
+  characterState: 0
+  actions: []
+  damage: 0
 --- !u!4 &1244913744
 Transform:
   m_ObjectHideFlags: 0
@@ -380,6 +394,12 @@ MonoBehaviour:
   magicDefense: 6
   agility: 7
   luck: 7
+  characterType: 0
+  characterState: 0
+  actions:
+  - {fileID: 11400000, guid: cfb7a3e94f6f3a84d926d8d088f41480, type: 2}
+  - {fileID: 11400000, guid: 2003bb61713aa9d40a4bba3cfb63bff8, type: 2}
+  damage: 0
 --- !u!4 &1668839399
 Transform:
   m_ObjectHideFlags: 0
@@ -517,6 +537,10 @@ MonoBehaviour:
   magicDefense: 2
   agility: 7
   luck: 2
+  characterType: 0
+  characterState: 0
+  actions: []
+  damage: 0
 --- !u!4 &1840865436
 Transform:
   m_ObjectHideFlags: 0
@@ -571,6 +595,12 @@ MonoBehaviour:
   magicDefense: 10
   agility: 3
   luck: 4
+  characterType: 0
+  characterState: 0
+  actions:
+  - {fileID: 11400000, guid: 3d5cdca00da7e094893b43744f7c8331, type: 2}
+  - {fileID: 11400000, guid: 0aeb0131134dbe644a333b5a1f32993e, type: 2}
+  damage: 0
 --- !u!4 &1996811993
 Transform:
   m_ObjectHideFlags: 0

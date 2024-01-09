@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
-  m_Name: sacrifice2
+  m_Name: Brute Force
   m_EditorClassIdentifier: 
-  actionName: Blood Sacrifice Part II
-  actionType: 1
-  targetType: 4
+  actionName: Brute Force
+  actionType: 0
+  targetType: 0
   additionalActions: []
-  actionDescription: "A deal with the devil at a really good price! \n\"You might
-    call it a last resort, but I call it a steal!\" - The retailer"
-  mpCost: 0
-  multiplyDamage: 0
-  addDamage: 666
+  actionDescription: A primitive form of attack. Expensive, but can be powerful.
+  mpCost: 30
+  multiplyDamage: 1
+  addDamage: 100
   addHealing: 0

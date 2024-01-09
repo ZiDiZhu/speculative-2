@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
-  m_Name: sacrifice2
+  m_Name: Sybil Attack
   m_EditorClassIdentifier: 
-  actionName: Blood Sacrifice Part II
-  actionType: 1
+  actionName: Sybil Attack
+  actionType: 0
   targetType: 4
   additionalActions: []
-  actionDescription: "A deal with the devil at a really good price! \n\"You might
-    call it a last resort, but I call it a steal!\" - The retailer"
-  mpCost: 0
-  multiplyDamage: 0
-  addDamage: 666
+  actionDescription: "A spell you can cast on a target which can spread to its surroundings.
+    \n(note: to improve the logic, make the attack target single but spreads to its
+    neighbours)"
+  mpCost: 1
+  multiplyDamage: 1.2
+  addDamage: 20
   addHealing: 0
