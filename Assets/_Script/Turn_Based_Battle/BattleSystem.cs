@@ -99,18 +99,46 @@ public class BattleSystem : MonoBehaviour
 
     public void TestAddTurnAction1(){
         state = BattleState.PLAYERTURN;
-        AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
-        AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
-        AddTurnAction(partyMembers[2], ActionType.ATTACK, enemies[0]);
+        //AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
+        //AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
+        //AddTurnAction(partyMembers[2], ActionType.ATTACK, enemies[0]);
+
+        foreach (Character chara in partyMembers)
+        {
+            int targetIndex = GetWeakestCharacterIndex(enemies);
+            AddTurnAction(chara, ActionType.ATTACK, enemies[targetIndex]);
+        }
     }
 
     public void TestAddTurnAction2()
     {
         state = BattleState.ENEMYTURN;
-        foreach(Character enemy in enemies){
-            AddTurnAction(enemy, ActionType.ATTACK, partyMembers[0]);
-        }
+        AddTurnActionsForAllCharacters(enemies, partyMembers);
+        
     }   
+
+    public int GetWeakestCharacterIndex(List<Character> characters){
+        int weakestIndex = 0;
+        int lowestHP = characters[0].currentHP;
+        for(int i = 1; i < characters.Count; i++){
+            if(characters[i].currentHP < lowestHP){
+                weakestIndex = i;
+                lowestHP = characters[i].currentHP;
+            }
+        }
+        return weakestIndex;
+    }
+
+    // Add turn actions for all characters on one side of the battle
+    public void AddTurnActionsForAllCharacters(List<Character> actors, List<Character> targets)
+    {
+        int weakestTargetIndex = GetWeakestCharacterIndex(targets);
+        foreach (Character actor in actors)
+        {
+            AddTurnAction(actor, ActionType.ATTACK, targets[weakestTargetIndex]);
+        }
+        
+    }
 
 
 
