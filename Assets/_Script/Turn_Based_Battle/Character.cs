@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum CharacterType { PARTYMEMBER, ENEMY, NPC }
-public enum CharacterState { NORMAL, DEAD }
+public enum CharacterState { NORMAL, DEAD, UNDEAD }
 
 public class Character : MonoBehaviour
 {
-
+    //visible basic stats
     public string characterName;
     public int maxHP;
     public int currentHP;
@@ -20,10 +20,15 @@ public class Character : MonoBehaviour
     public int magicDefense;    
     public int agility; 
     public int luck; 
-
     public CharacterType characterType;
     public CharacterState characterState;
+    public List<ActionData> actions = new List<ActionData>();
     
+    //temporary stats - used for battle calculations
+    public int damage;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,11 +69,41 @@ public class Character : MonoBehaviour
         luck = luk;
     }
 
+    
+    //handles actionData and performs the appropriate action
+    public void PerformAction(ActionData action, Character target){
+        switch (action.actionType)
+        {
+            case ActionType.ATTACK:
+                damage = strength * 10;
+                damage = (int)(damage * action.multiplyDamage);
+                damage += action.addDamage;
+                Attack(target);
+                damage = 0;
+                Heal(action.addHealing);
+                break;
+            case ActionType.MAGIC:
+                MagicAttack(target);
+                break;
+            case ActionType.HEAL:
+                //Heal(action.power);
+                break;
+            case ActionType.ITEM:
+                break;
+            case ActionType.DEFEND:
+                break;
+            case ActionType.FLEE:
+                break;
+            default:
+                break;
+        }
+    }
 
+    //basic from of attack that doesn't require an actionData
     public void Attack(Character target){
 
         string output = characterName + " attacks " + target.characterName+". ";
-        int damage = strength * 10 ;
+        //TODO: Improve calculation logic
         int criticalHitRoll = UnityEngine.Random.Range(0,100);
         if(criticalHitRoll < luck*strength){ // Critical Hit - luck, strength 
             damage *= 2;
@@ -102,7 +137,7 @@ public class Character : MonoBehaviour
 
     public void MagicAttack(Character target){
         string output = characterName + " casts a spell on " + target.characterName+". ";
-        int damage = magic * 10 ;
+        damage += magic * 10 ;
         int criticalHitRoll = UnityEngine.Random.Range(0,100);
         if (criticalHitRoll < luck * magic)
         { // Critical Hit - luck, strength

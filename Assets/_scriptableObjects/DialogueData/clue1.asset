@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: clue1
   m_EditorClassIdentifier: 
   speakerName: 
-  dialogue: []
+  dialogue:
+  - 
   responses: []

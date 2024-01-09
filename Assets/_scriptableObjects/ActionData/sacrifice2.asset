@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
+  m_Name: sacrifice2
+  m_EditorClassIdentifier: 
+  actionName: Blood Sacrifice Part II
+  actionType: 1
+  targetType: 0
+  additionalActions: []
+  actionDescription: "A deal with the devil at a really good price! \n\"You might
+    call it a last resort, but I call it a steal!\" - The retailer"
+  mpCost: 0
+  multiplyDamage: 0
+  addDamage: 666
+  addHealing: 0
