@@ -23,13 +23,6 @@ public class BattleSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //state = BattleState.PLAYERTURN;
-        ////test - player turn
-        //TestAddTurnAction1();
-        //ExecuteTurnActions();
-        ////test - enemy turn
-        //TestAddTurnAction2();
-        //ExecuteTurnActions();   
 
         TestTournament();
     }
@@ -40,11 +33,27 @@ public class BattleSystem : MonoBehaviour
             state = BattleState.PLAYERTURN;
             AddTurnActionsForAllCharacters(partyMembers, enemies);
             ExecuteTurnActions();
+            if(checkIfGameEnd()){
+                break;
+            }
             state = BattleState.ENEMYTURN;
             AddTurnActionsForAllCharacters(enemies, partyMembers);
             ExecuteTurnActions();
         }  
+    }
 
+    bool checkIfGameEnd(){
+        if(enemies.Count==0){
+            Debug.Log("You win!");
+            state = BattleState.WON;
+            return true;
+        }
+        if(partyMembers.Count==0){
+            Debug.Log("You lose!");
+            state = BattleState.LOST;
+            return true;
+        }
+        return false;
     }
 
 
@@ -53,6 +62,12 @@ public class BattleSystem : MonoBehaviour
     void ExecuteTurnActions(){
 
         for(int i = 0; i < turnActions.Count; i++){
+
+            if(checkIfGameEnd()){
+                break;
+            }
+
+            //default target    
             Character target = enemies[0];
 
             //target exceeds list length, default to first enemy in the list
@@ -74,23 +89,7 @@ public class BattleSystem : MonoBehaviour
                 //Destroy(target);
             }
 
-            //check if all enemies are dead
-            if(enemies.Count==0){
-                Debug.Log("You win!");
-                state = BattleState.WON;
-                turnActions.Clear();
-                turnActionTargets.Clear();
-                turnCount++;
-                return;
-            }
 
-            //check if all party members are dead
-            if(partyMembers.Count==0){
-                Debug.Log("You lose!");
-                state = BattleState.LOST;
-                return;
-            }
-            
         }
 
         //clear the turnActions list
@@ -110,26 +109,8 @@ public class BattleSystem : MonoBehaviour
             turnActionTargets.Add(target);
         }
 
-
     }
 
-    public void TestAddTurnAction1(){
-        state = BattleState.PLAYERTURN;
-        //AddTurnAction(partyMembers[0], ActionType.ATTACK, enemies[0]);
-        //AddTurnAction(partyMembers[1], ActionType.ATTACK, enemies[0]);
-        //AddTurnAction(partyMembers[2], ActionType.ATTACK, enemies[0]);
-
-        AddTurnActionsForAllCharacters(partyMembers, enemies);
-    }
-
-    public void TestAddTurnAction2()
-    {
-        state = BattleState.ENEMYTURN;
-        AddTurnActionsForAllCharacters(enemies, partyMembers);
-        
-    }   
-
-    
 
     // Add turn actions for all characters on one side of the battle
     public void AddTurnActionsForAllCharacters(List<Character> actors, List<Character> targets)
