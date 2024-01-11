@@ -44,6 +44,17 @@ public class DialogueUI : MonoBehaviour
             }
         }
     }
+    
+    //sets the dialogue object and its responses from an in-scene dialogue activator
+    public void UpdateFromDialogueActicator(DialogueActivator da){
+        this.dialogueObject = da.dialogueObject;
+        responseHandler.SetResponseEvent(da.responeEvents);
+    }
+
+    public void ClearDialogueObject(){
+        dialogueObject = null;
+        responseHandler.ClearResponseEvents();
+    }
 
     public void CloseDialogueBox(){
         responseHandler.CloseResponseBox();
@@ -66,7 +77,7 @@ public class DialogueUI : MonoBehaviour
             yield return typewriterEffect.Run(dialogue, textLabel);
             if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.HasResponses) break;
             yield return new WaitWhile(() => typewriterEffect.isRunnnig); 
-            Debug.Log("Done Typing, Waiting for input");
+            //Debug.Log("Done Typing, Waiting for input");
             yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E)||Input.GetKeyDown(KeyCode.Space));
             
         }

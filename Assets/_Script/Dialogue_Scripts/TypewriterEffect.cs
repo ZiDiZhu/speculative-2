@@ -40,7 +40,7 @@ public class TypewriterEffect : MonoBehaviour
         if(isRunnnig){
             if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Skip Typing");
+                //Debug.Log("Skip Typing");
                 if(textLabel!=null)SkipTyping(textLabel,textToType);
                 if(textlabel!=null)SkipTyping(textlabel,textToType);
             }
@@ -52,7 +52,7 @@ public class TypewriterEffect : MonoBehaviour
     {
         if (typeTextCoroutine != null)
         {
-            Debug.Log("Stop Typing");
+            //Debug.Log("Stop Typing");
             //StopCoroutine(typeTextCoroutine);
             isRunnnig = false;
             if (typeSound != null)

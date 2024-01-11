@@ -7,20 +7,12 @@ using UnityEngine.Events;
 public class Response
 {
     public string responseText; //the response text
-    [SerializeField] private DialogueObject nextDialogue; //the next dialogue object
 
-    [SerializeField] private bool isEndDialogue; //is this the end of the dialogue?
-    public bool IsEndDialogue => isEndDialogue; //reference to the isEndDialogue bool
+    [SerializeField] private DialogueObject nextDialogue; //the next dialogue object
+    public int sceneEventIndex; //the index of the scene event to trigger (see DialogueActivator -> responseEvents)
 
     public string ResponseText => responseText; //reference to the response text
     public DialogueObject NextDialogue => nextDialogue; //reference to the next dialogue object
-}
 
-[System.Serializable]
-public class ResponseEvent
-{
-    [HideInInspector] public string eventname;
-    [SerializeField] private UnityEvent onPickedResponse;
 
-    public UnityEvent OnPickedResponse => onPickedResponse;
 }

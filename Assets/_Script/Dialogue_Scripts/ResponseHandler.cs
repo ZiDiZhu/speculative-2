@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ResponseHandler : MonoBehaviour
@@ -10,7 +11,7 @@ public class ResponseHandler : MonoBehaviour
     [SerializeField] private RectTransform responseButtonTemplate;
     [SerializeField] private RectTransform responseContainer;
 
-    [SerializeField] private ResponseEvent[] responseEvents;
+    [SerializeField] private List<UnityEvent> responseEvents; //TODO: make this a reference to the dialogue object's response events
 
     [SerializeField]private DialogueUI dialogueUI;
     private List<GameObject> tempResponseButtons = new List<GameObject>();
@@ -22,11 +23,17 @@ public class ResponseHandler : MonoBehaviour
         responseButtonTemplate.gameObject.SetActive(false);
     }
 
-    public void AddResponseEvent(ResponseEvent[] responseEvents)
+    // Sets the response events
+    public void SetResponseEvent(List<UnityEvent> events)
     {
-        this.responseEvents = responseEvents;
+        this.responseEvents = events;
     }
 
+    public void ClearResponseEvents(){
+        responseEvents = null;
+    }
+
+    // Shows all selectable responses
     public void ShowResponses(Response[] responses){
         float responseBoxHeight = 0;
 
@@ -34,13 +41,13 @@ public class ResponseHandler : MonoBehaviour
         for (int i = 0; i < responses.Length; i++)
         {
             Response response = responses[i];
-            int responseIndex = i;
+            int responseIndex = 0; //TODO: make this variable link to r the response index ID
 
             GameObject responseButton = Instantiate(responseButtonTemplate.gameObject, responseContainer);
             responseButton.gameObject.SetActive(true);
             responseButton.GetComponent<TMP_Text>().text = response.ResponseText;
 
-            //turns response into button
+            //make the button click link to the event by its eventindex TODO
             responseButton.GetComponent<Button>().onClick.AddListener(() => OnPickedResponse(response, responseIndex));
 
             tempResponseButtons.Add(responseButton);
@@ -52,33 +59,33 @@ public class ResponseHandler : MonoBehaviour
     }
 
     //when a response is clicked
+    //responseIndex is used to determine which response EVENT to trigger was clicked
+    //it's this way because dialogues are scriptable objects and can't contain scene-specific events
+    //this the responseIndex is used to determine which event to trigger from the scene
+    //TODO: make this better
     private void OnPickedResponse(Response response, int responseIndex)
     {
 
         Debug.Log("Picked Response");
-        CloseResponseBox();
         dialogueUI.isNewDialogue = true;
 
-        //if (responseEvents != null && responseIndex <= responseEvents.Length)
-        //{
-        //    responseEvents[responseIndex].OnPickedResponse?.Invoke();
-        //}
-
-
-        //if a response has a following dialogue, show it
-        if (response.NextDialogue!=null)
+        //trigger the response event
+        if (responseEvents != null && responseIndex < responseEvents.Count)
         {
-            Debug.Log("response dialogue");
-            dialogueUI.dialogueObject = response.NextDialogue;
+            Debug.Log("Triggering Response Event");
+            responseEvents[responseIndex]?.Invoke();
         }
 
-        if(response.IsEndDialogue||response.NextDialogue==null){
+
+        if (response.NextDialogue==null){
             dialogueUI.CloseDialogueBox();
         }else{
+            //Debug.Log("response dialogue");
+            dialogueUI.dialogueObject = response.NextDialogue;
             dialogueUI.ShowDialogue(dialogueUI.dialogueObject);
         }
+        CloseResponseBox();
 
-        
     }
 
     public void CloseResponseBox()

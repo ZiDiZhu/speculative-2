@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
+public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST }
 public class BattleSystem : MonoBehaviour
 {
 
@@ -24,24 +24,33 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
 
-        TestTournament();
+        //AutoTournament();
     }
 
-    void TestTournament(){
+
+    //automatically run a battle until one side is defeated
+    public void AutoTournament(){
         
         while(state != BattleState.WON && state != BattleState.LOST){
-            state = BattleState.PLAYERTURN;
-            AddTurnActionsForAllCharacters(partyMembers, enemies);
-            ExecuteTurnActions();
-            if(checkIfGameEnd()){
-                break;
+            
+            if(state == BattleState.PLAYERTURN){
+                AddTurnActionsForAllCharacters(partyMembers, enemies);
+                ExecuteTurnActions();
+                if (checkIfGameEnd()) break;
+                state = BattleState.ENEMYTURN;
+
             }
-            state = BattleState.ENEMYTURN;
-            AddTurnActionsForAllCharacters(enemies, partyMembers);
-            ExecuteTurnActions();
+            else if(state == BattleState.ENEMYTURN){
+                AddTurnActionsForAllCharacters(enemies, partyMembers);
+                ExecuteTurnActions();
+                if (checkIfGameEnd()) break;    
+                state = BattleState.PLAYERTURN;
+                
+            }
         }  
     }
 
+    //returns true if the game has ended
     bool checkIfGameEnd(){
         if(enemies.Count==0){
             Debug.Log("You win!");
@@ -99,9 +108,7 @@ public class BattleSystem : MonoBehaviour
     }
 
     void AddTurnAction(Character actor, ActionType actionType, Character target){
-
         if (actor == null){ return; }
-
         //Add delegate actioins to the turnActions list
         if (actionType == ActionType.ATTACK)
         {
@@ -113,6 +120,7 @@ public class BattleSystem : MonoBehaviour
 
 
     // Add turn actions for all characters on one side of the battle
+    // Currently the strat is to attack the weakest enemy
     public void AddTurnActionsForAllCharacters(List<Character> actors, List<Character> targets)
     {
         Character weakestTarget = GetWeakestCharacter(targets);
