@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Blood Magic Trick
   actionType: 1
+  targetType: 0
+  additionalActions: []
   actionDescription: "A microtransaction which you pay with your blood. \n(to handle:
     what if you die from the negative heal?)"
   mpCost: 10

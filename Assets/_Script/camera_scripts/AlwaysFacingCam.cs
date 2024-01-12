@@ -12,7 +12,7 @@ public class AlwaysFacingCam : MonoBehaviour
             m_Camera = Camera.current;
         }
     }
-    void LateUpdate()
+    void Update()
     {
         transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward,
             m_Camera.transform.rotation * Vector3.up);

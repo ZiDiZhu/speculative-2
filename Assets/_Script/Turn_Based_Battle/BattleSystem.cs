@@ -8,6 +8,8 @@ public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST }
 public class BattleSystem : MonoBehaviour
 {
 
+    public static BattleSystem instance { get; private set; } //singleton
+
     public BattleState state;
     public ActionType actionType;
     public List<Character> partyMembers = new List<Character>();
@@ -19,6 +21,16 @@ public class BattleSystem : MonoBehaviour
     public List<ActionDelegate> turnActions = new List<ActionDelegate>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
     public List<Character> turnActionTargets = new List<Character>(); //sometimes the same action can be used on multiple targets
     
+    
+    public Character selectedMember; //the member that is currently selected by the player
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
