@@ -12,10 +12,10 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     Character member;
 
     public Image outline; //to indicate which member is selected
-    public Image portrait; 
-    public TMP_Text memberName;
-    public TMP_Text memberHP;
-    public TMP_Text memberMP;
+    [SerializeField]private Image portrait; 
+    [SerializeField]private TMP_Text memberName;
+    [SerializeField]private TMP_Text memberHP;
+    [SerializeField]private TMP_Text memberMP;
     public Slider hpSlider;
     public Slider mpSlider;
 
@@ -63,6 +63,10 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         memberName.text = member.characterName;
         memberHP.text = "HP: "+member.currentHP.ToString()+"/"+member.maxHP.ToString();
         memberMP.text = "MP: "+ member.currentMP.ToString()+"/"+member.maxMP.ToString();
+        hpSlider.maxValue = member.maxHP;
+        hpSlider.value = member.currentHP;
+        mpSlider.maxValue = member.maxMP;
+        mpSlider.value = member.currentMP;
     }
 
     //hover to show the outline
