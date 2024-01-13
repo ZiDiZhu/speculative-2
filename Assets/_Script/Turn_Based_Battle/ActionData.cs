@@ -16,7 +16,7 @@ public class ActionData : ScriptableObject
     public TargetType targetType;
     public List<ActionData> additionalActions = new List<ActionData>(); //used for composed actions
 
-    [SerializeField][TextArea] private string actionDescription;
+    [SerializeField][TextArea] public string actionDescription;
     public int mpCost;
 
     public float multiplyDamage; //multiplies the base damage of the attack.

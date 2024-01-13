@@ -9,19 +9,18 @@ public class BattleSystem : MonoBehaviour
 {
 
     public static BattleSystem instance { get; private set; } //singleton
-
     public BattleState state;
     public ActionType actionType;
     public List<Character> partyMembers = new List<Character>();
     public List<Character> enemies = new List<Character>();
-
     public int turnCount = 0;
 
+    //____Action Delegate for turn actions___ First draft
     public delegate void ActionDelegate(Character actor);
     public List<ActionDelegate> turnActions = new List<ActionDelegate>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
     public List<Character> turnActionTargets = new List<Character>(); //sometimes the same action can be used on multiple targets
-    
-    
+
+
     public Character selectedMember; //the member that is currently selected by the player
 
     private void Awake()
@@ -81,24 +80,18 @@ public class BattleSystem : MonoBehaviour
     // Take a turn actions (from the turnActions list) for all members on one side of the battle
     // Checks if the target is dead after each action and removes them from the battle if they are
     void ExecuteTurnActions(){
-
         for(int i = 0; i < turnActions.Count; i++){
-
             if(checkIfGameEnd()){
                 break;
             }
-
             //default target    
             Character target = enemies[0];
-
             //target exceeds list length, default to first enemy in the list
             if (i<turnActionTargets.Count){
                 target = turnActionTargets[i];
             }
-
             //do the thing
             turnActions[i](target);
-            
             //check if target is dead
             if(target.currentHP<=0){
                 target.characterState = CharacterState.DEAD;
@@ -109,17 +102,14 @@ public class BattleSystem : MonoBehaviour
                 //TODO: track dead characters 
                 //Destroy(target);
             }
-
-
         }
-
         //clear the turnActions list
         turnActions.Clear();
         turnActionTargets.Clear();  
         turnCount++;
     }
 
-    void AddTurnAction(Character actor, ActionType actionType, Character target){
+    void AddBasicAttackAction(Character actor, ActionType actionType, Character target){
         if (actor == null){ return; }
         //Add delegate actioins to the turnActions list
         if (actionType == ActionType.ATTACK)
@@ -138,9 +128,8 @@ public class BattleSystem : MonoBehaviour
         Character weakestTarget = GetWeakestCharacter(targets);
         foreach (Character actor in actors)
         {
-            AddTurnAction(actor, ActionType.ATTACK, weakestTarget);
+            AddBasicAttackAction(actor, ActionType.ATTACK, weakestTarget);
         }
-        
     }
 
     public Character GetWeakestCharacter(List<Character> characters)

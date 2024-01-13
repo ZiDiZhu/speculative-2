@@ -66,6 +66,9 @@ public class Character : MonoBehaviour
     
     //handles actionData and performs the appropriate action
     public void PerformAction(ActionData action, Character target){
+
+        currentMP -= action.mpCost;
+
         switch (action.actionType)
         {
             case ActionType.ATTACK:
