@@ -10,6 +10,8 @@ public class BattleUI : MonoBehaviour
     public PartyUI partyUI;
     public PartyUI enemyUI;
 
+    public ActionPanelUI actionPanelUI;
+
 
     private void Awake()
     {
@@ -20,6 +22,8 @@ public class BattleUI : MonoBehaviour
     private void Start()
     {
         partyUI.SetParty(battleSystem.partyMembers);
+        enemyUI.SetParty(battleSystem.enemies);
+        actionPanelUI.SetActionPanelUI(battleSystem.partyMembers[0].actions);
     }
 
 

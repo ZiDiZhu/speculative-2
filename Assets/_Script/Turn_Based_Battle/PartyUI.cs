@@ -4,23 +4,30 @@ using UnityEngine;
 
 public class PartyUI : MonoBehaviour
 {
+
+    public GameObject memberUIPrefab;
     public List<MemberUI> memberUIs = new List<MemberUI>();
     
+
     public void SetParty(List<Character> partyMembers)
+    {
+        ClearPartyUI();
+        foreach (Character member in partyMembers)
+        {
+            GameObject memberUIObject = Instantiate(memberUIPrefab, transform);
+            MemberUI memberUI = memberUIObject.GetComponent<MemberUI>();
+            memberUI.SetMember(member);
+            memberUIs.Add(memberUI);
+        }
+    }
+
+    public void ClearPartyUI()
     {
         foreach (Transform child in transform)
         {
-            MemberUI memberUI = child.GetComponent<MemberUI>();
-            if (memberUI != null)
-            {
-                memberUIs.Add(memberUI);
-            }
+            Destroy(child.gameObject);
         }
-
-        for (int i = 0; i < partyMembers.Count; i++)
-        {
-            memberUIs[i].SetMember(partyMembers[i]);
-        }
+        memberUIs.Clear();
     }
     
 }

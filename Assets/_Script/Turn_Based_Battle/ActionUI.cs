@@ -16,11 +16,6 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public GameObject highlight; //enable this to highlight selection
     public bool isSelected = false;
 
-    private void Start()
-    {
-        GetComponent<Button>().onClick.AddListener(OnClick);
-    }
-
 
     public void OnClick()
     {
@@ -28,6 +23,7 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             isSelected = false;
             highlight.SetActive(false);
+            ActionPanelUI.instance.actionDescription.text = "";
         }
         else
         {
@@ -42,6 +38,7 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
             isSelected = true;
             highlight.SetActive(true);
+            ActionPanelUI.instance.actionDescription.text = action.actionDescription;   
         }
     }
 

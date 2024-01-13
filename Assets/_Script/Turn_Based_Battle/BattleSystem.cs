@@ -21,6 +21,12 @@ public class BattleSystem : MonoBehaviour
     public List<Character> turnActionTargets = new List<Character>(); //sometimes the same action can be used on multiple targets
 
 
+    //____Action Delegate for turn actions___ Second draft
+    public delegate void ActionDelegate2(ActionData action, Character target);
+    public List<ActionDelegate2> turnActions2 = new List<ActionDelegate2>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
+    public List<Character> turnActionTargets2 = new List<Character>(); //sometimes the same action can be used on multiple targets
+    public List<ActionData> turnActionData = new List<ActionData>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
+
     public Character selectedMember; //the member that is currently selected by the player
 
     private void Awake()
@@ -36,6 +42,11 @@ public class BattleSystem : MonoBehaviour
     {
 
         //AutoTournament();
+
+        AddCharacterAction(partyMembers[0], partyMembers[0].actions[0], enemies[0]);
+        AddCharacterAction(partyMembers[1], partyMembers[1].actions[0], enemies[0]);
+        AddCharacterAction(partyMembers[2], partyMembers[2].actions[0], enemies[0]);
+        ExecuteTeamActions();
     }
 
 
@@ -108,6 +119,43 @@ public class BattleSystem : MonoBehaviour
         turnActionTargets.Clear();  
         turnCount++;
     }
+
+    void AddCharacterAction(Character actor, ActionData actionData, Character target){
+        if (actor == null){ return; }
+        //Add delegate actioins to the turnActions list
+        turnActions2.Add(new ActionDelegate2(actor.PerformAction));
+        turnActionTargets2.Add(target);
+        turnActionData.Add(actionData);
+    }
+
+    void ExecuteTeamActions(){
+        for(int i = 0; i < turnActions2.Count; i++){
+            if(checkIfGameEnd()){
+                break;
+            }
+            //default target    
+            Character target = enemies[0];
+            //target exceeds list length, default to first enemy in the list
+            if (i<turnActionTargets2.Count){
+                target = turnActionTargets2[i];
+            }
+            //!-----------CALLS THE ACTIon------------------!
+            turnActions2[i](turnActionData[i], target);
+            //check if target is dead
+            if(target.currentHP<=0){
+                target.characterState = CharacterState.DEAD;
+                Debug.Log(target.characterName + " has died");
+                enemies.Remove(target);
+                partyMembers.Remove(target);
+                turnActionTargets2.RemoveAll(x => x == target);
+            }
+        }
+    }
+
+
+
+
+
 
     void AddBasicAttackAction(Character actor, ActionType actionType, Character target){
         if (actor == null){ return; }

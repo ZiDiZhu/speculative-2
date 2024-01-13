@@ -41,7 +41,9 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             isSelected = false;
             outline.enabled = false;
             BattleSystem.instance.selectedMember = null;
-        }else{
+            ActionPanelUI.instance.ClearActionPanel();
+        }
+        else{
             foreach (Transform child in transform.parent)
             {
                 MemberUI memberUI = child.GetComponent<MemberUI>();
@@ -54,7 +56,10 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             isSelected = true;
             outline.enabled = true;
             BattleSystem.instance.selectedMember = member;
+            ActionPanelUI.instance.SetActionPanelUI(member.actions);
         }
+        ActionPanelUI.instance.actionDescription.text = "";
+
     }
 
     public void SetMemberUI(Character member)

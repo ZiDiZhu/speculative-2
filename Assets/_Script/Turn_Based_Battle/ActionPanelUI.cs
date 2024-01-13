@@ -7,7 +7,7 @@ using UnityEngine.UI;
 //to be attached to the ActionPanel in the battle scene, which is the parent of the ActionUIs
 public class ActionPanelUI : MonoBehaviour
 {
-    
+    public static ActionPanelUI instance { get; private set; } //singleton
     public List<ActionUI>actionUIs = new List<ActionUI>();
     public GameObject actionUIPrefab;
     public TMP_Text actionDescription;
@@ -16,6 +16,7 @@ public class ActionPanelUI : MonoBehaviour
     private void Awake()
     {
         confirmActionButton.onClick.AddListener(OnConfirmAction);
+        if(instance==null)instance = this;  
     }
     
     public void OnConfirmAction()
@@ -37,6 +38,7 @@ public class ActionPanelUI : MonoBehaviour
             GameObject actionUIObject = Instantiate(actionUIPrefab, transform);
             ActionUI actionUI = actionUIObject.GetComponent<ActionUI>();
             actionUI.SetAction(action);
+            actionUI.GetComponent<Button>().onClick.AddListener(actionUI.OnClick);
             actionUIs.Add(actionUI);
         }
     }
