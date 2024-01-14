@@ -7,7 +7,8 @@ public class PartyUI : MonoBehaviour
 
     public GameObject memberUIPrefab;
     public List<MemberUI> memberUIs = new List<MemberUI>();
-    
+    public enum PartyType { PARTY, ENEMY };
+    public PartyType partyType;
 
     public void SetParty(List<Character> partyMembers)
     {
@@ -28,6 +29,29 @@ public class PartyUI : MonoBehaviour
             Destroy(child.gameObject);
         }
         memberUIs.Clear();
+    }
+
+    public void DisableSelection()
+    {
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            memberUI.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        }
+    }
+
+    public void EnableSelection()
+    {
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            memberUI.GetComponent<UnityEngine.UI.Button>().interactable = true;
+        }
+    }
+
+    public void DeselectAll(){
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            memberUI.Deselect();
+        }
     }
     
 }

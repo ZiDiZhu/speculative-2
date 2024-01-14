@@ -9,21 +9,24 @@ using UnityEngine.UI;
 public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
-    Character member;
+    public Character member;
 
     public Image outline; //to indicate which member is selected
     [SerializeField]private Image portrait; 
     [SerializeField]private TMP_Text memberName;
     [SerializeField]private TMP_Text memberHP;
     [SerializeField]private TMP_Text memberMP;
+    [SerializeField]private TMP_Text actionText; //to display which action is selected
     public Slider hpSlider;
     public Slider mpSlider;
 
     public bool isSelected = false;
+    public bool hasSelectedAction = false;
 
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClick);
+ 
     }
 
     public void SetMember(Character member)
@@ -36,31 +39,63 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnClick()
     {
 
-        if(isSelected)
-        {
-            isSelected = false;
-            outline.enabled = false;
-            BattleSystem.instance.selectedMember = null;
-            ActionPanelUI.instance.ClearActionPanel();
-        }
-        else{
-            foreach (Transform child in transform.parent)
+        if(BattleUI.instance.battleSelectionState==BattleUI.BattleSelectionState.ACTION){
+            transform.parent.GetComponent<PartyUI>().DeselectAll();
+            Select();
+            BattleUI.instance.selectedActor = this;
+            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
+            ActionPanelUI.instance.actionDescription.text = "";
+
+        }else if (BattleUI.instance.battleSelectionState == BattleUI.BattleSelectionState.TARGET){
+            BattleUI.instance.selectedTarget = this;
+            BattleUI.instance.TurnActionSelected();
+        }else{
+            if (isSelected)
             {
-                MemberUI memberUI = child.GetComponent<MemberUI>();
-                if (memberUI != null)
-                {
-                    memberUI.isSelected = false;
-                    memberUI.outline.enabled = false;
-                }
+                Deselect();
+                BattleUI.instance.selectedActor = null;
+                BattleUI.instance.selectedAction = null;
+                BattleUI.instance.selectedTarget = null;
+                BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTOR;
+                ActionPanelUI.instance.actionDescription.text = "";
             }
-            isSelected = true;
-            outline.enabled = true;
-            BattleSystem.instance.selectedMember = member;
-            ActionPanelUI.instance.SetActionPanelUI(member.actions);
+            else
+            {
+                Select();
+                BattleUI.instance.selectedActor = this;
+                BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
+                ActionPanelUI.instance.actionDescription.text = "";
+            }
         }
-        ActionPanelUI.instance.actionDescription.text = "";
+        
+        
 
     }
+
+    public void Deselect(){
+        isSelected = false;
+        outline.enabled = false;
+        BattleSystem.instance.selectedMember = null;
+        ActionPanelUI.instance.ClearActionPanel();
+        BattleUI.instance.enemyUI.DisableSelection();
+    }
+
+    public void Select(){
+        foreach (Transform child in transform.parent)
+        {
+            MemberUI memberUI = child.GetComponent<MemberUI>();
+            if (memberUI != null)
+            {
+                memberUI.isSelected = false;
+                memberUI.outline.enabled = false;
+            }
+        }
+        isSelected = true;
+        outline.enabled = true;
+        BattleSystem.instance.selectedMember = member;
+        ActionPanelUI.instance.SetActionPanelUI(member.actions);
+    }
+
 
     public void SetMemberUI(Character member)
     {
@@ -72,6 +107,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         hpSlider.value = member.currentHP;
         mpSlider.maxValue = member.maxMP;
         mpSlider.value = member.currentMP;
+
+        
+    }
+
+    public void SetActionText(string txt){
+        actionText.text = txt;
     }
 
     //hover to show the outline

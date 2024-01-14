@@ -21,25 +21,46 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (isSelected)
         {
-            isSelected = false;
-            highlight.SetActive(false);
+            Deselect();
+            BattleUI.instance.selectedAction = null;
+            BattleUI.instance.selectedTarget = null;
+            BattleUI.instance.selectedActor.hasSelectedAction = false;
+            BattleUI.instance.selectedActor.SetActionText("[-Select Action-]");
+            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
             ActionPanelUI.instance.actionDescription.text = "";
+            BattleUI.instance.enemyUI.DisableSelection();
+            
         }
         else
         {
-            foreach (Transform child in transform.parent)
-            {
-                ActionUI actionUI = child.GetComponent<ActionUI>();
-                if (actionUI != null)
-                {
-                    actionUI.isSelected = false;
-                    actionUI.highlight.SetActive(false);
-                }
-            }
-            isSelected = true;
-            highlight.SetActive(true);
-            ActionPanelUI.instance.actionDescription.text = action.actionDescription;   
+            Select();
+            BattleUI.instance.selectedAction = action;
+            BattleUI.instance.selectedActor.SetActionText("[-Select Target-]");
+            ActionPanelUI.instance.actionDescription.text = action.actionDescription; 
+            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.TARGET;
+            BattleUI.instance.enemyUI.EnableSelection();
         }
+    }
+
+    public void Deselect()
+    {
+        isSelected = false;
+        highlight.SetActive(false);
+    }
+
+    public void Select()
+    {
+        foreach (Transform child in transform.parent)
+        {
+            ActionUI actionUI = child.GetComponent<ActionUI>();
+            if (actionUI != null)
+            {
+                actionUI.isSelected = false;
+                actionUI.highlight.SetActive(false);
+            }
+        }
+        isSelected = true;
+        highlight.SetActive(true);
     }
 
 

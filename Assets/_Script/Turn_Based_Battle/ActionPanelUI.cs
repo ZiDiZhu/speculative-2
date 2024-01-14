@@ -11,23 +11,10 @@ public class ActionPanelUI : MonoBehaviour
     public List<ActionUI>actionUIs = new List<ActionUI>();
     public GameObject actionUIPrefab;
     public TMP_Text actionDescription;
-    public Button confirmActionButton;
 
     private void Awake()
     {
-        confirmActionButton.onClick.AddListener(OnConfirmAction);
         if(instance==null)instance = this;  
-    }
-    
-    public void OnConfirmAction()
-    {
-        foreach (ActionUI actionUI in actionUIs)
-        {
-            if (actionUI.isSelected)
-            {
-                //BattleSystem.instance.turnActions.Add(actionUI.action);
-            }
-        }
     }
 
     public void SetActionPanelUI(List<ActionData> actions)

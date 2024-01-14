@@ -43,10 +43,10 @@ public class BattleSystem : MonoBehaviour
 
         //AutoTournament();
 
-        AddCharacterAction(partyMembers[0], partyMembers[0].actions[0], enemies[0]);
-        AddCharacterAction(partyMembers[1], partyMembers[1].actions[0], enemies[0]);
-        AddCharacterAction(partyMembers[2], partyMembers[2].actions[0], enemies[0]);
-        ExecuteTeamActions();
+        //AddCharacterAction(partyMembers[0], partyMembers[0].actions[0], enemies[0]);
+        //AddCharacterAction(partyMembers[1], partyMembers[1].actions[0], enemies[0]);
+        //AddCharacterAction(partyMembers[2], partyMembers[2].actions[0], enemies[0]);
+        //ExecuteTeamActions();
     }
 
 
@@ -90,7 +90,7 @@ public class BattleSystem : MonoBehaviour
 
     // Take a turn actions (from the turnActions list) for all members on one side of the battle
     // Checks if the target is dead after each action and removes them from the battle if they are
-    void ExecuteTurnActions(){
+    public void ExecuteTurnActions(){
         for(int i = 0; i < turnActions.Count; i++){
             if(checkIfGameEnd()){
                 break;
@@ -120,7 +120,7 @@ public class BattleSystem : MonoBehaviour
         turnCount++;
     }
 
-    void AddCharacterAction(Character actor, ActionData actionData, Character target){
+    public void AddCharacterAction(Character actor, ActionData actionData, Character target){
         if (actor == null){ return; }
         //Add delegate actioins to the turnActions list
         turnActions2.Add(new ActionDelegate2(actor.PerformAction));
@@ -128,7 +128,7 @@ public class BattleSystem : MonoBehaviour
         turnActionData.Add(actionData);
     }
 
-    void ExecuteTeamActions(){
+    public void ExecuteTeamActions(){
         for(int i = 0; i < turnActions2.Count; i++){
             if(checkIfGameEnd()){
                 break;
