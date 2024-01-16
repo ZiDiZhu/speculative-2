@@ -21,6 +21,7 @@ public class Character : MonoBehaviour
     public CharacterType characterType;
     public CharacterState characterState;
     public List<ActionData> actions = new List<ActionData>();
+    public Sprite fullBodySprite,pfpSprite;
     
     //temporary stats - used for battle calculations
     public int damage;

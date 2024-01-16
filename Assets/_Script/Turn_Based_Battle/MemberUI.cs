@@ -36,12 +36,14 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     //when the member is clicked, select the member
+    //to do: move the code to BattleUI
     public void OnClick()
     {
-
+        
         if(BattleUI.instance.battleSelectionState==BattleUI.BattleSelectionState.ACTION){
             transform.parent.GetComponent<PartyUI>().DeselectAll();
             Select();
+            BattleUI.instance.charaSpriteRenderer.sprite = member.fullBodySprite;
             BattleUI.instance.selectedActor = this;
             BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
             ActionPanelUI.instance.actionDescription.text = "";

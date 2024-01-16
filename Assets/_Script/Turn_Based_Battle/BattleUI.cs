@@ -9,8 +9,10 @@ public class BattleUI : MonoBehaviour
     public PartyUI partyUI;
     public PartyUI enemyUI;
     public ActionPanelUI actionPanelUI;
+
+
     public Button executeTurnBtn;
-    
+    public SpriteRenderer charaSpriteRenderer;    
 
     public enum BattleSelectionState { ACTOR,ACTION,TARGET };
     public BattleSelectionState battleSelectionState;
@@ -26,7 +28,6 @@ public class BattleUI : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
-        battleSystem = BattleSystem.instance;
     }
 
 
@@ -34,7 +35,7 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem = BattleSystem.instance;
         battleSelectionState = BattleSelectionState.ACTOR;
-        executeTurnBtn.onClick.AddListener(ExecuteTurn);
+        executeTurnBtn.onClick.AddListener(ExecuteTurn); 
 
         partyUI.SetParty(battleSystem.partyMembers);
         enemyUI.SetParty(battleSystem.enemies);
