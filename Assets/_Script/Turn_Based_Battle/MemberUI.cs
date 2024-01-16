@@ -34,43 +34,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         this.member = member;
         SetMemberUI(member);
     }
-
-    //when the member is clicked, select the member
-    //to do: move the code to BattleUI
+    
+    
+    //invokes the BattleUI's MemberUIOnClick function when MemberUI is clicked
     public void OnClick()
     {
-        
-        if(BattleUI.instance.battleSelectionState==BattleUI.BattleSelectionState.ACTION){
-            transform.parent.GetComponent<PartyUI>().DeselectAll();
-            Select();
-            BattleUI.instance.charaSpriteRenderer.sprite = member.fullBodySprite;
-            BattleUI.instance.selectedActor = this;
-            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
-            ActionPanelUI.instance.actionDescription.text = "";
-
-        }else if (BattleUI.instance.battleSelectionState == BattleUI.BattleSelectionState.TARGET){
-            BattleUI.instance.selectedTarget = this;
-            BattleUI.instance.TurnActionSelected();
-        }else{
-            if (isSelected)
-            {
-                Deselect();
-                BattleUI.instance.selectedActor = null;
-                BattleUI.instance.selectedAction = null;
-                BattleUI.instance.selectedTarget = null;
-                BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTOR;
-                ActionPanelUI.instance.actionDescription.text = "";
-            }
-            else
-            {
-                Select();
-                BattleUI.instance.selectedActor = this;
-                BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
-                ActionPanelUI.instance.actionDescription.text = "";
-            }
-        }
-        
-        
+        BattleUI.instance.MemberUIOnClick(this);
 
     }
 
@@ -78,30 +47,18 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         isSelected = false;
         outline.enabled = false;
         BattleSystem.instance.selectedMember = null;
-        ActionPanelUI.instance.ClearActionPanel();
-        BattleUI.instance.enemyUI.DisableSelection();
+        BattleUI.instance.ClearActionPanel();
     }
 
     public void Select(){
-        foreach (Transform child in transform.parent)
-        {
-            MemberUI memberUI = child.GetComponent<MemberUI>();
-            if (memberUI != null)
-            {
-                memberUI.isSelected = false;
-                memberUI.outline.enabled = false;
-            }
-        }
         isSelected = true;
         outline.enabled = true;
-        BattleSystem.instance.selectedMember = member;
-        ActionPanelUI.instance.SetActionPanelUI(member.actions);
     }
 
 
     public void SetMemberUI(Character member)
     {
-        //portrait.sprite = member.portrait;
+        if(member.pfpSprite!=null)portrait.sprite = member.pfpSprite;
         memberName.text = member.characterName;
         memberHP.text = "HP: "+member.currentHP.ToString()+"/"+member.maxHP.ToString();
         memberMP.text = "MP: "+ member.currentMP.ToString()+"/"+member.maxMP.ToString();
@@ -109,8 +66,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         hpSlider.value = member.currentHP;
         mpSlider.maxValue = member.maxMP;
         mpSlider.value = member.currentMP;
-
-        
     }
 
     public void SetActionText(string txt){
@@ -128,7 +83,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if(!isSelected)outline.enabled = false;
     }
 
-    //update the UI when the member is attacked
 
 
 

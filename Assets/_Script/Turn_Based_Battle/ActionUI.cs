@@ -19,27 +19,10 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnClick()
     {
-        if (isSelected)
-        {
-            Deselect();
-            BattleUI.instance.selectedAction = null;
-            BattleUI.instance.selectedTarget = null;
-            BattleUI.instance.selectedActor.hasSelectedAction = false;
-            BattleUI.instance.selectedActor.SetActionText("[-Select Action-]");
-            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.ACTION;
-            ActionPanelUI.instance.actionDescription.text = "";
-            BattleUI.instance.enemyUI.DisableSelection();
-            
-        }
-        else
-        {
-            Select();
-            BattleUI.instance.selectedAction = action;
-            BattleUI.instance.selectedActor.SetActionText("[-Select Target-]");
-            ActionPanelUI.instance.actionDescription.text = action.actionDescription; 
-            BattleUI.instance.battleSelectionState = BattleUI.BattleSelectionState.TARGET;
-            BattleUI.instance.enemyUI.EnableSelection();
-        }
+
+        BattleUI.instance.ActionUIOnClick(this);
+        Select();
+        
     }
 
     public void Deselect()

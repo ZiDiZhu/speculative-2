@@ -10,4 +10,13 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(name);
     }
+
+    public void ReloadCurrentScene()
+    {
+        // Get the name of the current scene
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        // Reload the current scene
+        SceneManager.LoadScene(currentSceneName);
+    }
 }
