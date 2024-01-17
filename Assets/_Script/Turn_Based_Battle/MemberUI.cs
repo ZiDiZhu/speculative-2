@@ -25,7 +25,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(OnClick);
  
     }
 
@@ -37,11 +36,17 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     
     //invokes the BattleUI's MemberUIOnClick function when MemberUI is clicked
-    public void OnClick()
-    {
+    public void PartyMemberOnClick()
+    {   
         BattleUI.instance.MemberUIOnClick(this);
-
+        
     }
+
+    public void EnemyMemberOnClick()
+    {
+        BattleUI.instance.EnemyMemberOnClick(this);
+    }
+
 
     public void Deselect(){
         isSelected = false;

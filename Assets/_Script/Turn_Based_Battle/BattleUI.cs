@@ -19,7 +19,7 @@ public class BattleUI : MonoBehaviour
     List<ActionUI> actionUIs = new List<ActionUI>();
     public Button executeTurnBtn;
     public SpriteRenderer charaSpriteRenderer;    
-
+    public TMP_Text battleStateText;
     
     [Header("Run-Time")]
     //Temporarily store the selected actor, action and target
@@ -41,13 +41,31 @@ public class BattleUI : MonoBehaviour
     private void Start()
     {
         battleSystem = BattleSystem.instance;
-        battleSelectionState = BattleSelectionState.ACTOR;
+        SetBattleSelectionState(BattleSelectionState.ACTOR);
         executeTurnBtn.onClick.AddListener(ExecuteTurn); 
 
         partyUI.SetParty(battleSystem.partyMembers);
         enemyUI.SetParty(battleSystem.enemies);
         charaSpriteRenderer.sprite = null;
+        ClearActionPanel();
     }
+
+    public void SetBattleSelectionState(BattleSelectionState state){
+        battleSelectionState = state;
+        battleStateText.text = "SELECT "+ battleSelectionState.ToString();
+
+        switch(battleSelectionState){
+            case (BattleSelectionState.ACTOR):
+                enemyUI.DisableSelection();
+                break;
+            case (BattleSelectionState.ACTION):
+                break;
+            case (BattleSelectionState.TARGET):
+                enemyUI.EnableSelection();
+                break;
+        }
+    }
+    
     
     public void SetActionPanel(List<ActionData> actions)
     {
@@ -92,13 +110,27 @@ public class BattleUI : MonoBehaviour
         }
     }
 
+    public void EnemyMemberOnClick(MemberUI enemyUI){
+        switch(battleSelectionState){
+            case (BattleSelectionState.TARGET): //this member is selected as target
+                selectedTarget = enemyUI;  
+                TurnActionSelected();
+                break;
+            default:
+                //display enemy info
+                break;  
+        }
+    }
+
+    
+
+
     //when an action is selected
     public void ActionUIOnClick(ActionUI actionUI){
         selectedAction = actionUI.action;
         selectedActor.SetActionText("[-Select Target-]");
         actionDescription.text = actionUI.action.actionDescription;
-        battleSelectionState = BattleUI.BattleSelectionState.TARGET;
-        enemyUI.EnableSelection();
+        SetBattleSelectionState(BattleSelectionState.TARGET);
     }
 
 
@@ -111,9 +143,8 @@ public class BattleUI : MonoBehaviour
         selectedAction = null;
         selectedTarget = null;
         selectedActor = null;
-        battleSelectionState = BattleSelectionState.ACTOR;
+        SetBattleSelectionState(BattleSelectionState.ACTOR);
         ClearActionPanel();
-        enemyUI.DisableSelection();
     
     }
     public void ExecuteTurn(){

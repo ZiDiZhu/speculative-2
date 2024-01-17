@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PartyUI : MonoBehaviour
 {
@@ -19,6 +20,16 @@ public class PartyUI : MonoBehaviour
             MemberUI memberUI = memberUIObject.GetComponent<MemberUI>();
             memberUI.SetMember(member);
             memberUIs.Add(memberUI);
+
+            if (partyType == PartyType.ENEMY)
+            {
+                memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
+            }
+            else if (partyType == PartyType.PARTY)
+            {
+                memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
+            }
+            
         }
     }
 
@@ -35,7 +46,8 @@ public class PartyUI : MonoBehaviour
     {
         foreach (MemberUI memberUI in memberUIs)
         {
-            memberUI.GetComponent<UnityEngine.UI.Button>().interactable = false;
+            memberUI.GetComponent<Button>().interactable = false;
+            memberUI.Deselect();
         }
     }
 
@@ -43,7 +55,7 @@ public class PartyUI : MonoBehaviour
     {
         foreach (MemberUI memberUI in memberUIs)
         {
-            memberUI.GetComponent<UnityEngine.UI.Button>().interactable = true;
+            memberUI.GetComponent<Button>().interactable = true;
         }
     }
 
