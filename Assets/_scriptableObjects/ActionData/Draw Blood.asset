@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Draw Blood
   actionType: 0
+  targetType: 0
+  additionalActions: []
   actionDescription: "Consume the blood of the enemy. \n(to add: Works best when
     you are close to dying or undead)"
   mpCost: 1
   multiplyDamage: 0.5
   addDamage: 15
-  addHealing: 15
+  addHealing: 30

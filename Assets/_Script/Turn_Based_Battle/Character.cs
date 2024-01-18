@@ -64,6 +64,10 @@ public class Character : MonoBehaviour
         luck = luk;
     }
 
+    public Character(CharacterData data){
+
+    }
+
     
     //handles actionData and performs the appropriate action
     public void PerformAction(ActionData action, Character target){

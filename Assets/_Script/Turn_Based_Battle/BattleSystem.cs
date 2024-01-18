@@ -15,13 +15,13 @@ public class BattleSystem : MonoBehaviour
     public List<Character> enemies = new List<Character>();
     public int turnCount = 0;
 
-    //____Action Delegate for turn actions___ First draft
+    //____Action Delegate for turn actions___ First draft___ doesn't require action data
     public delegate void ActionDelegate(Character actor);
     public List<ActionDelegate> turnActions = new List<ActionDelegate>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
     public List<Character> turnActionTargets = new List<Character>(); //sometimes the same action can be used on multiple targets
 
 
-    //____Action Delegate for turn actions___ Second draft
+    //____Action Delegate for turn actions___ Second draft --- takes action data
     public delegate void ActionDelegate2(ActionData action, Character target);
     public List<ActionDelegate2> turnActions2 = new List<ActionDelegate2>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
     public List<Character> turnActionTargets2 = new List<Character>(); //sometimes the same action can be used on multiple targets
@@ -107,8 +107,8 @@ public class BattleSystem : MonoBehaviour
             if(target.currentHP<=0){
                 target.characterState = CharacterState.DEAD;
                 Debug.Log(target.characterName + " has died");
-                enemies.Remove(target);
-                partyMembers.Remove(target);
+                //enemies.Remove(target);
+                //partyMembers.Remove(target);
                 turnActionTargets.RemoveAll(x => x == target);
                 //TODO: track dead characters 
                 //Destroy(target);
@@ -122,12 +122,14 @@ public class BattleSystem : MonoBehaviour
 
     public void AddCharacterAction(Character actor, ActionData actionData, Character target){
         if (actor == null){ return; }
+        if (actor.characterState==CharacterState.DEAD){ return;}
         //Add delegate actioins to the turnActions list
         turnActions2.Add(new ActionDelegate2(actor.PerformAction));
         turnActionTargets2.Add(target);
         turnActionData.Add(actionData);
     }
 
+    // calls the actions in the turnActions2 list
     public void ExecuteTeamActions(){
         for(int i = 0; i < turnActions2.Count; i++){
             if(checkIfGameEnd()){
@@ -145,8 +147,8 @@ public class BattleSystem : MonoBehaviour
             if(target.currentHP<=0){
                 target.characterState = CharacterState.DEAD;
                 Debug.Log(target.characterName + " has died");
-                enemies.Remove(target);
-                partyMembers.Remove(target);
+                //enemies.Remove(target);
+                //partyMembers.Remove(target);
                 turnActionTargets2.RemoveAll(x => x == target);
             }
         }

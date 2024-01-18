@@ -21,15 +21,19 @@ public class PartyUI : MonoBehaviour
             memberUI.SetMember(member);
             memberUIs.Add(memberUI);
 
-            if (partyType == PartyType.ENEMY)
-            {
-                memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
+            if(memberUI.member.characterState!=CharacterState.DEAD){
+                if (partyType == PartyType.ENEMY)
+                {
+                    memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
+                    memberUI.SetActionText("ENEMY");
+                }
+                else if (partyType == PartyType.PARTY)
+                {
+                    memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
+                    memberUI.SetActionText("[-Select Action-]");
+                }
             }
-            else if (partyType == PartyType.PARTY)
-            {
-                memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
-            }
-            
+
         }
     }
 

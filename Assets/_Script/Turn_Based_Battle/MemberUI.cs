@@ -20,6 +20,8 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Slider hpSlider;
     public Slider mpSlider;
 
+    [SerializeField] private Image deathIndicator; //enable this when the character is dead
+
     public bool isSelected = false;
     public bool hasSelectedAction = false;
 
@@ -71,6 +73,20 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         hpSlider.value = member.currentHP;
         mpSlider.maxValue = member.maxMP;
         mpSlider.value = member.currentMP;
+        
+        if(member.characterState==CharacterState.DEAD){
+            GetComponent<Button>().enabled = false;
+            GetComponent<Image>().enabled = false;
+            GetComponent<Button>().interactable = false;    
+            actionText.text = "DEAD";
+            if(deathIndicator!=null)deathIndicator.enabled = true;
+        }else{
+            GetComponent<Button>().enabled = true;
+            GetComponent<Image>().enabled = true;
+            GetComponent<Button>().interactable = true;
+            if (deathIndicator != null) deathIndicator.enabled = false;
+        }
+    
     }
 
     public void SetActionText(string txt){
