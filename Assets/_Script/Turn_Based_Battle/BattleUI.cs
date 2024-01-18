@@ -92,7 +92,7 @@ public class BattleUI : MonoBehaviour
     }
 
 
-    //when a member is selected
+    //when a memberUI is clicked
     public void MemberUIOnClick(MemberUI memberUI){
         
         switch(battleSelectionState){
@@ -115,6 +115,7 @@ public class BattleUI : MonoBehaviour
         
     }
 
+    //when an enemy memberUI is clicked
     public void EnemyMemberOnClick(MemberUI enemyUI){
         switch(battleSelectionState){
             case (BattleSelectionState.TARGET): //this member is selected as target
@@ -139,10 +140,10 @@ public class BattleUI : MonoBehaviour
         executeTurnBtn.interactable = false;
     }
 
-    
+
+    //When a target is selected
     public void TargetSelected()
     {
-        
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
         selectedActor.hasSelectedAction = true;
         selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
@@ -152,7 +153,7 @@ public class BattleUI : MonoBehaviour
         bool canExecuteTurn = true;
         foreach (MemberUI memberUI in partyUI.memberUIs)
         {
-            if (!memberUI.hasSelectedAction)
+            if (!memberUI.hasSelectedAction&&memberUI.member.characterState!=CharacterState.DEAD)
             {
                 canExecuteTurn = false;
                 break;
@@ -168,8 +169,8 @@ public class BattleUI : MonoBehaviour
         selectedAction = null;
         selectedTarget = null;
         selectedActor = null;
-
     }
+    
     public void ExecuteTurn(){
 
         int enemyCount = battleSystem.enemies.Count;
@@ -180,10 +181,28 @@ public class BattleUI : MonoBehaviour
         partyCount = battleSystem.partyMembers.Count;
         partyUI.SetParty(battleSystem.partyMembers);
         enemyUI.SetParty(battleSystem.enemies);
-        battleSystem.AddTurnActionsForAllCharacters(battleSystem.enemies, battleSystem.partyMembers);
-        battleSystem.ExecuteTurnActions();
-        output += "\nExecuted Actions.. You lost " + (partyCount - battleSystem.partyMembers.Count) + " party member(s); Your Turn..";
-        actionDescription.text = output;
+        bool gameEnd = battleSystem.checkIfGameEnd();
+        if(!gameEnd){
+            battleSystem.AddTurnActionsForAllCharacters(battleSystem.enemies, battleSystem.partyMembers);
+            battleSystem.ExecuteTurnActions();
+            output += "\nExecuted Actions.. You lost " + (partyCount - battleSystem.partyMembers.Count) + " party member(s); Your Turn..";
+            actionDescription.text = output;
+        }
+        
+
+        if(battleSystem.state ==BattleState.WON){
+            battleStateText.text = "YOU WIN!";
+            executeTurnBtn.interactable = false;
+        }
+        else if(battleSystem.state ==BattleState.LOST){
+            battleStateText.text = "YOU LOSE!";
+            executeTurnBtn.interactable = false;
+        }
+        else{
+            SetBattleSelectionState(BattleSelectionState.ACTOR);
+            executeTurnBtn.interactable = false;
+        }
+
     }
 
 

@@ -73,19 +73,32 @@ public class BattleSystem : MonoBehaviour
     }
 
     //returns true if the game has ended
-    bool checkIfGameEnd(){
-        if(enemies.Count==0){
+    public bool checkIfGameEnd(){
+
+        bool hasWon = true;
+
+        foreach(Character enemy in enemies){
+            if(enemy.characterState!=CharacterState.DEAD){
+                hasWon = false;
+                break;
+            }
+        }
+        if(hasWon){
             Debug.Log("You win!");
             state = BattleState.WON;
             return true;
         }
-        if(partyMembers.Count==0){
-            Debug.Log("You lose!");
-            state = BattleState.LOST;
-            return true;
+        foreach(Character member in partyMembers){
+            if(member.characterState!=CharacterState.DEAD){
+                return false;
+            }
         }
-        return false;
+
+        Debug.Log("You lose!");
+        state = BattleState.LOST;
+        return true;
     }
+
 
 
     // Take a turn actions (from the turnActions list) for all members on one side of the battle
