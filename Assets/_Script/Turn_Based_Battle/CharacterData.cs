@@ -31,6 +31,4 @@ public class CharacterData : ScriptableObject
     public int currentDamage;
     public int currentHeal;
     
-
-
 }

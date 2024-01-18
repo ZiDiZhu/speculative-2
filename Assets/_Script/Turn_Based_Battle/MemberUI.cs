@@ -21,6 +21,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Slider mpSlider;
 
     [SerializeField] private Image deathIndicator; //enable this when the character is dead
+    [SerializeField] private GameObject readyIndicator; //set this active when the character has selected an action]
 
     public bool isSelected = false;
     public bool hasSelectedAction = false;
@@ -65,6 +66,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void SetMemberUI(Character member)
     {
+        if(readyIndicator!=null)readyIndicator.SetActive(false);
         if(member.pfpSprite!=null)portrait.sprite = member.pfpSprite;
         memberName.text = member.characterName;
         memberHP.text = "HP: "+member.currentHP.ToString()+"/"+member.maxHP.ToString();
@@ -78,7 +80,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             GetComponent<Button>().enabled = false;
             GetComponent<Image>().enabled = false;
             GetComponent<Button>().interactable = false;    
-            actionText.text = "DEAD";
+            SetActionText("DEAD");
             if(deathIndicator!=null)deathIndicator.enabled = true;
         }else{
             GetComponent<Button>().enabled = true;
@@ -91,6 +93,11 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void SetActionText(string txt){
         actionText.text = txt;
+        if(hasSelectedAction){
+            if (readyIndicator != null) readyIndicator.SetActive(true);
+        }else{
+            if (readyIndicator != null) readyIndicator.SetActive(false);
+        }
     }
 
     //hover to show the outline

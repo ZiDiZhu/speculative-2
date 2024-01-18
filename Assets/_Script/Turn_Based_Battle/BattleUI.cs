@@ -19,7 +19,7 @@ public class BattleUI : MonoBehaviour
     List<ActionUI> actionUIs = new List<ActionUI>();
     public Button executeTurnBtn;
     public SpriteRenderer charaSpriteRenderer;    
-    public TMP_Text battleStateText;
+    private TMP_Text battleStateText;
     
     [Header("Run-Time")]
     //Temporarily store the selected actor, action and target
@@ -35,6 +35,7 @@ public class BattleUI : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
+        battleStateText = executeTurnBtn.GetComponentInChildren<TMP_Text>();
     }
 
 
@@ -48,6 +49,7 @@ public class BattleUI : MonoBehaviour
         enemyUI.SetParty(battleSystem.enemies);
         charaSpriteRenderer.sprite = null;
         ClearActionPanel();
+        executeTurnBtn.interactable = false;
     }
 
     public void SetBattleSelectionState(BattleSelectionState state){
@@ -96,7 +98,7 @@ public class BattleUI : MonoBehaviour
         switch(battleSelectionState){
             case (BattleSelectionState.TARGET): //this member is selected as target
                 selectedTarget = memberUI;  
-                TurnActionSelected();
+                TargetSelected();
                 break;
             default:
                 partyUI.DeselectAll(); 
@@ -106,15 +108,18 @@ public class BattleUI : MonoBehaviour
                 battleSelectionState = BattleSelectionState.ACTION;
                 SetActionPanel(memberUI.member.actions);
                 charaSpriteRenderer.sprite = memberUI.member.fullBodySprite;
+                SetBattleSelectionState(BattleSelectionState.ACTION);
+                executeTurnBtn.interactable = false;
                 break;  
         }
+        
     }
 
     public void EnemyMemberOnClick(MemberUI enemyUI){
         switch(battleSelectionState){
             case (BattleSelectionState.TARGET): //this member is selected as target
                 selectedTarget = enemyUI;  
-                TurnActionSelected();
+                TargetSelected();
                 break;
             default:
                 //display enemy info
@@ -131,21 +136,39 @@ public class BattleUI : MonoBehaviour
         selectedActor.SetActionText("[-Select Target-]");
         actionDescription.text = actionUI.action.actionDescription;
         SetBattleSelectionState(BattleSelectionState.TARGET);
+        executeTurnBtn.interactable = false;
     }
 
-
-    public void TurnActionSelected()
+    
+    public void TargetSelected()
     {
+        
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
         selectedActor.hasSelectedAction = true;
         selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
         partyUI.DeselectAll();
+        SetBattleSelectionState(BattleSelectionState.ACTOR);
+        ClearActionPanel();
+        bool canExecuteTurn = true;
+        foreach (MemberUI memberUI in partyUI.memberUIs)
+        {
+            if (!memberUI.hasSelectedAction)
+            {
+                canExecuteTurn = false;
+                break;
+            }
+        }
+        if (canExecuteTurn)
+        {
+            executeTurnBtn.interactable = true;
+            battleStateText.text = "EXECUTE TURN";
+        }else{
+            executeTurnBtn.interactable = false;
+        }
         selectedAction = null;
         selectedTarget = null;
         selectedActor = null;
-        SetBattleSelectionState(BattleSelectionState.ACTOR);
-        ClearActionPanel();
-    
+
     }
     public void ExecuteTurn(){
 
