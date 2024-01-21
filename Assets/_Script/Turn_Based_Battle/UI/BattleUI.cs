@@ -10,6 +10,8 @@ public class BattleUI : MonoBehaviour
     public static BattleUI instance { get; private set; } //singleton
     public PartyUI partyUI;
     public PartyUI enemyUI;
+    private CharacterUI characterUI;
+    private BattleSystem battleSystem;
 
 
     [Header("Action Panel")]
@@ -27,7 +29,9 @@ public class BattleUI : MonoBehaviour
     public ActionData selectedAction;
     public MemberUI selectedTarget;
 
-    private BattleSystem battleSystem;
+    
+    
+
     public enum BattleSelectionState { ACTOR, ACTION, TARGET };
     public BattleSelectionState battleSelectionState;
 
@@ -42,6 +46,7 @@ public class BattleUI : MonoBehaviour
     private void Start()
     {
         battleSystem = BattleSystem.instance;
+        characterUI = CharacterUI.instance;
         SetBattleSelectionState(BattleSelectionState.ACTOR);
         executeTurnBtn.onClick.AddListener(ExecuteTurn); 
 
@@ -103,6 +108,7 @@ public class BattleUI : MonoBehaviour
             default:
                 partyUI.DeselectAll(); 
                 memberUI.Select();
+                characterUI.SetCharacter(memberUI.member);
                 selectedActor = memberUI;
                 battleSystem.selectedMember = memberUI.member;
                 battleSelectionState = BattleSelectionState.ACTION;

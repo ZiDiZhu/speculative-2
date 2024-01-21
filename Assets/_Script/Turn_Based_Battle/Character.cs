@@ -10,22 +10,31 @@ public class Character : MonoBehaviour
 {
     //visible basic stats
     public string characterName;
+    [SerializeField][TextArea(15,20)] public string description;
     public int maxHP;
     public int currentHP;
     public int maxMP;   
     public int currentMP;   
-    public int strength;
-    public int defense;
+    
+    //basic stats from the characterData.Minimum 1 Maximum 10
+    public int strength;    
+    public int precision;
     public int agility; 
-    public int luck; 
+    public int luck;
+    
+    //equipment stats. not inherent to the character
+    public int defense; 
+    
+   
+    
+    //temporary stats - reset after each action
+    public int damage;
+
+
     public CharacterType characterType;
     public CharacterState characterState;
     public List<ActionData> actions = new List<ActionData>();
-    public Sprite fullBodySprite,pfpSprite;
-    
-    //temporary stats - used for battle calculations
-    public int damage;
-
+    public Sprite fullBodySprite, pfpSprite;
 
 
     // Start is called before the first frame update

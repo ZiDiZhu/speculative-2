@@ -63,6 +63,11 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void SetAction(ActionData action){
         this.action = action;
         actionName.text = action.actionName;
-        actionCost.text = "-" + action.mpCost.ToString();
+        string targetString = "";
+        targetString = "-" + action.mpCost.ToString()+" mp";
+        if(action.addHealing<0){
+            targetString += "\n" +action.addHealing +"hp";
+        }
+        actionCost.text = targetString;
     }
 }
