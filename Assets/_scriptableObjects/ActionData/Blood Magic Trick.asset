@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
   m_Name: Blood Magic Trick
   m_EditorClassIdentifier: 
-  actionName: Blood Magic Trick
+  actionName: Blood Magic I
   actionType: 0
   targetType: 0
   additionalActions: []
-  actionDescription: "A microtransaction which you pay with your blood. \n(to handle:
-    what if you die from the negative heal?)"
+  actionDescription: 'A microtransaction in which you pay damage with your blood. '
   mpCost: 10
   multiplyDamage: 1
   addDamage: 200

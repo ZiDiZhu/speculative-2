@@ -19,7 +19,7 @@ MonoBehaviour:
   actionDescription: 'Serve your oppoments a bone-breaking experience with your cool
     dance move!
 
-    (note: adds 1 agility when you learn it.)'
+'
   mpCost: 1
   multiplyDamage: 1.2
   addDamage: 20

@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Boxing
   actionType: 0
+  targetType: 0
+  additionalActions: []
   actionDescription: "A balanced combat technique which requires strength and agility
-    to excel. \n(note: adds 1 agility when you learn it.)"
+    to excel. \n"
   mpCost: 1
-  addDamage: 20
   multiplyDamage: 1.2
+  addDamage: 20
   addHealing: 0

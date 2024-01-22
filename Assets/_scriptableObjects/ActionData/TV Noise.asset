@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
-  m_Name: Sybil Attack
+  m_Name: TV Noise
   m_EditorClassIdentifier: 
-  actionName: Sybil Attack
+  actionName: TV Noise
   actionType: 0
   targetType: 4
   additionalActions: []
-  actionDescription: "A spell you can cast on a target which can spread to its surroundings.
-    \n(note: to improve the logic, make the attack target single but spreads to its
-    neighbours)"
+  actionDescription: Broadcast to cause mass brain rot
   mpCost: 1
   multiplyDamage: 1.2
   addDamage: 20
