@@ -26,6 +26,9 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool isSelected = false;
     public bool hasSelectedAction = false;
 
+    [SerializeField] private GameObject actorsContainer; //the container that holds all the other charas that will take action on this character
+    [SerializeField] private GameObject actorTemplate; //template - parent has image whic disply pfp of the "actor" that will take action on this character", its child has the tmptext that shows the action
+
     private void Start()
     {
  
@@ -82,6 +85,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             GetComponent<Button>().interactable = false;    
             SetActionText("DEAD");
             if(deathIndicator!=null)deathIndicator.enabled = true;
+            portrait.color = Color.gray;
         }else{
             GetComponent<Button>().enabled = true;
             GetComponent<Image>().enabled = true;
@@ -89,8 +93,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (deathIndicator != null) deathIndicator.enabled = false;
         }
     
-    }
-
+    } 
     public void SetActionText(string txt){
         actionText.text = txt;
         if(hasSelectedAction){
@@ -98,6 +101,13 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }else{
             if (readyIndicator != null) readyIndicator.SetActive(false);
         }
+    }
+
+    public void AddActor(Character actor, ActionData action){
+        GameObject actorUI = Instantiate(actorTemplate,actorsContainer.transform);
+        actorUI.SetActive(true);
+        actorUI.GetComponent<Image>().sprite = actor.pfpSprite;
+        actorUI.GetComponentInChildren<TMP_Text>().text = action.actionType.ToString();
     }
 
     //hover to show the outline

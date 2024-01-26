@@ -10,6 +10,7 @@ public class BattleUI : MonoBehaviour
     public static BattleUI instance { get; private set; } //singleton
     public PartyUI partyUI;
     public PartyUI enemyUI;
+    [SerializeField] private TMP_Text liveText; //Types out live update of the battle
     private CharacterUI characterUI;
     private BattleSystem battleSystem;
 
@@ -55,11 +56,12 @@ public class BattleUI : MonoBehaviour
         charaSpriteRenderer.sprite = null;
         ClearActionPanel();
         executeTurnBtn.interactable = false;
+        SetLiveText("Battle Start! Selet Actor to give instructions.");
     }
 
     public void SetBattleSelectionState(BattleSelectionState state){
         battleSelectionState = state;
-        battleStateText.text = "SELECT "+ battleSelectionState.ToString();
+        battleStateText.GetComponent<TypewriterEffect>().Run("CHOOSE  " + battleSelectionState.ToString(),battleStateText);
 
         switch(battleSelectionState){
             case (BattleSelectionState.ACTOR):
@@ -102,20 +104,10 @@ public class BattleUI : MonoBehaviour
         
         switch(battleSelectionState){
             case (BattleSelectionState.TARGET): //this member is selected as target
-                selectedTarget = memberUI;  
-                TargetSelected();
+                TargetSelected(memberUI);
                 break;
             default:
-                partyUI.DeselectAll(); 
-                memberUI.Select();
-                characterUI.SetCharacter(memberUI.member);
-                selectedActor = memberUI;
-                battleSystem.selectedMember = memberUI.member;
-                battleSelectionState = BattleSelectionState.ACTION;
-                SetActionPanel(memberUI.member.actions);
-                charaSpriteRenderer.sprite = memberUI.member.fullBodySprite;
-                SetBattleSelectionState(BattleSelectionState.ACTION);
-                executeTurnBtn.interactable = false;
+                ActorSelected(memberUI);
                 break;  
         }
         
@@ -126,7 +118,7 @@ public class BattleUI : MonoBehaviour
         switch(battleSelectionState){
             case (BattleSelectionState.TARGET): //this member is selected as target
                 selectedTarget = enemyUI;  
-                TargetSelected();
+                TargetSelected(enemyUI);
                 break;
             default:
                 //display enemy info
@@ -139,6 +131,8 @@ public class BattleUI : MonoBehaviour
 
     //when an action is selected
     public void ActionUIOnClick(ActionUI actionUI){
+
+        SetLiveText("Selected Action: [" + actionUI.action.actionName + "] - Select Target: ");
         selectedAction = actionUI.action;
         selectedActor.SetActionText("[-Select Target-]");
         actionDescription.text = actionUI.action.actionDescription;
@@ -147,9 +141,30 @@ public class BattleUI : MonoBehaviour
     }
 
 
+    public void ActorSelected(MemberUI memberUI){
+
+        SetLiveText("Select Action for " + memberUI.member.characterName + " ! ");
+
+        partyUI.DeselectAll();
+        memberUI.Select();
+        characterUI.SetCharacter(memberUI.member);
+        selectedActor = memberUI;
+        battleSystem.selectedMember = memberUI.member;
+        battleSelectionState = BattleSelectionState.ACTION;
+        SetActionPanel(memberUI.member.actions);
+        charaSpriteRenderer.sprite = memberUI.member.fullBodySprite;
+        SetBattleSelectionState(BattleSelectionState.ACTION);
+        executeTurnBtn.interactable = false;
+    }
+
+
+
     //When a target is selected
-    public void TargetSelected()
+    public void TargetSelected(MemberUI targetMemberUI)
     {
+        SetLiveText(selectedActor.member.characterName + " will use " + selectedAction.actionName + " on " + targetMemberUI.member.characterName);
+        targetMemberUI.AddActor(selectedActor.member, selectedAction);
+        selectedTarget = targetMemberUI;
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
         selectedActor.hasSelectedAction = true;
         selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
@@ -157,9 +172,9 @@ public class BattleUI : MonoBehaviour
         SetBattleSelectionState(BattleSelectionState.ACTOR);
         ClearActionPanel();
         bool canExecuteTurn = true;
-        foreach (MemberUI memberUI in partyUI.memberUIs)
+        foreach (MemberUI ui in partyUI.memberUIs)
         {
-            if (!memberUI.hasSelectedAction&&memberUI.member.characterState!=CharacterState.DEAD)
+            if (!ui.hasSelectedAction&&ui.member.characterState!=CharacterState.DEAD)
             {
                 canExecuteTurn = false;
                 break;
@@ -168,7 +183,7 @@ public class BattleUI : MonoBehaviour
         if (canExecuteTurn)
         {
             executeTurnBtn.interactable = true;
-            battleStateText.text = "EXECUTE TURN";
+            battleStateText.GetComponent<TypewriterEffect>().Run("EXECUTE TURN",battleStateText);
         }else{
             executeTurnBtn.interactable = false;
         }
@@ -178,6 +193,8 @@ public class BattleUI : MonoBehaviour
     }
     
     public void ExecuteTurn(){
+
+        battleStateText.GetComponent<TypewriterEffect>().Run("FIGHT",battleStateText);
 
         int enemyCount = battleSystem.enemies.Count;
         int partyCount = battleSystem.partyMembers.Count;
@@ -197,11 +214,11 @@ public class BattleUI : MonoBehaviour
         
 
         if(battleSystem.state ==BattleState.WON){
-            battleStateText.text = "YOU WIN!";
+            battleStateText.GetComponent<TypewriterEffect>().Run("YOU WIN!",battleStateText);
             executeTurnBtn.interactable = false;
         }
         else if(battleSystem.state ==BattleState.LOST){
-            battleStateText.text = "YOU LOSE!";
+            battleStateText.GetComponent<TypewriterEffect>().Run("YOU LOSE!",battleStateText);
             executeTurnBtn.interactable = false;
         }
         else{
@@ -211,5 +228,8 @@ public class BattleUI : MonoBehaviour
 
     }
 
+    public void SetLiveText(string text){
+        liveText.GetComponent<TypewriterEffect>().Run(text,liveText);
+    }
 
 }
