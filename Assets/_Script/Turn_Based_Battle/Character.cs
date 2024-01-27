@@ -23,9 +23,9 @@ public class Character : MonoBehaviour
     public int luck;
     
     //equipment stats. not inherent to the character
-    public int defense; 
-    
-   
+    public int defense;
+
+    public AudioClip placeHolder_sfx;
     
     //temporary stats - reset after each action
     public int damage;

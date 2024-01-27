@@ -104,10 +104,26 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public void AddActor(Character actor, ActionData action){
+        
         GameObject actorUI = Instantiate(actorTemplate,actorsContainer.transform);
         actorUI.SetActive(true);
         actorUI.GetComponent<Image>().sprite = actor.pfpSprite;
         actorUI.GetComponentInChildren<TMP_Text>().text = action.actionType.ToString();
+    }
+
+    //WARNING: using the sprite to identify the actor rn
+    public void RemoveActor(Character actor){
+        foreach(Transform child in actorsContainer.transform){
+            if(child.GetComponent<Image>().sprite == actor.pfpSprite){
+                Destroy(child.gameObject);
+            }
+        }
+    } 
+
+    public void ClearActors(){
+        foreach(Transform child in actorsContainer.transform){
+            if(child.gameObject.activeSelf)Destroy(child.gameObject);
+        }
     }
 
     //hover to show the outline

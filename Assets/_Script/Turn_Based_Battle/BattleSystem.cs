@@ -41,12 +41,6 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
 
-        //AutoTournament();
-
-        //AddCharacterAction(partyMembers[0], partyMembers[0].actions[0], enemies[0]);
-        //AddCharacterAction(partyMembers[1], partyMembers[1].actions[0], enemies[0]);
-        //AddCharacterAction(partyMembers[2], partyMembers[2].actions[0], enemies[0]);
-        //ExecuteTeamActions();
     }
 
 

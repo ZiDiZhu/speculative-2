@@ -30,7 +30,7 @@ public class BattleUI : MonoBehaviour
     public ActionData selectedAction;
     public MemberUI selectedTarget;
 
-    
+    public AudioSource audioSource;
     
 
     public enum BattleSelectionState { ACTOR, ACTION, TARGET };
@@ -40,6 +40,7 @@ public class BattleUI : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
+        audioSource = GetComponent<AudioSource>();
         battleStateText = executeTurnBtn.GetComponentInChildren<TMP_Text>();
     }
 
@@ -62,6 +63,7 @@ public class BattleUI : MonoBehaviour
     public void SetBattleSelectionState(BattleSelectionState state){
         battleSelectionState = state;
         battleStateText.GetComponent<TypewriterEffect>().Run("CHOOSE  " + battleSelectionState.ToString(),battleStateText);
+        
 
         switch(battleSelectionState){
             case (BattleSelectionState.ACTOR):
@@ -142,9 +144,9 @@ public class BattleUI : MonoBehaviour
 
 
     public void ActorSelected(MemberUI memberUI){
-
+        //liveText.GetComponent<TypewriterEffect>().typeSound.clip = memberUI.member.placeHolder_sfx;
         SetLiveText("Select Action for " + memberUI.member.characterName + " ! ");
-
+       
         partyUI.DeselectAll();
         memberUI.Select();
         characterUI.SetCharacter(memberUI.member);
@@ -163,6 +165,14 @@ public class BattleUI : MonoBehaviour
     public void TargetSelected(MemberUI targetMemberUI)
     {
         SetLiveText(selectedActor.member.characterName + " will use " + selectedAction.actionName + " on " + targetMemberUI.member.characterName);
+        foreach (MemberUI ui in enemyUI.memberUIs)
+        {
+            ui.RemoveActor(selectedActor.member);
+        }
+        foreach (MemberUI ui in partyUI.memberUIs)
+        {
+            ui.RemoveActor(selectedActor.member);
+        }
         targetMemberUI.AddActor(selectedActor.member, selectedAction);
         selectedTarget = targetMemberUI;
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);

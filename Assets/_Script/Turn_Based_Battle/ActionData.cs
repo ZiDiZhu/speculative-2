@@ -29,6 +29,9 @@ public class ActionData : ScriptableObject
         if (actionType == ActionType.ATTACK)
         {
 
+        }else if (actionType == ActionType.HEAL)
+        {
+            
         }
         else if (actionType == ActionType.ITEM)
         {

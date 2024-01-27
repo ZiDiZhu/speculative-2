@@ -34,6 +34,14 @@ public class TypewriterEffect : MonoBehaviour
         return typeTextCoroutine;
     }
 
+    private void Start()
+    {
+        if (typeSound == null)
+        {
+            typeSound = GetComponent<AudioSource>();
+        }
+    }
+
 
     private void Update()
     {
