@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Breakdance
   actionType: 0
-  targetType: 4
+  targetType: 2
   additionalActions: []
   actionDescription: 'Serve your oppoments a bone-breaking experience with your cool
     dance move!

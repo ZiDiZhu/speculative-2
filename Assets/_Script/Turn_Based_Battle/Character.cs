@@ -25,9 +25,10 @@ public class Character : MonoBehaviour
     //equipment stats. not inherent to the character
     public int defense;
 
+    //Character-specific sounds
     public AudioClip placeHolder_sfx;
     
-    //temporary stats - reset after each action
+    //battle stat generated from basic stats - reset after each action
     public int damage;
 
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Blood Sacrifice Part II
   actionType: 1
-  targetType: 4
+  targetType: 1
   additionalActions: []
   actionDescription: "A deal with the devil at a really good price! \n\"You might
     call it a last resort, but I call it a steal!\" - The retailer"

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: TV Noise
   actionType: 0
-  targetType: 4
+  targetType: 2
   additionalActions: []
   actionDescription: Broadcast to cause mass brain rot
   mpCost: 1

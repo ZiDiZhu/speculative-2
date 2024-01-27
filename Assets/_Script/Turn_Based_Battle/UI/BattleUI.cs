@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class BattleUI : MonoBehaviour
 {
     public static BattleUI instance { get; private set; } //singleton
@@ -133,13 +134,38 @@ public class BattleUI : MonoBehaviour
 
     //when an action is selected
     public void ActionUIOnClick(ActionUI actionUI){
-
-        SetLiveText("Selected Action: [" + actionUI.action.actionName + "] - Select Target: ");
+        
         selectedAction = actionUI.action;
-        selectedActor.SetActionText("[-Select Target-]");
-        actionDescription.text = actionUI.action.actionDescription;
-        SetBattleSelectionState(BattleSelectionState.TARGET);
-        executeTurnBtn.interactable = false;
+
+        switch(actionUI.action.targetType){
+            case (TargetType.SINGLE):
+                SetLiveText("Selected Action: [" + actionUI.action.actionName + "] - Select Target: ");
+                
+                selectedActor.SetActionText("[-Select Target-]");
+                actionDescription.text = actionUI.action.actionDescription;
+                SetBattleSelectionState(BattleSelectionState.TARGET);
+                executeTurnBtn.interactable = false;
+                break;
+            case (TargetType.PARTY_OTHER):
+                //TODO 
+                foreach (MemberUI ui in enemyUI.memberUIs)
+                {
+                    ui.RemoveActor(selectedActor.member);
+                }
+                SetLiveText(selectedActor.member.characterName+ "Will perform " + actionUI.action.actionName + " on all opponents");
+                selectedActor.hasSelectedAction = true;
+                selectedActor.SetActionText(actionUI.action.actionName + " on all opponents");  
+                foreach (MemberUI ui in enemyUI.memberUIs)
+                {
+                    TargetSelected(ui);
+                }
+                selectedAction = null;
+                selectedTarget = null;
+                selectedActor = null;
+                SetBattleSelectionState(BattleSelectionState.ACTOR);
+                ClearActionPanel();
+                break;
+        }
     }
 
 
@@ -164,23 +190,32 @@ public class BattleUI : MonoBehaviour
     //When a target is selected
     public void TargetSelected(MemberUI targetMemberUI)
     {
-        SetLiveText(selectedActor.member.characterName + " will use " + selectedAction.actionName + " on " + targetMemberUI.member.characterName);
-        foreach (MemberUI ui in enemyUI.memberUIs)
-        {
-            ui.RemoveActor(selectedActor.member);
+        if(selectedAction.targetType == TargetType.SINGLE){
+            SetLiveText(selectedActor.member.characterName + " will use " + selectedAction.actionName + " on " + targetMemberUI.member.characterName);
+        }
+        
+        if(selectedAction.targetType!=TargetType.PARTY_OTHER){
+            foreach (MemberUI ui in enemyUI.memberUIs)
+            {
+                ui.RemoveActor(selectedActor.member);
+            }
         }
         foreach (MemberUI ui in partyUI.memberUIs)
         {
             ui.RemoveActor(selectedActor.member);
         }
+        selectedActor.hasSelectedAction = true;
         targetMemberUI.AddActor(selectedActor.member, selectedAction);
         selectedTarget = targetMemberUI;
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
-        selectedActor.hasSelectedAction = true;
-        selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
-        partyUI.DeselectAll();
-        SetBattleSelectionState(BattleSelectionState.ACTOR);
-        ClearActionPanel();
+        if(selectedAction.targetType!=TargetType.PARTY_OTHER){
+            selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
+            partyUI.DeselectAll();
+            SetBattleSelectionState(BattleSelectionState.ACTOR);
+            ClearActionPanel();
+        }
+        
+        
         bool canExecuteTurn = true;
         foreach (MemberUI ui in partyUI.memberUIs)
         {
@@ -192,14 +227,19 @@ public class BattleUI : MonoBehaviour
         }
         if (canExecuteTurn)
         {
+            
             executeTurnBtn.interactable = true;
             battleStateText.GetComponent<TypewriterEffect>().Run("EXECUTE TURN",battleStateText);
         }else{
             executeTurnBtn.interactable = false;
         }
-        selectedAction = null;
-        selectedTarget = null;
-        selectedActor = null;
+        if(selectedAction.targetType == TargetType.SINGLE)
+        {
+            selectedAction = null;
+            selectedTarget = null;
+            selectedActor = null;
+        }
+        
     }
     
     public void ExecuteTurn(){

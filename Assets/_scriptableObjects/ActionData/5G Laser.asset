@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: 5G Laser
   actionType: 0
-  targetType: 4
+  targetType: 2
   additionalActions: []
   actionDescription: An invisible waveform that damages all beings indiscriminately,
     human or robot
