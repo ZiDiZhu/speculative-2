@@ -13,16 +13,15 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public ActionData action;
     public TMP_Text actionName;
     public TMP_Text actionCost;
+    public TMP_Text targetTxt;
     public GameObject highlight; //enable this to highlight selection
     public bool isSelected = false;
 
 
     public void OnClick()
     {
-
         BattleUI.instance.ActionUIOnClick(this);
         Select();
-        
     }
 
     public void Deselect()
@@ -63,11 +62,12 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void SetAction(ActionData action){
         this.action = action;
         actionName.text = action.actionName;
-        string targetString = "";
+        string targetString = "Cost: ";
         targetString = "-" + action.mpCost.ToString()+" mp";
         if(action.addHealing<0){
             targetString += "\n" +action.addHealing +"hp";
         }
         actionCost.text = targetString;
+        targetTxt.text = "target: "+ action.targetType.ToString();
     }
 }

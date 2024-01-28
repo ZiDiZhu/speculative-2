@@ -21,7 +21,7 @@ public class BattleUI : MonoBehaviour
     public GameObject actionUIParent;
     public TMP_Text actionDescription;
     List<ActionUI> actionUIs = new List<ActionUI>();
-    public Button executeTurnBtn;
+    public Button executeTurnBtn; //button to execute turn, or to confirm action selection
     public SpriteRenderer charaSpriteRenderer;    
     private TMP_Text battleStateText;
     
@@ -34,7 +34,7 @@ public class BattleUI : MonoBehaviour
     public AudioSource audioSource;
     
 
-    public enum BattleSelectionState { ACTOR, ACTION, TARGET };
+    public enum BattleSelectionState { ACTOR, ACTION, TARGET, CONFIRM };
     public BattleSelectionState battleSelectionState;
 
 
@@ -63,14 +63,16 @@ public class BattleUI : MonoBehaviour
 
     public void SetBattleSelectionState(BattleSelectionState state){
         battleSelectionState = state;
-        battleStateText.GetComponent<TypewriterEffect>().Run("CHOOSE  " + battleSelectionState.ToString(),battleStateText);
-        
+
+        SetLiveText("CHOOSE  " + battleSelectionState.ToString());
 
         switch(battleSelectionState){
             case (BattleSelectionState.ACTOR):
                 enemyUI.DisableSelection();
+                executeTurnBtn.interactable = false;
                 break;
             case (BattleSelectionState.ACTION):
+                executeTurnBtn.interactable = true;
                 break;
             case (BattleSelectionState.TARGET):
                 enemyUI.EnableSelection();
@@ -136,36 +138,10 @@ public class BattleUI : MonoBehaviour
     public void ActionUIOnClick(ActionUI actionUI){
         
         selectedAction = actionUI.action;
+        executeTurnBtn.interactable = true;
+        battleStateText.GetComponent<TypewriterEffect>().Run("Select ["+actionUI.action.actionName+"]",battleStateText );
+        actionDescription.text = selectedAction.actionDescription;
 
-        switch(actionUI.action.targetType){
-            case (TargetType.SINGLE):
-                SetLiveText("Selected Action: [" + actionUI.action.actionName + "] - Select Target: ");
-                
-                selectedActor.SetActionText("[-Select Target-]");
-                actionDescription.text = actionUI.action.actionDescription;
-                SetBattleSelectionState(BattleSelectionState.TARGET);
-                executeTurnBtn.interactable = false;
-                break;
-            case (TargetType.PARTY_OTHER):
-                //TODO 
-                foreach (MemberUI ui in enemyUI.memberUIs)
-                {
-                    ui.RemoveActor(selectedActor.member);
-                }
-                SetLiveText(selectedActor.member.characterName+ "Will perform " + actionUI.action.actionName + " on all opponents");
-                selectedActor.hasSelectedAction = true;
-                selectedActor.SetActionText(actionUI.action.actionName + " on all opponents");  
-                foreach (MemberUI ui in enemyUI.memberUIs)
-                {
-                    TargetSelected(ui);
-                }
-                selectedAction = null;
-                selectedTarget = null;
-                selectedActor = null;
-                SetBattleSelectionState(BattleSelectionState.ACTOR);
-                ClearActionPanel();
-                break;
-        }
     }
 
 
@@ -229,6 +205,7 @@ public class BattleUI : MonoBehaviour
         {
             
             executeTurnBtn.interactable = true;
+            battleSelectionState = BattleSelectionState.CONFIRM;
             battleStateText.GetComponent<TypewriterEffect>().Run("EXECUTE TURN",battleStateText);
         }else{
             executeTurnBtn.interactable = false;
@@ -243,39 +220,88 @@ public class BattleUI : MonoBehaviour
     }
     
     public void ExecuteTurn(){
+        switch(battleSelectionState){
+            case (BattleSelectionState.CONFIRM):
+                battleStateText.GetComponent<TypewriterEffect>().Run("FIGHT", battleStateText);
+                int enemyCount = battleSystem.enemies.Count;
+                int partyCount = battleSystem.partyMembers.Count;
+                battleSystem.ExecuteTeamActions();
+                string output = "Executed Actions.. You killed " + (enemyCount - battleSystem.enemies.Count) + " enemie(s) and lost" + (partyCount - battleSystem.partyMembers.Count) + "party member; Enemies Turn..";
+                Debug.Log(output);
+                partyCount = battleSystem.partyMembers.Count;
+                partyUI.SetParty(battleSystem.partyMembers);
+                enemyUI.SetParty(battleSystem.enemies);
+                bool gameEnd = battleSystem.checkIfGameEnd();
+                if (!gameEnd)
+                {
+                    battleSystem.AddTurnActionsForAllCharacters(battleSystem.enemies, battleSystem.partyMembers);
+                    battleSystem.ExecuteTurnActions();
+                    output += "\nExecuted Actions.. You lost " + (partyCount - battleSystem.partyMembers.Count) + " party member(s); Your Turn..";
+                    actionDescription.text = output;
+                }
 
-        battleStateText.GetComponent<TypewriterEffect>().Run("FIGHT",battleStateText);
-
-        int enemyCount = battleSystem.enemies.Count;
-        int partyCount = battleSystem.partyMembers.Count;
-        battleSystem.ExecuteTeamActions();
-        string output = "Executed Actions.. You killed " + (enemyCount - battleSystem.enemies.Count)+" enemie(s) and lost"+(partyCount - battleSystem.partyMembers.Count)+"party member; Enemies Turn..";
-        Debug.Log(output);
-        partyCount = battleSystem.partyMembers.Count;
-        partyUI.SetParty(battleSystem.partyMembers);
-        enemyUI.SetParty(battleSystem.enemies);
-        bool gameEnd = battleSystem.checkIfGameEnd();
-        if(!gameEnd){
-            battleSystem.AddTurnActionsForAllCharacters(battleSystem.enemies, battleSystem.partyMembers);
-            battleSystem.ExecuteTurnActions();
-            output += "\nExecuted Actions.. You lost " + (partyCount - battleSystem.partyMembers.Count) + " party member(s); Your Turn..";
-            actionDescription.text = output;
+                if (battleSystem.state == BattleState.WON)
+                {
+                    battleStateText.GetComponent<TypewriterEffect>().Run("YOU WIN!", battleStateText);
+                    executeTurnBtn.interactable = false;
+                }
+                else if (battleSystem.state == BattleState.LOST)
+                {
+                    battleStateText.GetComponent<TypewriterEffect>().Run("YOU LOSE!", battleStateText);
+                    executeTurnBtn.interactable = false;
+                }
+                else
+                {
+                    SetBattleSelectionState(BattleSelectionState.ACTOR);
+                    executeTurnBtn.interactable = false;
+                }
+                break;
+            case (BattleSelectionState.ACTION):
+                ConfirmActionSelection();
+                SetLiveText("Select Action for " + selectedActor.member.characterName + " ! ");
+                break;
+            case (BattleSelectionState.ACTOR):
+                SetLiveText("Select Actor to give instructions.");
+                break;
+            case (BattleSelectionState.TARGET):
+                SetLiveText("Selected Action: [" + selectedAction.actionName + "] - Select Target: ");
+                break;
         }
+
         
 
-        if(battleSystem.state ==BattleState.WON){
-            battleStateText.GetComponent<TypewriterEffect>().Run("YOU WIN!",battleStateText);
-            executeTurnBtn.interactable = false;
-        }
-        else if(battleSystem.state ==BattleState.LOST){
-            battleStateText.GetComponent<TypewriterEffect>().Run("YOU LOSE!",battleStateText);
-            executeTurnBtn.interactable = false;
-        }
-        else{
-            SetBattleSelectionState(BattleSelectionState.ACTOR);
-            executeTurnBtn.interactable = false;
-        }
+    }
 
+    public void ConfirmActionSelection(){
+        switch (selectedAction.targetType)
+        {
+            case (TargetType.SINGLE):
+                SetLiveText("Selected Action: [" + selectedAction.actionName + "] - Select Target: ");
+
+                selectedActor.SetActionText("[-Select Target-]");
+                SetBattleSelectionState(BattleSelectionState.TARGET);
+                executeTurnBtn.interactable = false;
+                break;
+            case (TargetType.PARTY_OTHER):
+                //TODO 
+                foreach (MemberUI ui in enemyUI.memberUIs)
+                {
+                    ui.RemoveActor(selectedActor.member);
+                }
+                SetLiveText(selectedActor.member.characterName + "Will perform " + selectedAction.actionName + " on all opponents");
+                selectedActor.hasSelectedAction = true;
+                selectedActor.SetActionText(selectedAction.actionName + " on all opponents");
+                foreach (MemberUI ui in enemyUI.memberUIs)
+                {
+                    TargetSelected(ui);
+                }
+                selectedAction = null;
+                selectedTarget = null;
+                selectedActor = null;
+                SetBattleSelectionState(BattleSelectionState.ACTOR);
+                ClearActionPanel();
+                break;
+        }
     }
 
     public void SetLiveText(string text){
