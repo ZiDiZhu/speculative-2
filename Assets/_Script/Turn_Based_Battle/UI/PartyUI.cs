@@ -8,7 +8,6 @@ public class PartyUI : MonoBehaviour
 
     public GameObject memberUIPrefab;
     public List<MemberUI> memberUIs = new List<MemberUI>();
-    public enum PartyType { PARTY, ENEMY };
     public PartyType partyType;
 
     public void SetParty(List<Character> partyMembers)
@@ -18,19 +17,19 @@ public class PartyUI : MonoBehaviour
         {
             GameObject memberUIObject = Instantiate(memberUIPrefab, transform);
             MemberUI memberUI = memberUIObject.GetComponent<MemberUI>();
-            memberUI.SetMember(member);
+            memberUI.SetMemberUI(member);
             memberUIs.Add(memberUI);
 
             if(memberUI.member.characterState!=CharacterState.DEAD){
                 if (partyType == PartyType.ENEMY)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
-                    memberUI.SetActionText("ENEMY");
+                    memberUI.SetStateText("ENEMY");
                 }
-                else if (partyType == PartyType.PARTY)
+                else if (partyType == PartyType.PLAYER)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
-                    memberUI.SetActionText("[-Select Action-]");
+                    memberUI.SetStateText("[-Select Action-]");
                 }
             }
 

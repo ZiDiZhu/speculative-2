@@ -18,7 +18,7 @@ public class CharaBioUI : MonoBehaviour
     {
         this.character = character;
         charaName.text = character.characterName;
-        charaDescription.text = character.description;
+        charaDescription.text = character.GetDescription();
         charaImage.sprite = character.pfpSprite;
     }
     

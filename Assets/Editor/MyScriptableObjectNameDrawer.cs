@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(ActionData))]
+[CustomEditor(typeof(BattleAction))]
 public class MyScriptableObjectNameDrawer : Editor
 {
     public override void OnInspectorGUI()
     {
-        ActionData scriptableObject = (ActionData)target;
+        BattleAction scriptableObject = (BattleAction)target;
 
         EditorGUI.BeginChangeCheck();
 

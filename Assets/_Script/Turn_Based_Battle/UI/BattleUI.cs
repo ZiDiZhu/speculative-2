@@ -8,11 +8,18 @@ using UnityEngine.UI;
 
 public class BattleUI : MonoBehaviour
 {
-    public static BattleUI instance { get; private set; } //singleton
-    public PartyUI partyUI;
-    public PartyUI enemyUI;
+    public static BattleUI instance { get; private set; } //this is a singleton
+
+    public enum BattleSelectionState { ACTOR, ACTION, TARGET, CONFIRM };
+    public BattleSelectionState battleSelectionState;
+
+    //Link to Canvas UI Elements
+    [SerializeField] private PartyUI partyUI;
+    [SerializeField] private PartyUI enemyUI;
     [SerializeField] private TMP_Text liveText; //Types out live update of the battle
-    private CharacterUI characterUI;
+
+    //Singleton References
+    private CharacterUI characterUI; //to display the selected character's stats and equipment, etc. 
     private BattleSystem battleSystem;
 
 
@@ -28,14 +35,13 @@ public class BattleUI : MonoBehaviour
     [Header("Run-Time")]
     //Temporarily store the selected actor, action and target
     public MemberUI selectedActor;
-    public ActionData selectedAction;
+    public BattleAction selectedAction;
     public MemberUI selectedTarget;
 
     public AudioSource audioSource;
     
 
-    public enum BattleSelectionState { ACTOR, ACTION, TARGET, CONFIRM };
-    public BattleSelectionState battleSelectionState;
+    
 
 
     private void Awake()
@@ -48,15 +54,16 @@ public class BattleUI : MonoBehaviour
 
     private void Start()
     {
+
+        ClearActionPanel();
         battleSystem = BattleSystem.instance;
         characterUI = CharacterUI.instance;
         SetBattleSelectionState(BattleSelectionState.ACTOR);
         executeTurnBtn.onClick.AddListener(ExecuteTurn); 
-
+        
         partyUI.SetParty(battleSystem.partyMembers);
         enemyUI.SetParty(battleSystem.enemies);
         charaSpriteRenderer.sprite = null;
-        ClearActionPanel();
         executeTurnBtn.interactable = false;
         SetLiveText("Battle Start! Selet Actor to give instructions.");
     }
@@ -81,15 +88,14 @@ public class BattleUI : MonoBehaviour
     }
     
     
-    public void SetActionPanel(List<ActionData> actions)
+    public void SetActionPanel(List<BattleAction> actions)
     {
         ClearActionPanel();
-        foreach (ActionData action in actions)
+        foreach (BattleAction action in actions)
         {
             GameObject actionUIObject = Instantiate(actionUIPrefab, actionUIParent.transform);
             ActionUI actionUI = actionUIObject.GetComponent<ActionUI>();
             actionUI.SetAction(action);
-            actionUI.GetComponent<Button>().onClick.AddListener(actionUI.OnClick);
             actionUIs.Add(actionUI);
         }
     }
@@ -138,11 +144,24 @@ public class BattleUI : MonoBehaviour
     public void ActionUIOnClick(ActionUI actionUI){
         
         selectedAction = actionUI.action;
-        executeTurnBtn.interactable = true;
-        battleStateText.GetComponent<TypewriterEffect>().Run("Select ["+actionUI.action.actionName+"]",battleStateText );
+        
+        
         actionDescription.text = selectedAction.actionDescription;
 
+        bool canSelectAction = (selectedAction.mpCost > selectedActor.member.GetCurrentMP());
+        if (canSelectAction ){
+           actionDescription.text += "\nNot enough MP!";
+            executeTurnBtn.interactable = false;
+            battleStateText.GetComponent<TypewriterEffect>().Run("Not Enough MP for " + actionUI.action.actionName, battleStateText);
+        }
+        else
+        {
+            executeTurnBtn.interactable = true;
+            battleStateText.GetComponent<TypewriterEffect>().Run("Select [" + actionUI.action.actionName + "]", battleStateText);
+        }
+
     }
+
 
 
     public void ActorSelected(MemberUI memberUI){
@@ -153,7 +172,6 @@ public class BattleUI : MonoBehaviour
         memberUI.Select();
         characterUI.SetCharacter(memberUI.member);
         selectedActor = memberUI;
-        battleSystem.selectedMember = memberUI.member;
         battleSelectionState = BattleSelectionState.ACTION;
         SetActionPanel(memberUI.member.actions);
         charaSpriteRenderer.sprite = memberUI.member.fullBodySprite;
@@ -170,7 +188,7 @@ public class BattleUI : MonoBehaviour
             SetLiveText(selectedActor.member.characterName + " will use " + selectedAction.actionName + " on " + targetMemberUI.member.characterName);
         }
         
-        if(selectedAction.targetType!=TargetType.PARTY_OTHER){
+        if(selectedAction.targetType!=TargetType.ALL_OPPONENT){
             foreach (MemberUI ui in enemyUI.memberUIs)
             {
                 ui.RemoveActor(selectedActor.member);
@@ -184,8 +202,8 @@ public class BattleUI : MonoBehaviour
         targetMemberUI.AddActor(selectedActor.member, selectedAction);
         selectedTarget = targetMemberUI;
         battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
-        if(selectedAction.targetType!=TargetType.PARTY_OTHER){
-            selectedActor.SetActionText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
+        if(selectedAction.targetType!=TargetType.ALL_OPPONENT){
+            selectedActor.SetStateText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
             partyUI.DeselectAll();
             SetBattleSelectionState(BattleSelectionState.ACTOR);
             ClearActionPanel();
@@ -258,7 +276,7 @@ public class BattleUI : MonoBehaviour
                 break;
             case (BattleSelectionState.ACTION):
                 ConfirmActionSelection();
-                SetLiveText("Select Action for " + selectedActor.member.characterName + " ! ");
+                SetLiveText("Select Actor");
                 break;
             case (BattleSelectionState.ACTOR):
                 SetLiveText("Select Actor to give instructions.");
@@ -278,11 +296,11 @@ public class BattleUI : MonoBehaviour
             case (TargetType.SINGLE):
                 SetLiveText("Selected Action: [" + selectedAction.actionName + "] - Select Target: ");
 
-                selectedActor.SetActionText("[-Select Target-]");
+                selectedActor.SetStateText("[-Select Target-]");
                 SetBattleSelectionState(BattleSelectionState.TARGET);
                 executeTurnBtn.interactable = false;
                 break;
-            case (TargetType.PARTY_OTHER):
+            case (TargetType.ALL_OPPONENT):
                 //TODO 
                 foreach (MemberUI ui in enemyUI.memberUIs)
                 {
@@ -290,7 +308,7 @@ public class BattleUI : MonoBehaviour
                 }
                 SetLiveText(selectedActor.member.characterName + "Will perform " + selectedAction.actionName + " on all opponents");
                 selectedActor.hasSelectedAction = true;
-                selectedActor.SetActionText(selectedAction.actionName + " on all opponents");
+                selectedActor.SetStateText(selectedAction.actionName + " on all opponents");
                 foreach (MemberUI ui in enemyUI.memberUIs)
                 {
                     TargetSelected(ui);

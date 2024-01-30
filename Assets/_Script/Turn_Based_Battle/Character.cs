@@ -3,39 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CharacterType { PARTYMEMBER, ENEMY, NPC }
-public enum CharacterState { NORMAL, DEAD, UNDEAD }
+public enum CharacterState { ALIVE, DEAD }
 
+//Its parent object is BattlePartyManager.
 public class Character : MonoBehaviour
 {
     //visible basic stats
     public string characterName;
-    [SerializeField][TextArea(15,20)] public string description;
-    public int maxHP;
-    public int currentHP;
-    public int maxMP;   
-    public int currentMP;   
+    [SerializeField][TextArea(15,20)] private string description;
+    [SerializeField]private int maxHP;
+    [SerializeField] private int currentHP;
+    [SerializeField] private int maxMP;
+    [SerializeField] private int currentMP;   
     
-    //basic stats from the characterData.Minimum 1 Maximum 10
-    public int strength;    
-    public int precision;
-    public int agility; 
-    public int luck;
+    //primitive stats from the characterData.Minimum 1 Maximum 10
+    public int strength; //affect damage
+    public int agility; //affect dodge chance
+    public int precision; //affect critical hit chance  
+    public int speed; // affect turn order
+    public int luck; //affect all
     
     //equipment stats. not inherent to the character
     public int defense;
-
-    //Character-specific sounds
-    public AudioClip placeHolder_sfx;
     
+    //secondary stats generated from primitive stats
+    
+    
+    
+
     //battle stat generated from basic stats - reset after each action
     public int damage;
 
-
-    public CharacterType characterType;
     public CharacterState characterState;
-    public List<ActionData> actions = new List<ActionData>();
+    public List<BattleAction> actions = new List<BattleAction>();
     public Sprite fullBodySprite, pfpSprite;
+
+    //Character-specific sounds
+    public AudioClip placeHolder_sfx;
 
 
     // Start is called before the first frame update
@@ -44,43 +48,38 @@ public class Character : MonoBehaviour
         damage = strength * 10;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public string GetDescription(){
+        return description;
     }
 
-    public Character(){
-        characterName = "Default";
-        maxHP = 10;
-        currentHP = 10;
-        maxMP = 10;
-        currentMP = 10;
-        strength = 10;
-        defense = 10;
-        agility = 10;
-        luck = 10;
+
+    public int GetMaxHP(){
+        return maxHP;
+    }
+
+    public int GetCurrentHP(){
+        return currentHP;
     }   
 
-    public Character(string name, int hp, int mp, int str, int def, int mag, int mdef, int agi, int luk){
-        characterName = name;
-        maxHP = hp;
-        currentHP = hp;
-        maxMP = mp;
-        currentMP = mp;
-        strength = str;
-        defense = def;
-        agility = agi;
-        luck = luk;
+    public int GetMaxMP(){
+        return maxMP;
+    }
+    public int GetCurrentMP(){
+        return currentMP;
     }
 
-    public Character(CharacterData data){
-
+    //returns the party type of the parent BattlePartyManager
+    public PartyType GetPartyType(){
+        return transform.parent.GetComponent<BattlePartyManager>().GetPartyType();
     }
 
-    
+    public PartyType GetOppositePartyType(){
+        return transform.parent.GetComponent<BattlePartyManager>().GetOppositePartyType();
+    }
+
+    //TO be replaced
     //handles actionData and performs the appropriate action
-    public void PerformAction(ActionData action, Character target){
+    public void PerformAction(BattleAction action, Character target){
 
         currentMP -= action.mpCost;
 
@@ -142,6 +141,7 @@ public class Character : MonoBehaviour
         if (target.currentHP <= 0)
         {
             output += target.characterName + " has been defeated.";
+            target.characterState = CharacterState.DEAD;
         }
         Debug.Log(output);
 
@@ -156,18 +156,15 @@ public class Character : MonoBehaviour
         if (currentHP > maxHP){
             currentHP = maxHP;
         }
-        
     }
 
     public void UseMP(int mp){
-        
         if(currentMP-mp < 0){
             Debug.Log(characterName + " does not have enough MP.");
         }else{
             currentMP -= mp;
             Debug.Log(characterName + " used " + mp + " MP.");
         }
-        
     }
 
     public void RestoreMP(int mp){

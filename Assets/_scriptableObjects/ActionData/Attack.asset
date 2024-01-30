@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff160bd9fd2675646ac2a6335caba231, type: 3}
-  m_Name: FIRST AID
+  m_Script: {fileID: 11500000, guid: aaea7e4e1add25740b942f9afc701cb8, type: 3}
+  m_Name: Attack
   m_EditorClassIdentifier: 
-  actionName: FIrst Aid
-  actionType: 1
-  targetType: 1
+  actionName: Basic Attack
+  actionType: 0
+  targetType: 0
   additionalActions: []
-  actionDescription: Apply First Aid
-  mpCost: 1
+  actionDescription: Basic attack
+  mpCost: 0
   multiplyDamage: 0
   addDamage: 0
-  addHealing: 30
+  addHealing: 0

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 // to be attacked to each member's UI in the battle scene
 public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-
     public Character member;
 
     public Image outline; //to indicate which member is selected
@@ -16,10 +15,11 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]private TMP_Text memberName;
     [SerializeField]private TMP_Text memberHP;
     [SerializeField]private TMP_Text memberMP;
-    [SerializeField]private TMP_Text actionText; //to display which action is selected
-    public Slider hpSlider;
-    public Slider mpSlider;
+    [SerializeField]private TMP_Text stateText; //to display what the member is doing. has typewriter effect.
+    [SerializeField]private Slider hpSlider;
+    [SerializeField]private  Slider mpSlider;
 
+    
     [SerializeField] private Image deathIndicator; //enable this when the character is dead
     [SerializeField] private GameObject readyIndicator; //set this active when the character has selected an action]
 
@@ -33,19 +33,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
  
     }
-
-    public void SetMember(Character member)
-    {
-        this.member = member;
-        SetMemberUI(member);
-    }
     
     
     //invokes the BattleUI's MemberUIOnClick function when MemberUI is clicked
     public void PartyMemberOnClick()
     {   
         BattleUI.instance.MemberUIOnClick(this);
-        
     }
 
     public void EnemyMemberOnClick()
@@ -57,8 +50,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void Deselect(){
         isSelected = false;
         outline.enabled = false;
-        BattleSystem.instance.selectedMember = null;
-        BattleUI.instance.ClearActionPanel();
     }
 
     public void Select(){
@@ -69,21 +60,21 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void SetMemberUI(Character member)
     {
-        if(readyIndicator!=null)readyIndicator.SetActive(false);
+        this.member = member;
+        if (readyIndicator!=null)readyIndicator.SetActive(false);
         if(member.pfpSprite!=null)portrait.sprite = member.pfpSprite;
         memberName.text = member.characterName;
-        memberHP.text = "HP: "+member.currentHP.ToString()+"/"+member.maxHP.ToString();
-        memberMP.text = "MP: "+ member.currentMP.ToString()+"/"+member.maxMP.ToString();
-        hpSlider.maxValue = member.maxHP;
-        hpSlider.value = member.currentHP;
-        mpSlider.maxValue = member.maxMP;
-        mpSlider.value = member.currentMP;
-        
+        memberHP.text = "HP: "+member.GetCurrentHP().ToString()+"/"+member.GetCurrentHP().ToString();
+        memberMP.text = "MP: "+ member.GetCurrentHP().ToString()+"/"+member.GetCurrentHP().ToString();
+        hpSlider.maxValue = member.GetCurrentHP();
+        hpSlider.value = member.GetCurrentHP();
+        mpSlider.maxValue = member.GetCurrentHP();
+        mpSlider.value = member.GetCurrentHP();
         if(member.characterState==CharacterState.DEAD){
             GetComponent<Button>().enabled = false;
             GetComponent<Image>().enabled = false;
             GetComponent<Button>().interactable = false;    
-            SetActionText("DEAD");
+            SetStateText("DEAD");
             if(deathIndicator!=null)deathIndicator.enabled = true;
             portrait.color = Color.gray;
         }else{
@@ -94,8 +85,11 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     
     } 
-    public void SetActionText(string txt){
-        actionText.text = txt;
+
+    
+    public void SetStateText(string txt){
+        
+        stateText.GetComponent<TypewriterEffect>().Run(txt,stateText); 
         if(hasSelectedAction){
             if (readyIndicator != null) readyIndicator.SetActive(true);
         }else{
@@ -103,7 +97,9 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    public void AddActor(Character actor, ActionData action){
+
+
+    public void AddActor(Character actor, BattleAction action){
         
         GameObject actorUI = Instantiate(actorTemplate,actorsContainer.transform);
         actorUI.SetActive(true);

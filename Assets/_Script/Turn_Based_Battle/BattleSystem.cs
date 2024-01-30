@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST }
 public class BattleSystem : MonoBehaviour
 {
 
     public static BattleSystem instance { get; private set; } //singleton
     public BattleState state;
-    public ActionType actionType;
     public List<Character> partyMembers = new List<Character>();
     public List<Character> enemies = new List<Character>();
     public int turnCount = 0;
@@ -22,12 +20,11 @@ public class BattleSystem : MonoBehaviour
 
 
     //____Action Delegate for turn actions___ Second draft --- takes action data
-    public delegate void ActionDelegate2(ActionData action, Character target);
+    public delegate void ActionDelegate2(BattleAction action, Character target);
     public List<ActionDelegate2> turnActions2 = new List<ActionDelegate2>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
     public List<Character> turnActionTargets2 = new List<Character>(); //sometimes the same action can be used on multiple targets
-    public List<ActionData> turnActionData = new List<ActionData>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
+    public List<BattleAction> turnActionData = new List<BattleAction>(); //list of actions to be performed. should be the same length as turnActionTargets and can have reapeated actions on different targets
 
-    public Character selectedMember; //the member that is currently selected by the player
 
     private void Awake()
     {
@@ -68,20 +65,21 @@ public class BattleSystem : MonoBehaviour
 
     //returns true if the game has ended
     public bool checkIfGameEnd(){
-
         bool hasWon = true;
-
         foreach(Character enemy in enemies){
             if(enemy.characterState!=CharacterState.DEAD){
                 hasWon = false;
                 break;
             }
         }
-        if(hasWon){
+        //if all enemies are dead, it's a win
+        if (hasWon){
             Debug.Log("You win!");
             state = BattleState.WON;
             return true;
         }
+        
+        //if any party members are alive, it's end if the game.
         foreach(Character member in partyMembers){
             if(member.characterState!=CharacterState.DEAD){
                 return false;
@@ -111,14 +109,11 @@ public class BattleSystem : MonoBehaviour
             //do the thing
             turnActions[i](target);
             //check if target is dead
-            if(target.currentHP<=0){
+            if(target.GetCurrentHP() <=0){
                 target.characterState = CharacterState.DEAD;
                 Debug.Log(target.characterName + " has died");
-                //enemies.Remove(target);
-                //partyMembers.Remove(target);
                 turnActionTargets.RemoveAll(x => x == target);
                 //TODO: track dead characters 
-                //Destroy(target);
             }
         }
         //clear the turnActions list
@@ -127,7 +122,8 @@ public class BattleSystem : MonoBehaviour
         turnCount++;
     }
 
-    public void AddCharacterAction(Character actor, ActionData actionData, Character target){
+
+    public void AddCharacterAction(Character actor, BattleAction actionData, Character target){
         if (actor == null){ return; }
         if (actor.characterState==CharacterState.DEAD){ return;}
         //Add delegate actioins to the turnActions list
@@ -151,9 +147,9 @@ public class BattleSystem : MonoBehaviour
             //!-----------CALLS THE ACTIon------------------!
             turnActions2[i](turnActionData[i], target);
             //check if target is dead
-            if(target.currentHP<=0){
+            if(target.GetCurrentHP() <=0){
                 target.characterState = CharacterState.DEAD;
-                Debug.Log(target.characterName + " has died");
+                Debug.Log(target.GetCurrentHP() + " has died");
                 //enemies.Remove(target);
                 //partyMembers.Remove(target);
                 turnActionTargets2.RemoveAll(x => x == target);
@@ -192,13 +188,13 @@ public class BattleSystem : MonoBehaviour
     public Character GetWeakestCharacter(List<Character> characters)
     {
         int weakestIndex = 0;
-        int lowestHP = characters[0].currentHP;
+        int lowestHP = characters[0].GetCurrentHP();
         for (int i = 1; i < characters.Count; i++)
         {
-            if (characters[i].currentHP < lowestHP)
+            if (characters[i].GetCurrentHP() < lowestHP)
             {
                 weakestIndex = i;
-                lowestHP = characters[i].currentHP;
+                lowestHP = characters[i].GetCurrentHP();
             }
         }
         return characters[weakestIndex];

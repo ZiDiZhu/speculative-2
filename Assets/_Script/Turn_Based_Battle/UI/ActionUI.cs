@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,28 +11,24 @@ using UnityEngine.UI;
 public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
-    public ActionData action;
+    public BattleAction action;
     public TMP_Text actionName;
     public TMP_Text actionCost;
     public TMP_Text targetTxt;
     public GameObject highlight; //enable this to highlight selection
     public bool isSelected = false;
-
+    
 
     public void OnClick()
     {
+        
         BattleUI.instance.ActionUIOnClick(this);
-        Select();
-    }
-
-    public void Deselect()
-    {
-        isSelected = false;
-        highlight.SetActive(false);
-    }
-
-    public void Select()
-    {
+        
+        //select this action
+        isSelected = true;
+        highlight.SetActive(true);
+        
+        //deselect all other actions
         foreach (Transform child in transform.parent)
         {
             ActionUI actionUI = child.GetComponent<ActionUI>();
@@ -41,11 +38,7 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 actionUI.highlight.SetActive(false);
             }
         }
-        isSelected = true;
-        highlight.SetActive(true);
     }
-
-
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -59,8 +52,9 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!isSelected) highlight.SetActive(false);
     }
 
-    public void SetAction(ActionData action){
+    public void SetAction(BattleAction action){
         this.action = action;
+        GetComponent<Button>().onClick.AddListener(OnClick);
         actionName.text = action.actionName;
         string targetString = "Cost: ";
         targetString = "-" + action.mpCost.ToString()+" mp";
@@ -68,6 +62,6 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             targetString += "\n" +action.addHealing +"hp";
         }
         actionCost.text = targetString;
-        targetTxt.text = "target: "+ action.targetType.ToString();
+        targetTxt.text = "target type: "+ action.targetType.ToString();
     }
 }
