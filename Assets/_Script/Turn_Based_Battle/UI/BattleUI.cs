@@ -20,8 +20,8 @@ public class BattleUI : MonoBehaviour
 
     //Singleton References
     private CharacterUI characterUI; //to display the selected character's stats and equipment, etc. 
-    private BattleSystem battleSystem;
-
+    //private BattleSystem battleSystem;
+    private BattleManager battleManager;
 
     [Header("Action Panel")]
     public GameObject actionUIPrefab;
@@ -56,13 +56,15 @@ public class BattleUI : MonoBehaviour
     {
 
         ClearActionPanel();
-        battleSystem = BattleSystem.instance;
+        //battleSystem = BattleSystem.instance;
+        battleManager = BattleManager.instance;
         characterUI = CharacterUI.instance;
         SetBattleSelectionState(BattleSelectionState.ACTOR);
         executeTurnBtn.onClick.AddListener(ExecuteTurn); 
         
-        partyUI.SetParty(battleSystem.partyMembers);
-        enemyUI.SetParty(battleSystem.enemies);
+        
+        partyUI.SetParty(battleManager.GetPartyManager(PartyType.PLAYER).GetAllPartyMembers());
+        enemyUI.SetParty(battleManager.GetPartyManager(PartyType.ENEMY).GetAllPartyMembers());
         charaSpriteRenderer.sprite = null;
         executeTurnBtn.interactable = false;
         SetLiveText("Battle Start! Selet Actor to give instructions.");
@@ -201,7 +203,9 @@ public class BattleUI : MonoBehaviour
         selectedActor.hasSelectedAction = true;
         targetMemberUI.AddActor(selectedActor.member, selectedAction);
         selectedTarget = targetMemberUI;
-        battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
+        //battleSystem.AddCharacterAction(selectedActor.member, selectedAction, selectedTarget.member);
+        TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, selectedTarget.member);
+        battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(),turnBattleAction);
         if(selectedAction.targetType!=TargetType.ALL_OPPONENT){
             selectedActor.SetStateText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
             partyUI.DeselectAll();
@@ -237,33 +241,25 @@ public class BattleUI : MonoBehaviour
         
     }
     
+    //On Execute Turn Button Click
     public void ExecuteTurn(){
         switch(battleSelectionState){
             case (BattleSelectionState.CONFIRM):
                 battleStateText.GetComponent<TypewriterEffect>().Run("FIGHT", battleStateText);
-                int enemyCount = battleSystem.enemies.Count;
-                int partyCount = battleSystem.partyMembers.Count;
-                battleSystem.ExecuteTeamActions();
-                string output = "Executed Actions.. You killed " + (enemyCount - battleSystem.enemies.Count) + " enemie(s) and lost" + (partyCount - battleSystem.partyMembers.Count) + "party member; Enemies Turn..";
-                Debug.Log(output);
-                partyCount = battleSystem.partyMembers.Count;
-                partyUI.SetParty(battleSystem.partyMembers);
-                enemyUI.SetParty(battleSystem.enemies);
-                bool gameEnd = battleSystem.checkIfGameEnd();
+                battleManager.ExecuteTurn(); //execute turn - simutaneously for both parties
+                bool gameEnd = battleManager.IfBattleEnded();
                 if (!gameEnd)
                 {
-                    battleSystem.AddTurnActionsForAllCharacters(battleSystem.enemies, battleSystem.partyMembers);
-                    battleSystem.ExecuteTurnActions();
-                    output += "\nExecuted Actions.. You lost " + (partyCount - battleSystem.partyMembers.Count) + " party member(s); Your Turn..";
-                    actionDescription.text = output;
+                    //add enemy actions
+                    battleManager.GetPartyManager(PartyType.ENEMY).AddActionsForAllCharacters(battleManager.GetPartyManager(PartyType.PLAYER));
                 }
 
-                if (battleSystem.state == BattleState.WON)
+                if (battleManager.GetBattleState() == BattleState.WON)
                 {
                     battleStateText.GetComponent<TypewriterEffect>().Run("YOU WIN!", battleStateText);
                     executeTurnBtn.interactable = false;
                 }
-                else if (battleSystem.state == BattleState.LOST)
+                else if (battleManager.GetBattleState() == BattleState.LOST)
                 {
                     battleStateText.GetComponent<TypewriterEffect>().Run("YOU LOSE!", battleStateText);
                     executeTurnBtn.interactable = false;

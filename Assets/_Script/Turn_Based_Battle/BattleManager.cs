@@ -39,9 +39,34 @@ public class BattleManager: MonoBehaviour
         battleState = state;
     }
 
-    public void CreateTurnBattleAction()
+
+    public BattlePartyManager GetPartyManager(PartyType type){
+        if(type == PartyType.PLAYER){
+            return playerParty;
+        }
+        else if(type == PartyType.ENEMY){
+            return enemyParty;
+        }
+        else{
+            Debug.Log("Party Type Error");
+            return null;
+        }
+    }
+
+    public void AddTurnBattleAction(PartyType partyType, TurnBattleAction turnBattleAction)
     {
-        
+        if (partyType == PartyType.PLAYER)
+        {
+            playerParty.turnBattleActions.Add(turnBattleAction);
+        }
+        else if (partyType == PartyType.ENEMY)
+        {
+            enemyParty.turnBattleActions.Add(turnBattleAction);
+        }
+        else
+        {
+            Debug.Log("Party Type Error");
+        }
     }
 
     // Execute the turn actions in the turnBattleActions lists from player and enemy parties

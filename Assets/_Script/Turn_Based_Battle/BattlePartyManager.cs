@@ -13,7 +13,11 @@ public class BattlePartyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        partyMembers.Clear();
+        turnBattleActions.Clear();
+        foreach(Character member in GetComponentsInChildren<Character>()){
+            AddPartyMember(member);
+        }
     }
 
     // Update is called once per frame
@@ -95,6 +99,18 @@ public class BattlePartyManager : MonoBehaviour
             }
         }
         return deadPartyMembers;
+    }
+    
+    //For each living character in the party, add a turn action to the turnBattleActions list
+    //Takes anthor party as a parameter to determine the target of the action
+    public void AddActionsForAllCharacters(BattlePartyManager enemyParty){
+        List<Character> livingEnemies = enemyParty.GetAlivePartyMembers();
+        foreach(Character member in GetAlivePartyMembers()){
+            Character target = livingEnemies[0];
+            BattleAction battleAction = member.GetRandomBattleAction(ActionType.ATTACK);
+            TurnBattleAction turnBattleAction = new TurnBattleAction(member, battleAction, target);
+            turnBattleActions.Add(turnBattleAction);
+        }   
     }
 
     
