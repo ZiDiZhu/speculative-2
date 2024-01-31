@@ -12,7 +12,7 @@ public class BattleUI : MonoBehaviour
 
     public enum BattleSelectionState { ACTOR, ACTION, TARGET, CONFIRM };
     public BattleSelectionState battleSelectionState;
-
+    
     //Link to Canvas UI Elements
     [SerializeField] private PartyUI partyUI;
     [SerializeField] private PartyUI enemyUI;

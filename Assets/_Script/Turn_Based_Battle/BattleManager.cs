@@ -30,13 +30,22 @@ public class BattleManager: MonoBehaviour
 
     }
 
+    public BattleState GetBattleState()
+    {
+        return battleState;
+    }
+    public void SetBattleState(BattleState state)
+    {
+        battleState = state;
+    }
+
     public void CreateTurnBattleAction()
     {
         
     }
 
     // Execute the turn actions in the turnBattleActions lists from player and enemy parties
-    // They compare the speed of the first action in each list and try execute the faster one
+    // Compare the speed of the first action in each list and try execute the faster one
     public void ExecuteTurn()
     {
         enemyParty.SortTurnBattleActionsBySpeed();  
@@ -107,18 +116,19 @@ public class BattleManager: MonoBehaviour
             Debug.Log(actor.characterName + " can't Execute " + battleAction.actionName + " - Target"+ target.characterName +" is dead. ");
             return false;
         }
+
+        //execute the action
+
+        switch(turnBattleAction.battleAction.actionType){
+            case ActionType.ATTACK:
+                actor.PerformAction(battleAction, target);
+                break;
+            default:
+                Debug.Log("Action Type Error");
+                break;
+        }
         
         return true;
-    }
-    
-
-    public BattleState GetBattleState()
-    {
-        return battleState;
-    }
-    public void SetBattleState(BattleState state)
-    {
-        battleState = state;
     }
 
     

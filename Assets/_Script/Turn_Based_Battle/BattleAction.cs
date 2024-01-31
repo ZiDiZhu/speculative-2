@@ -3,22 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-//for run time action queue
-[System.Serializable]
-public struct TurnBattleAction
-{
-    public Character actor;
-    public BattleAction battleAction;
-    public Character target;
-
-    public TurnBattleAction(Character actor, BattleAction battleAction, Character target)
-    {
-        this.actor = actor;
-        this.battleAction = battleAction;
-        this.target = target;
-    }
-}
-
 //TODO: think about how to handle composed actions (e.g. attack + heal)
 public enum ActionType { ATTACK, HEAL, ITEM, DEFEND, FLEE }
 public enum TargetType { SINGLE, ALL_PARTY, ALL_ALLY, ALL_OPPONENT }

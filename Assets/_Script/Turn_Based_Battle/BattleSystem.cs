@@ -150,9 +150,7 @@ public class BattleSystem : MonoBehaviour
             if(target.GetCurrentHP() <=0){
                 target.characterState = CharacterState.DEAD;
                 Debug.Log(target.GetCurrentHP() + " has died");
-                //enemies.Remove(target);
-                //partyMembers.Remove(target);
-                turnActionTargets2.RemoveAll(x => x == target);
+                turnActionTargets2.RemoveAll(x => x == target); //remove all actions where this dead character is the target
             }
         }
     }
