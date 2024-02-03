@@ -16,10 +16,10 @@ MonoBehaviour:
   actionType: 0
   targetType: 0
   additionalActions: []
-  actionDescription: 'The Universal Attack action. Single Target.
+  actionDescription: 'The Universal Attack action. One hit and Single Targeted.
 
-    The amount
-    of damage depends on the character''s strength.'
+    The
+    amount of damage depends on the character''s stats.'
   mpCost: 10
   multiplyDamage: 1
   addDamage: 0

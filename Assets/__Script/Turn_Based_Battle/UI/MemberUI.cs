@@ -43,7 +43,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void EnemyMemberOnClick()
     {
-        BattleUI.instance.EnemyMemberOnClick(this);
+        BattleUI.instance.MemberUIOnClick(this);
     }
 
 

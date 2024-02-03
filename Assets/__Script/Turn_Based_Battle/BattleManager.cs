@@ -12,8 +12,8 @@ public class BattleManager: MonoBehaviour
     
     public static BattleManager instance { get; private set; } //singleton
     [SerializeField]private BattleState battleState;
-    [SerializeField] private BattlePartyManager playerParty;
-    [SerializeField] private BattlePartyManager enemyParty;
+    [SerializeField] private PartyManager playerParty;
+    [SerializeField] private PartyManager enemyParty;
    
 
     private void Awake()
@@ -27,8 +27,6 @@ public class BattleManager: MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemyParty.AddActionsForAllCharacters(playerParty);
-        enemyParty.SortTurnBattleActionsBySpeed();
     }
 
     public BattleState GetBattleState()
@@ -41,7 +39,7 @@ public class BattleManager: MonoBehaviour
     }
 
 
-    public BattlePartyManager GetPartyManager(PartyType type){
+    public PartyManager GetPartyManager(PartyType type){
         if(type == PartyType.PLAYER){
             return playerParty;
         }
@@ -76,12 +74,9 @@ public class BattleManager: MonoBehaviour
     //remember to update both if you change one
     public string ExecuteTurn()
     {
-
         List<TurnBattleAction> playerActions = playerParty.turnBattleActions;
         List<TurnBattleAction> enemyActions = enemyParty.turnBattleActions;
-
         string output = "";
-
         while((playerActions.Count > 0 || enemyActions.Count > 0) && !IfBattleEnded())
         {
             //if both parties have actions, compare the speed of the first action in each list
@@ -110,7 +105,6 @@ public class BattleManager: MonoBehaviour
                     enemyActions.RemoveAt(0);
                 }   
             }
-            
         }
         return output;
     }
@@ -124,8 +118,8 @@ public class BattleManager: MonoBehaviour
         Character actor = turnBattleAction.actor;
         Character target = turnBattleAction.target;
 
-
-        //check invalid - return false if the action cannot be executed
+        //check if invalid - return false if the action cannot be executed.
+        //should not happen normally cause UI will prevent the action from being selectable
         if (target == null) //target is null - should not happen normally 
         {
             return actor.characterName + " can't Execute Action - Target is null!";
@@ -133,7 +127,8 @@ public class BattleManager: MonoBehaviour
         
         if (actor.characterState == CharacterState.DEAD) //target is dead
         {
-            return actor.characterName + " is Dead and can't Execute Action.";
+            GetPartyManager(actor.GetPartyType()).DeleteTurnBattleActionsForActor(actor);
+            return actor.characterName + " is Dead.";
         }
         if (battleAction.mpCost > actor.GetCurrentMP()) //not enough mp - should not happen normally cause UI will prevent the action from being selectable
         {
@@ -143,17 +138,8 @@ public class BattleManager: MonoBehaviour
             return actor.characterName + " can't Execute " + battleAction.actionName + " - Target"+ target.characterName +" is dead. ";
         }
 
-
         //execute the action is valid
-        string output = "";
-        switch (turnBattleAction.battleAction.actionType){
-            case ActionType.ATTACK:
-                output = actor.PerformAction(battleAction, target);
-                break;
-            default:
-                Debug.Log("Action Type Error");
-                break;
-        }
+        string output = turnBattleAction.Execute();
         
         return output;
     }

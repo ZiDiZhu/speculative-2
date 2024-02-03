@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,10 +12,8 @@ public enum TargetType { SINGLE, ALL_PARTY, ALL_ALLY, ALL_OPPONENT }
 public class BattleAction : ScriptableObject
 {
     public string actionName;
-    public ActionType actionType;
+    public ActionType actionType; //I want an editor tool that changes the value whenever this is changed
     public TargetType targetType;
-    public List<BattleAction> additionalActions = new List<BattleAction>(); //used for composed actions
-
     [SerializeField][TextArea] public string actionDescription;
     public int mpCost;
 
@@ -27,10 +26,10 @@ public class BattleAction : ScriptableObject
     {
         if (actionType == ActionType.ATTACK)
         {
-
+            multiplyDamage = Mathf.Clamp(multiplyDamage, 0.1f, 10);
         }else if (actionType == ActionType.HEAL)
         {
-            
+            addHealing = Mathf.Clamp(addHealing, -100, 100);
         }
         else if (actionType == ActionType.ITEM)
         {
@@ -42,7 +41,8 @@ public class BattleAction : ScriptableObject
         }
         else if (actionType == ActionType.FLEE)
         {
-            
         }
+
+        actionName = this.name;
     }
 }
