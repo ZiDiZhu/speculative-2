@@ -11,6 +11,7 @@ public class Character : MonoBehaviour
     //visible basic stats
     public string characterName;
     [SerializeField][TextArea(10,15)] private string description;
+    public List<BattleAction> actions = new List<BattleAction>();
     [SerializeField] private int maxHP;
     [SerializeField] private int currentHP;
     [SerializeField] private int maxMP;
@@ -31,11 +32,11 @@ public class Character : MonoBehaviour
 
 
     public CharacterState characterState;
-    public List<BattleAction> actions = new List<BattleAction>();
+    
     public Sprite fullBodySprite, pfpSprite;
 
-    //Character-specific sounds
-    public AudioClip placeHolder_sfx;
+    //effects
+    public GameObject placeHolder_fx;
 
     public string GetDescription(){
         return description;

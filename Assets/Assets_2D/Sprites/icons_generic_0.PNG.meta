@@ -195,7 +195,7 @@ TextureImporter:
       213: -699422476244139072
     second: icons_generic_0_63
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -212,10 +212,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -254,6 +256,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -269,6 +273,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1636,9 +1652,73 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      icons_generic_0_0: 9097248261083032630
+      icons_generic_0_1: -5583796673677119792
+      icons_generic_0_10: -1070898477953517060
+      icons_generic_0_11: -4529432552959945883
+      icons_generic_0_12: -8766618677358560054
+      icons_generic_0_13: -8639060863078628246
+      icons_generic_0_14: 6928284341456102315
+      icons_generic_0_15: -6160171962135779833
+      icons_generic_0_16: 8264972827220145188
+      icons_generic_0_17: -1588481235139387612
+      icons_generic_0_18: -3033120521279454343
+      icons_generic_0_19: -5717186136533871156
+      icons_generic_0_2: 1664561032452862309
+      icons_generic_0_20: 5540117440131375167
+      icons_generic_0_21: 1676357580361779213
+      icons_generic_0_22: -7408803421493029179
+      icons_generic_0_23: 6193745747567750603
+      icons_generic_0_24: 5921492780244945624
+      icons_generic_0_25: -400011352742871335
+      icons_generic_0_26: 698205069203823371
+      icons_generic_0_27: -1502510229094543905
+      icons_generic_0_28: -2444593200530028279
+      icons_generic_0_29: 5688307591635001251
+      icons_generic_0_3: -586165897956985774
+      icons_generic_0_30: -383923522975486707
+      icons_generic_0_31: -5725417644631258156
+      icons_generic_0_32: -810046222287479851
+      icons_generic_0_33: -5019234870040437044
+      icons_generic_0_34: -1814302152294757354
+      icons_generic_0_35: -129352255901376360
+      icons_generic_0_36: -5783637171985310120
+      icons_generic_0_37: -3716394575101953372
+      icons_generic_0_38: -8363995910854893706
+      icons_generic_0_39: 5415339018028203755
+      icons_generic_0_4: 4799640298585492316
+      icons_generic_0_40: 3081305710262953716
+      icons_generic_0_41: -2494847380477748935
+      icons_generic_0_42: -1118822619657664885
+      icons_generic_0_43: -2717403396113448885
+      icons_generic_0_44: 205784081657932922
+      icons_generic_0_45: 1509486620403313688
+      icons_generic_0_46: 5055353211668336272
+      icons_generic_0_47: 4067800718492424716
+      icons_generic_0_48: 6704377228453659958
+      icons_generic_0_49: -5310375780095398109
+      icons_generic_0_5: -7449516058937689776
+      icons_generic_0_50: 9009414472081461153
+      icons_generic_0_51: -6885781638212772347
+      icons_generic_0_52: -7340992291050686602
+      icons_generic_0_53: 5166689049734297412
+      icons_generic_0_54: 3164574947191286753
+      icons_generic_0_55: -3434238474209504864
+      icons_generic_0_56: -7812080685313945162
+      icons_generic_0_57: -4375491870806229889
+      icons_generic_0_58: 7715799081425406726
+      icons_generic_0_59: 2085566205809893694
+      icons_generic_0_6: 48507186731991134
+      icons_generic_0_60: -4332694217739881009
+      icons_generic_0_61: -6661634583897284230
+      icons_generic_0_62: 6544972245605619120
+      icons_generic_0_63: -699422476244139072
+      icons_generic_0_7: -5566573716052788791
+      icons_generic_0_8: -4011113646375480193
+      icons_generic_0_9: 7044435169734055849
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

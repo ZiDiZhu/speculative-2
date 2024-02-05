@@ -17,6 +17,8 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private PartyUI partyUI;
     [SerializeField] private PartyUI enemyUI;
 
+    [SerializeField] private Transform fxParentTransform; //parent transform for all particles fx objects
+
     //Singleton References
     private CharacterUI characterUI; //to display the selected character's stats and equipment, etc. 
     //private BattleSystem battleSystem;
@@ -29,7 +31,7 @@ public class BattleUI : MonoBehaviour
     List<ActionUI> actionUIs = new List<ActionUI>();
     [SerializeField] private Button executeBtn; //button to execute turn, or to confirm action selection
     //public SpriteRenderer charaSpriteRenderer;    
-    [SerializeField]private Image charaBodySprite; //to display the selected character's sprite
+    [SerializeField]private Image charaBodySprite,targetBodySprite; //to display the selected character's sprite
     private TMP_Text battleStateText;
     
     [Header("Run-Time")]
@@ -367,11 +369,14 @@ public class BattleUI : MonoBehaviour
             TurnBattleAction turnBattleAction = turnParty.turnBattleActions[0];
             output +=battleManager.TestExecuteTurnBattleAction(turnBattleAction) + "\n";
             charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite;
+            targetBodySprite.sprite = turnBattleAction.target.fullBodySprite;
             turnParty.turnBattleActions.RemoveAt(0);
             SetActionDescriptionText(output, true);
             enemyUI.SetParty(allEnemyMembers);
             partyUI.SetParty(allPlayerMembers);
+            GameObject actionfx = Instantiate(turnBattleAction.actor.placeHolder_fx,fxParentTransform);
             yield return new WaitForSeconds(seconds);
+            Destroy(actionfx);
         }
     }
 
