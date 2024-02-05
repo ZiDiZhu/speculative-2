@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
 {
     //visible basic stats
     public string characterName;
-    [SerializeField][TextArea(15,20)] private string description;
+    [SerializeField][TextArea(10,15)] private string description;
     [SerializeField] private int maxHP;
     [SerializeField] private int currentHP;
     [SerializeField] private int maxMP;
@@ -23,8 +23,9 @@ public class Character : MonoBehaviour
     public int speed; // affect turn order
     public int luck; //affect all
     
-    //equipment stats. not inherent to the character
-    public int defense;
+    //temporary stats - buffs and debuffs
+    public int damageAddBuff; //applpies to the final damage dealt
+    public int shieldBuff; //reduces damage taken
     
     //secondary stats generated from primitive stats
 

@@ -63,6 +63,8 @@ public struct TurnBattleAction
             {
                 damage = 0;
             }
+            damage += actor.damageAddBuff;
+            damage -= target.shieldBuff;
             target.TakeDamage(damage);
         }
         else //miss

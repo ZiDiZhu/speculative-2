@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 //TODO: think about how to handle composed actions (e.g. attack + heal)
-public enum ActionType { ATTACK, HEAL, ITEM, DEFEND, FLEE }
+public enum ActionType { ATTACK, HEAL, BUFF, ITEM, DEFEND, FLEE }
 public enum TargetType { SINGLE, ALL_PARTY, ALL_ALLY, ALL_OPPONENT }
 
 [CreateAssetMenu(fileName = "new action data", menuName = "Turn Based Battle/Action Data")]
