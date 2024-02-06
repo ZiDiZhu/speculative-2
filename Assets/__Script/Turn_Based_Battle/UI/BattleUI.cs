@@ -174,7 +174,7 @@ public class BattleUI : MonoBehaviour
         selectedActor = memberUI;
         battleSelectionState = BattleSelectionState.ACTION;
         SetActionPanel(memberUI.member.actions);
-        charaBodySprite.sprite = memberUI.member.fullBodySprite;
+        charaBodySprite.sprite = memberUI.member.fullBodySprite_Normal;
         SetBattleSelectionState(BattleSelectionState.ACTION);
         executeBtn.interactable = false;
 
@@ -368,14 +368,16 @@ public class BattleUI : MonoBehaviour
             }
             TurnBattleAction turnBattleAction = turnParty.turnBattleActions[0];
             output +=battleManager.TestExecuteTurnBattleAction(turnBattleAction) + "\n";
-            charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite;
-            targetBodySprite.sprite = turnBattleAction.target.fullBodySprite;
+            charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite_Normal;
+            targetBodySprite.sprite = turnBattleAction.target.fullBodySprite_Normal;
             turnParty.turnBattleActions.RemoveAt(0);
             SetActionDescriptionText(output, true);
             enemyUI.SetParty(allEnemyMembers);
             partyUI.SetParty(allPlayerMembers);
+            yield return new WaitForSeconds(seconds * 0.2f);
+            charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite_Action;
             GameObject actionfx = Instantiate(turnBattleAction.actor.placeHolder_fx,fxParentTransform);
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(seconds*0.8f);
             Destroy(actionfx);
         }
     }

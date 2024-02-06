@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
 
     public CharacterState characterState;
     
-    public Sprite fullBodySprite, pfpSprite;
+    public Sprite fullBodySprite_Normal, fullBodySprite_Action, pfpSprite;
 
     //effects
     public GameObject placeHolder_fx;
