@@ -32,7 +32,7 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private Button executeBtn; //button to execute turn, or to confirm action selection
     //public SpriteRenderer charaSpriteRenderer;    
     [SerializeField]private Image charaBodySprite,targetBodySprite; //to display the selected character's sprite
-    private TMP_Text battleStateText;
+    private TMP_Text executeButtonText;
     
     [Header("Run-Time")]
     //Temporarily store the selected actor, action and target
@@ -54,7 +54,7 @@ public class BattleUI : MonoBehaviour
     {
         if (instance == null) instance = this;
         audioSource = GetComponent<AudioSource>();
-        battleStateText = executeBtn.GetComponentInChildren<TMP_Text>();
+        executeButtonText = executeBtn.GetComponentInChildren<TMP_Text>();
     }
 
     private void Start()
@@ -90,7 +90,7 @@ public class BattleUI : MonoBehaviour
                 executeBtn.interactable = true;
                 break;
             case (BattleSelectionState.TARGET):
-                SetActionDescriptionText("Select a Target", true);
+                SetExecuteButtonText("Select Target");
                 break;
         }
     }
@@ -145,6 +145,8 @@ public class BattleUI : MonoBehaviour
 
     public void ActionUIOnClick(ActionUI actionUI){
 
+        
+
         selectedAction = actionUI.action;
         string actionDescription = "";
         actionDescription += actionUI.action.actionName + "\n";
@@ -153,16 +155,22 @@ public class BattleUI : MonoBehaviour
         actionDescription += "Target: " + actionUI.action.targetType + "\n";
         actionDescription += "Description: " + actionUI.action.actionDescription + "\n";
         bool canSelectAction = (selectedAction.mpCost < selectedActor.member.GetCurrentMP());
-        if (!canSelectAction){
-           actionDescription += "\nNot enough MP!";
-            executeBtn.interactable = false;
-            battleStateText.GetComponent<TypewriterEffect>().Run("Not Enough MP for " + actionUI.action.actionName, battleStateText);
-        }
-        else
+        if (selectedActor.member.GetPartyType() == PartyType.ENEMY)
         {
-            executeBtn.interactable = true;
-            battleStateText.GetComponent<TypewriterEffect>().Run("Select [" + actionUI.action.actionName + "]", battleStateText);
+            CheckIfCanExecuteTurn();
+        }else if(selectedActor.member.GetPartyType()==PartyType.PLAYER){
+            if (!canSelectAction)
+            {
+                executeBtn.interactable = false;
+                SetExecuteButtonText("Not Enough MP");
+            }
+            else
+            {
+                executeBtn.interactable = true;
+                SetExecuteButtonText("Select " + selectedAction.actionName);
+            }
         }
+
         SetActionDescriptionText(actionDescription, false);
     }
 
@@ -231,10 +239,11 @@ public class BattleUI : MonoBehaviour
             selectedActor = null;
         }
         
-        
         CheckIfCanExecuteTurn();
         
     }
+
+
     //for multi-target actions
     public void TargetsSelected(List<MemberUI> targetUI){
 
@@ -265,12 +274,12 @@ public class BattleUI : MonoBehaviour
         {
             executeBtn.interactable = true;
             battleSelectionState = BattleSelectionState.CONFIRM;
-            battleStateText.GetComponent<TypewriterEffect>().Run("EXECUTE TURN", battleStateText);
+            SetExecuteButtonText("EXECUTE TURN");
         }
         else
         {
             executeBtn.interactable = false;
-            battleStateText.GetComponent<TypewriterEffect>().Run("SELECT MEMBER", battleStateText);
+            SetExecuteButtonText("YOUR TURN");
         }
     }
 
@@ -292,24 +301,13 @@ public class BattleUI : MonoBehaviour
     public void ExecuteBtnOnClick(){
         switch(battleSelectionState){
             case (BattleSelectionState.CONFIRM):
-                battleStateText.GetComponent<TypewriterEffect>().Run("FIGHT", battleStateText);
+                executeButtonText.GetComponent<TypewriterEffect>().Run("FIGHT", executeButtonText);
                 StartCoroutine(ExecuteTurnWithDelay(battleTurnDuration));   
                 bool gameEnd = battleManager.IfBattleEnded();
                 if (!gameEnd)
                 {
                     //add enemy actions
                     enemyParty.AddActionsForAllCharacters(playerParty);
-                }
-
-                if (battleManager.GetBattleState() == BattleState.WON)
-                {
-                    battleStateText.GetComponent<TypewriterEffect>().Run("YOU WIN!", battleStateText);
-                    executeBtn.interactable = false;
-                }
-                else if (battleManager.GetBattleState() == BattleState.LOST)
-                {
-                    battleStateText.GetComponent<TypewriterEffect>().Run("YOU LOSE!", battleStateText);
-                    executeBtn.interactable = false;
                 }
                 else
                 {
@@ -319,13 +317,19 @@ public class BattleUI : MonoBehaviour
 
                 partyUI.SetParty(allPlayerMembers);
                 enemyUI.SetParty(allEnemyMembers);
-
                 break;
             case (BattleSelectionState.ACTION):
                 ActionSelected();
-                
                 break;
             case (BattleSelectionState.ACTOR):
+                if (battleManager.GetBattleState() == BattleState.WON)
+                {
+                    Debug.Log("You Win!");
+                }
+                else if (battleManager.GetBattleState() == BattleState.LOST)
+                {
+                    Debug.Log("You Lose!");
+                }
                 break;
             case (BattleSelectionState.TARGET):
                 break;
@@ -337,7 +341,7 @@ public class BattleUI : MonoBehaviour
     public IEnumerator ExecuteTurnWithDelay(float seconds){
         List<TurnBattleAction> playerActions = playerParty.turnBattleActions;
         List<TurnBattleAction> enemyActions = enemyParty.turnBattleActions;
-        
+        targetBodySprite.gameObject.SetActive(true);
         while ((playerActions.Count > 0 || enemyActions.Count > 0) && !battleManager.IfBattleEnded())
         {
             PartyManager turnParty;
@@ -366,19 +370,91 @@ public class BattleUI : MonoBehaviour
                     turnParty = enemyParty;
                 }
             }
+
+            targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().text = "";
+            targetBodySprite.color = Color.white;
+            charaBodySprite.color = Color.white;
+        
+            //This is gonna be the action that is executed
             TurnBattleAction turnBattleAction = turnParty.turnBattleActions[0];
-            output +=battleManager.TestExecuteTurnBattleAction(turnBattleAction) + "\n";
+
+            //If actor is dead
+            if(turnBattleAction.actor.characterState == CharacterState.DEAD){
+                charaBodySprite.color = Color.red;
+            }
+
+            //Shows actor and Target sprites
             charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite_Normal;
             targetBodySprite.sprite = turnBattleAction.target.fullBodySprite_Normal;
+
+            //Get the target's HP before the action
+            int targetHpBefore = turnBattleAction.target.GetCurrentHP();        
+
+            //Executes the action and returns a string with the result
+            output +=battleManager.TestExecuteTurnBattleAction(turnBattleAction) + "\n";
+
+            
+            //Get the target's HP after the action and display the damage/heal
+            //TODO: improve the logic of displaying the action taking effect
+            //Currently, it can only tell if action was valid and if it was a heal or damage
+            
+            int targetHpAfter = turnBattleAction.target.GetCurrentHP(); 
+            int hpChange = targetHpAfter - targetHpBefore;
+            
+            bool actionWasValid = (hpChange != 0);
+            if (actionWasValid)
+            {
+                if (hpChange > 0)
+                {
+                    targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().color = Color.green; //its a heal
+                }
+                else
+                {
+                    targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().color = Color.red; //its a damage
+                }
+            }
+            else
+            {
+                targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().color = Color.white; //its a miss
+            }
+
+            //remove the action from queue            
             turnParty.turnBattleActions.RemoveAt(0);
+
             SetActionDescriptionText(output, true);
+            
+            yield return new WaitForSeconds(seconds * 0.2f);
+            
+            GameObject actionfx = null;
+            charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite_Action;
+
+            if (actionWasValid){
+                
+                actionfx = Instantiate(turnBattleAction.actor.placeHolder_fx, fxParentTransform);
+                yield return new WaitForSeconds(seconds * 0.8f);
+                Destroy(actionfx);
+            }
+
+            if(targetHpAfter<=0){
+                targetBodySprite.color = Color.red;
+            }
+
             enemyUI.SetParty(allEnemyMembers);
             partyUI.SetParty(allPlayerMembers);
-            yield return new WaitForSeconds(seconds * 0.2f);
-            charaBodySprite.sprite = turnBattleAction.actor.fullBodySprite_Action;
-            GameObject actionfx = Instantiate(turnBattleAction.actor.placeHolder_fx,fxParentTransform);
+            targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().text = hpChange.ToString();
+
             yield return new WaitForSeconds(seconds*0.8f);
             Destroy(actionfx);
+        }
+        targetBodySprite.gameObject.SetActive(false);
+        if(battleManager.GetBattleState() ==BattleState.PLAYERTURN){
+            SetActionDescriptionText("Your Turn", true);
+        }else if(battleManager.GetBattleState() ==BattleState.WON){
+            SetActionDescriptionText("You Won", true);
+            executeButtonText.GetComponent<TypewriterEffect>().Run("CONTINUE", executeButtonText);
+        }
+        else if(battleManager.GetBattleState() ==BattleState.LOST){
+            SetActionDescriptionText("Game Over", true);
         }
     }
 
@@ -389,5 +465,15 @@ public class BattleUI : MonoBehaviour
             actionDescriptionText.text = txt;
         }
     }
+
+    public void SetExecuteButtonText(string txt){
+
+        if(executeButtonText.text!=txt){
+            executeButtonText.GetComponent<TypewriterEffect>().Run(txt, executeButtonText);
+        }
+       
+    }
+
+
 
 }
