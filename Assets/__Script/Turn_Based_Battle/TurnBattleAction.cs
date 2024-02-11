@@ -9,7 +9,6 @@ public struct TurnBattleAction
     public BattleAction battleAction;
     public Character target;
 
-
     //to generate these values
     public int damage;
     public float hitChance; //0 to 1. generate before battle, during the battle it uses this value to compare it to compare to a random value to determine hit or miss
@@ -33,14 +32,14 @@ public struct TurnBattleAction
     }
 
     public string Execute(){
-        string output = actor.characterName + " uses " + battleAction.actionName + " on " + target.characterName + ". ";
+        string output = actor.characterName + " uses " + battleAction.actionName + " on " + target.characterName + ". \n";
         switch (battleAction.actionType)
         {
             case ActionType.ATTACK:
-                output = ExecuteAttack();
+                output += ExecuteAttack();
                 break;
             case ActionType.HEAL:
-                output = ExecuteHeal();
+                output += ExecuteHeal();
                 break;
             default:    
                 break;
@@ -49,7 +48,7 @@ public struct TurnBattleAction
     }
 
     public string ExecuteAttack(){
-        string output = actor.characterName + " attacks " + target.characterName+". ";
+        string output = "";
         int hitRoll = UnityEngine.Random.Range(0, 100);
         if (hitRoll< hitChance*100) //hit
         {
@@ -57,7 +56,7 @@ public struct TurnBattleAction
             if (critHitRoll < critChance*100) //crit hit
             {
                 damage += critHitAddDamage;
-                output += "Critical Hit! ";
+                output += " Critical Hit! ";
             }
             if (damage < 0)
             {
@@ -69,14 +68,14 @@ public struct TurnBattleAction
         }
         else //miss
         {
-            output += "Missed!";
+            output += " Missed!";
         }
         output += target.characterName + " takes " + damage + " damage. ";
         return output;
     }
 
     public string ExecuteHeal(){
-        string output = actor.characterName + " heals " + target.characterName+". ";
+        string output = "";
         target.Heal(battleAction.addHealing);
         output += target.characterName + " heals " + battleAction.addHealing + " HP. ";
         return output;

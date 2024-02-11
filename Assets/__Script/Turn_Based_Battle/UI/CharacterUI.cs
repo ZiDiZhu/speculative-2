@@ -13,7 +13,7 @@ public class CharacterUI : MonoBehaviour
 
     [SerializeField] private Button btn_bio, btn_stats, btn_equip, btn_log;
     [SerializeField] private GameObject bioPanel, statsPanel, equipPanel, logPanel;
-    [SerializeField] private AttributeUI strengthUI, precisionUI, agilityUI, luckUI;
+    [SerializeField] private AttributeUI strengthUI, precisionUI, agilityUI, speedUI, luckUI;
 
 
     private void Awake()
@@ -68,6 +68,7 @@ public class CharacterUI : MonoBehaviour
         this.character = character;
         strengthUI.SetAttribute(character.strength, 10);
         precisionUI.SetAttribute(character.precision, 10);
+        speedUI.SetAttribute(character.speed, 10);
         agilityUI.SetAttribute(character.agility, 10);
         luckUI.SetAttribute(character.luck, 10);
         bioPanel.GetComponent<CharaBioUI>().SetCharacter(character);

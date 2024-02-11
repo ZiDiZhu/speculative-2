@@ -20,7 +20,7 @@ public class Character : MonoBehaviour
     //primitive stats from the characterData.Minimum 1 Maximum 10
     public int strength; //affect damage
     public int agility; //affect dodge chance
-    public int precision; //affect critical hit chance  
+    public int precision; //affect critical hit chance 
     public int speed; // affect turn order
     public int luck; //affect all
     

@@ -192,6 +192,7 @@ public class BattleUI : MonoBehaviour
 
     public void ActionSelected()
     {
+        string actionDescription = "";
 
         switch (selectedAction.targetType)
         {
@@ -204,9 +205,37 @@ public class BattleUI : MonoBehaviour
             case (TargetType.ALL_OPPONENT):
                 //TODO 
                 selectedActor.SetStateText(selectedAction.actionName + " Targeting all opponents");
-                string actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all opponents";
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all opponents";
                 SetActionDescriptionText(actionDescription, true);
                 TargetsSelected(enemyUI.memberUIs);
+                selectedActor.hasSelectedAction = true;
+                selectedAction = null;
+                selectedTarget = null;
+                selectedActor = null;
+                SetBattleSelectionState(BattleSelectionState.ACTOR);
+                ClearActionPanel();
+                break;
+            case (TargetType.ALL_PARTY):
+                //TODO 
+                selectedActor.SetStateText(selectedAction.actionName + " Targeting all Party Members");
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
+                SetActionDescriptionText(actionDescription, true);
+                TargetsSelected(partyUI.memberUIs);
+                selectedActor.hasSelectedAction = true;
+                selectedAction = null;
+                selectedTarget = null;
+                selectedActor = null;
+                SetBattleSelectionState(BattleSelectionState.ACTOR);
+                ClearActionPanel();
+                break;
+            case (TargetType.ALL_ALLY):
+                //TODO 
+                selectedActor.SetStateText(selectedAction.actionName + " Targeting all ally");
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all ally.";
+                SetActionDescriptionText(actionDescription, true);
+                List<MemberUI> allyUIs = partyUI.memberUIs;
+                allyUIs.Remove(selectedActor);  
+                TargetsSelected(allyUIs);
                 selectedActor.hasSelectedAction = true;
                 selectedAction = null;
                 selectedTarget = null;
@@ -238,9 +267,7 @@ public class BattleUI : MonoBehaviour
             selectedTarget = null;
             selectedActor = null;
         }
-        
         CheckIfCanExecuteTurn();
-        
     }
 
 
@@ -465,7 +492,6 @@ public class BattleUI : MonoBehaviour
             actionDescriptionText.text = txt;
         }
     }
-
     public void SetExecuteButtonText(string txt){
 
         if(executeButtonText.text!=txt){
