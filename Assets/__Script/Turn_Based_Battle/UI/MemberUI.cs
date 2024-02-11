@@ -10,7 +10,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Character member;
 
-    public Image outline; //to indicate which member is selected
+    //public Image outline; //to indicate which member is selected
     [SerializeField]private Image portrait; 
     [SerializeField]private TMP_Text memberName;
     [SerializeField]private TMP_Text memberHP;
@@ -29,10 +29,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private GameObject actorsContainer; //the container that holds all the other charas that will take action on this character
     [SerializeField] private GameObject actorTemplate; //template - parent has image whic disply pfp of the "actor" that will take action on this character", its child has the tmptext that shows the action
 
-    private void Start()
-    {
- 
-    }
     
     
     //invokes the BattleUI's MemberUIOnClick function when MemberUI is clicked
@@ -49,12 +45,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void Deselect(){
         isSelected = false;
-        outline.enabled = false;
+        portrait.color = Color.grey;
     }
 
     public void Select(){
         isSelected = true;
-        outline.enabled = true;
+        portrait.color = Color.white;
     }
 
 
@@ -62,7 +58,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         this.member = member;
         if (readyIndicator!=null)readyIndicator.SetActive(false);
-        if(member.pfpSprite!=null)portrait.sprite = member.pfpSprite;
+        if(member.pfpSprite!=null)portrait.sprite = member.fullBodySprite_Normal;
         memberName.text = member.characterName;
         memberHP.text = "HP: "+member.GetCurrentHP().ToString()+"/"+member.GetMaxHP().ToString();
         memberMP.text = "MP: "+ member.GetCurrentMP().ToString()+"/"+member.GetMaxMP().ToString();
@@ -125,12 +121,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     //hover to show the outline
     public void OnPointerEnter(PointerEventData eventData)
     {
-        outline.enabled = true;
+        portrait.color = Color.white;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(!isSelected)outline.enabled = false;
+        if(!isSelected)portrait.color = Color.grey;
     }
 
 

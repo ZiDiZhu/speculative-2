@@ -44,8 +44,6 @@ public class BattleUI : MonoBehaviour
     //references
     private PartyManager playerParty;
     private PartyManager enemyParty;
-    private List<Character> allPlayerMembers;
-    private List<Character> allEnemyMembers;
 
     //UI settings
     [SerializeField]private int battleTurnDuration = 2; //duration of each turn in seconds
@@ -53,13 +51,14 @@ public class BattleUI : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
-        audioSource = GetComponent<AudioSource>();
-        executeButtonText = executeBtn.GetComponentInChildren<TMP_Text>();
+        
     }
 
+
+    [ContextMenu("Start")]
     private void Start()
     {
-
+        executeButtonText = executeBtn.GetComponentInChildren<TMP_Text>();
         ClearActionPanel();
         //battleSystem = BattleSystem.instance;
         battleManager = BattleManager.instance;
@@ -69,12 +68,11 @@ public class BattleUI : MonoBehaviour
 
         playerParty = battleManager.GetPartyManager(PartyType.PLAYER);
         enemyParty = battleManager.GetPartyManager(PartyType.ENEMY);
-        allPlayerMembers = playerParty.GetAllPartyMembers();
-        allEnemyMembers = enemyParty.GetAllPartyMembers();
+        partyUI.AssignMembers(playerParty.GetAllPartyMembers());
+        enemyUI.AssignMembers(enemyParty.GetAllPartyMembers());
         
-        
-        partyUI.SetParty(allPlayerMembers);
-        enemyUI.SetParty(allEnemyMembers);
+        partyUI.SetParty();
+        enemyUI.SetParty();
 
         executeBtn.interactable = false;
     }
@@ -113,7 +111,6 @@ public class BattleUI : MonoBehaviour
             Destroy(child.gameObject);
         }
         actionUIs.Clear();
-        //SetActionDescriptionText("",false);
     }
 
 
@@ -342,8 +339,8 @@ public class BattleUI : MonoBehaviour
                     CheckIfCanExecuteTurn();
                 }
 
-                partyUI.SetParty(allPlayerMembers);
-                enemyUI.SetParty(allEnemyMembers);
+                partyUI.SetParty();
+                enemyUI.SetParty();
                 break;
             case (BattleSelectionState.ACTION):
                 ActionSelected();
@@ -466,8 +463,8 @@ public class BattleUI : MonoBehaviour
                 targetBodySprite.color = Color.red;
             }
 
-            enemyUI.SetParty(allEnemyMembers);
-            partyUI.SetParty(allPlayerMembers);
+            enemyUI.SetParty();
+            partyUI.SetParty();
             targetBodySprite.gameObject.GetComponentInChildren<TMP_Text>().text = hpChange.ToString();
 
             yield return new WaitForSeconds(seconds*0.8f);

@@ -8,9 +8,15 @@ public class PartyUI : MonoBehaviour
 
     public GameObject memberUIPrefab;
     public List<MemberUI> memberUIs = new List<MemberUI>();
+    [SerializeField]private List<Character> partyMembers = new List<Character>();
     public PartyType partyType;
 
-    public void SetParty(List<Character> partyMembers)
+
+    public void AssignMembers(List<Character> charas){
+        partyMembers = charas;
+    }
+    
+    public void SetParty()
     {
         ClearPartyUI();
         foreach (Character member in partyMembers)
@@ -24,12 +30,12 @@ public class PartyUI : MonoBehaviour
                 if (partyType == PartyType.ENEMY)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
-                    memberUI.SetStateText("ENEMY");
+                    memberUI.SetStateText(member.characterState.ToString());
                 }
                 else if (partyType == PartyType.PLAYER)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
-                    memberUI.SetStateText("[-Select Action-]");
+                    memberUI.SetStateText("Ready");
                 }
             }
 
@@ -38,11 +44,12 @@ public class PartyUI : MonoBehaviour
 
     public void ClearPartyUI()
     {
+        memberUIs.Clear();
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
-        memberUIs.Clear();
+        
     }
 
     public void DisableSelection()
