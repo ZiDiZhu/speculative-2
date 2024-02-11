@@ -18,8 +18,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]private TMP_Text stateText; //to display what the member is doing. has typewriter effect.
     [SerializeField]private Slider hpSlider;
     [SerializeField]private  Slider mpSlider;
-
-    
     [SerializeField] private Image deathIndicator; //enable this when the character is dead
     [SerializeField] private GameObject readyIndicator; //set this active when the character has selected an action]
 
@@ -72,7 +70,7 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             GetComponent<Button>().interactable = false;    
             SetStateText("DEAD");
             if(deathIndicator!=null)deathIndicator.enabled = true;
-            portrait.color = Color.gray;
+            portrait.color = Color.red;
         }else{
             GetComponent<Button>().enabled = true;
             GetComponent<Image>().enabled = true;
@@ -82,10 +80,8 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     } 
 
-    
     public void SetStateText(string txt){
-        
-        stateText.GetComponent<TypewriterEffect>().Run(txt,stateText); 
+        stateText.GetComponent<TypewriterEffect>().Run(txt, stateText);
         if(hasSelectedAction){
             if (readyIndicator != null) readyIndicator.SetActive(true);
         }else{
@@ -111,12 +107,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
         }
     } 
-
-    public void ClearActors(){
-        foreach(Transform child in actorsContainer.transform){
-            if(child.gameObject.activeSelf)Destroy(child.gameObject);
-        }
-    }
 
     //hover to show the outline
     public void OnPointerEnter(PointerEventData eventData)

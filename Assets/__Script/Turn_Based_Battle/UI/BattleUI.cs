@@ -55,7 +55,7 @@ public class BattleUI : MonoBehaviour
     }
 
 
-    [ContextMenu("Start")]
+
     private void Start()
     {
         executeButtonText = executeBtn.GetComponentInChildren<TMP_Text>();
@@ -68,8 +68,8 @@ public class BattleUI : MonoBehaviour
 
         playerParty = battleManager.GetPartyManager(PartyType.PLAYER);
         enemyParty = battleManager.GetPartyManager(PartyType.ENEMY);
-        partyUI.AssignMembers(playerParty.GetAllPartyMembers());
-        enemyUI.AssignMembers(enemyParty.GetAllPartyMembers());
+        partyUI.AssignMembers(playerParty);
+        enemyUI.AssignMembers(enemyParty);
         
         partyUI.SetParty();
         enemyUI.SetParty();
@@ -189,65 +189,59 @@ public class BattleUI : MonoBehaviour
 
     public void ActionSelected()
     {
+        string actorTxt = "";
         string actionDescription = "";
 
         switch (selectedAction.targetType)
         {
-            case (TargetType.SINGLE):
+            case (TargetType.SINGLE): //proceed to select a target
                 SetBattleSelectionState(BattleSelectionState.TARGET);
                 selectedActor.SetStateText(selectedAction.actionName + "- Select a Target");
                 executeBtn.interactable = false;
                 SetBattleSelectionState(BattleSelectionState.TARGET);
                 break;
-            case (TargetType.ALL_OPPONENT):
-                //TODO 
-                selectedActor.SetStateText(selectedAction.actionName + " Targeting all opponents");
+            case (TargetType.ALL_OPPONENT): //confirm turn action selection
+                actorTxt = selectedAction.actionName + " Targeting all opponents";
                 actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all opponents";
-                SetActionDescriptionText(actionDescription, true);
-                TargetsSelected(enemyUI.memberUIs);
-                selectedActor.hasSelectedAction = true;
-                selectedAction = null;
-                selectedTarget = null;
-                selectedActor = null;
-                SetBattleSelectionState(BattleSelectionState.ACTOR);
-                ClearActionPanel();
+                TargetsSelected(enemyUI.GetMemberUIs());
+                ConfirmTurnActionSelection(actorTxt,actionDescription);
                 break;
-            case (TargetType.ALL_PARTY):
-                //TODO 
-                selectedActor.SetStateText(selectedAction.actionName + " Targeting all Party Members");
+            case (TargetType.ALL_PARTY)://confirm turn action selection
+                actorTxt = selectedAction.actionName + " Targeting all Party Members";
                 actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
-                SetActionDescriptionText(actionDescription, true);
-                TargetsSelected(partyUI.memberUIs);
-                selectedActor.hasSelectedAction = true;
-                selectedAction = null;
-                selectedTarget = null;
-                selectedActor = null;
-                SetBattleSelectionState(BattleSelectionState.ACTOR);
-                ClearActionPanel();
+                TargetsSelected(partyUI.GetMemberUIs());
+                ConfirmTurnActionSelection(actorTxt, actionDescription);
                 break;
-            case (TargetType.ALL_ALLY):
-                //TODO 
-                selectedActor.SetStateText(selectedAction.actionName + " Targeting all ally");
+            case (TargetType.ALL_ALLY)://confirm turn action selection
+                actorTxt = selectedAction.actionName + " Targeting all ally";
                 actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all ally.";
-                SetActionDescriptionText(actionDescription, true);
-                List<MemberUI> allyUIs = partyUI.memberUIs;
+                List<MemberUI> allyUIs = partyUI.GetMemberUIs();
                 allyUIs.Remove(selectedActor);  
                 TargetsSelected(allyUIs);
-                selectedActor.hasSelectedAction = true;
-                selectedAction = null;
-                selectedTarget = null;
-                selectedActor = null;
-                SetBattleSelectionState(BattleSelectionState.ACTOR);
-                ClearActionPanel();
+                ConfirmTurnActionSelection(actorTxt, actionDescription);
                 break;
         }
+    }
+
+
+    void ConfirmTurnActionSelection(string actorTxt, string actionDescription){
+        selectedActor.SetStateText(actorTxt);
+        SetActionDescriptionText(actionDescription, true);
+        selectedActor.hasSelectedAction = true;
+        selectedAction = null;
+        selectedTarget = null;
+        selectedActor = null;
+        SetBattleSelectionState(BattleSelectionState.ACTOR);
+        ClearActionPanel();
+        partyUI.DeselectAll();
+        enemyUI.DeselectAll();
+        CheckIfCanExecuteTurn();
     }
 
     //When a target is selected
     public void TargetSelected(MemberUI targetMemberUI)
     {
-        string actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + selectedTarget.member.characterName;
-        SetActionDescriptionText(actionDescription, true);
+        
         ClearSelectedActionForCharacter(selectedActor.member); //remove indicator for previeus target
         //remove all actors from enemyUI -----TODO: actually implement this in battkeManager
         if (selectedAction.targetType==TargetType.SINGLE){
@@ -255,18 +249,9 @@ public class BattleUI : MonoBehaviour
             targetMemberUI.AddActor(selectedActor.member, selectedAction);
             TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, selectedTarget.member);
             battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
-            selectedActor.hasSelectedAction = true;
-            selectedActor.SetStateText(selectedAction.actionName + " on " + selectedTarget.member.characterName);
-            partyUI.DeselectAll();
             SetBattleSelectionState(BattleSelectionState.ACTOR);
-            ClearActionPanel();
-            selectedAction = null;
-            selectedTarget = null;
-            selectedActor = null;
         }
-        CheckIfCanExecuteTurn();
     }
-
 
     //for multi-target actions
     public void TargetsSelected(List<MemberUI> targetUI){
@@ -279,22 +264,26 @@ public class BattleUI : MonoBehaviour
             battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
             ui.AddActor(selectedActor.member, selectedAction);
         }
-        selectedActor.hasSelectedAction = true;
-        selectedActor.SetStateText(selectedAction.actionName + " on all");
-        CheckIfCanExecuteTurn();
+    }
+
+    void ClearSelectedActionForCharacter(Character character)
+    {
+        foreach (MemberUI ui in partyUI.GetMemberUIs())
+        {
+            ui.RemoveActor(selectedActor.member);
+        }
+        foreach (MemberUI ui in enemyUI.GetMemberUIs())
+        {
+            ui.RemoveActor(selectedActor.member);
+        }
+        PartyManager party = battleManager.GetPartyManager(character.GetPartyType());
+        party.DeleteTurnBattleActionsForActor(character);
+        selectedActor.hasSelectedAction = false;
     }
 
     void CheckIfCanExecuteTurn(){
-        bool canExecuteTurn = true;
-        foreach (MemberUI ui in partyUI.memberUIs)
-        {
-            if (!ui.hasSelectedAction)
-            {
-                canExecuteTurn = false;
-                break;
-            }
-        }
-        if (canExecuteTurn)
+        
+        if (partyUI.IsPartyReady())
         {
             executeBtn.interactable = true;
             battleSelectionState = BattleSelectionState.CONFIRM;
@@ -307,25 +296,12 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public void ClearSelectedActionForCharacter(Character character){
-        foreach (MemberUI ui in partyUI.memberUIs)
-        {
-            ui.RemoveActor(selectedActor.member);
-        }
-        foreach (MemberUI ui in enemyUI.memberUIs)
-        {
-            ui.RemoveActor(selectedActor.member);
-        }
-        PartyManager party = battleManager.GetPartyManager(character.GetPartyType());
-        party.DeleteTurnBattleActionsForActor(character);
-        selectedActor.hasSelectedAction = false;
-    }
+    
 
     //On Execute Turn Button Click
     public void ExecuteBtnOnClick(){
         switch(battleSelectionState){
             case (BattleSelectionState.CONFIRM):
-                executeButtonText.GetComponent<TypewriterEffect>().Run("FIGHT", executeButtonText);
                 StartCoroutine(ExecuteTurnWithDelay(battleTurnDuration));   
                 bool gameEnd = battleManager.IfBattleEnded();
                 if (!gameEnd)
@@ -421,7 +397,6 @@ public class BattleUI : MonoBehaviour
             //Get the target's HP after the action and display the damage/heal
             //TODO: improve the logic of displaying the action taking effect
             //Currently, it can only tell if action was valid and if it was a heal or damage
-            
             int targetHpAfter = turnBattleAction.target.GetCurrentHP(); 
             int hpChange = targetHpAfter - targetHpBefore;
             
@@ -484,7 +459,7 @@ public class BattleUI : MonoBehaviour
 
     public void SetActionDescriptionText(string txt, bool useTypeWriterEffect){
         if (useTypeWriterEffect){
-            actionDescriptionText.GetComponent<TypewriterEffect>().Run(txt, actionDescriptionText);
+            actionDescriptionText.GetComponent<TypewriterEffect>().Run(txt,actionDescriptionText);
         }else{
             actionDescriptionText.text = txt;
         }
@@ -496,7 +471,4 @@ public class BattleUI : MonoBehaviour
         }
        
     }
-
-
-
 }

@@ -24,17 +24,6 @@ public class PartyManager : MonoBehaviour
         
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //Sort the turnBattleActions list by actor speed
     //For automating battle logic (e.g. auto tournament / enemy AI)
     public void SortTurnBattleActionsBySpeed(){

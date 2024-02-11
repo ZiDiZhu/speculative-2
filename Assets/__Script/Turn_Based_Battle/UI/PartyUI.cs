@@ -7,13 +7,16 @@ public class PartyUI : MonoBehaviour
 {
 
     public GameObject memberUIPrefab;
-    public List<MemberUI> memberUIs = new List<MemberUI>();
+    public PartyManager party;
+    [SerializeField] private List<MemberUI> memberUIs = new List<MemberUI>();
+    
     [SerializeField]private List<Character> partyMembers = new List<Character>();
     public PartyType partyType;
 
 
-    public void AssignMembers(List<Character> charas){
-        partyMembers = charas;
+    public void AssignMembers(PartyManager target){
+        party = target;
+        partyMembers = party.GetAllPartyMembers();
     }
     
     public void SetParty()
@@ -42,6 +45,26 @@ public class PartyUI : MonoBehaviour
         }
     }
 
+    public List<MemberUI> GetMemberUIs(){
+        return memberUIs;
+    }
+
+    public bool IsPartyReady()
+    {
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            if (memberUI.member.characterState == CharacterState.DEAD)
+            {
+                continue;
+            }
+            if (!memberUI.hasSelectedAction)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void ClearPartyUI()
     {
         memberUIs.Clear();
@@ -50,6 +73,18 @@ public class PartyUI : MonoBehaviour
             Destroy(child.gameObject);
         }
         
+    }
+
+    public MemberUI GetMemberUI(Character member)
+    {
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            if (memberUI.member == member)
+            {
+                return memberUI;
+            }
+        }
+        return null;
     }
 
     public void DisableSelection()
