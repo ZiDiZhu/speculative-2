@@ -82,12 +82,12 @@ public class BattleUI : MonoBehaviour
 
         switch(battleSelectionState){
             case (BattleSelectionState.ACTOR):
-                CheckIfCanExecuteTurn();
                 break;
             case (BattleSelectionState.ACTION):
                 executeBtn.interactable = true;
                 break;
             case (BattleSelectionState.TARGET):
+                executeBtn.interactable = false;
                 SetExecuteButtonText("Select Target");
                 break;
         }
@@ -120,8 +120,10 @@ public class BattleUI : MonoBehaviour
             case (BattleSelectionState.TARGET): //this member is selected as target
                 selectedTarget = memberUI;
                 TargetSelected(memberUI);
+                ConfirmTurnActionSelection(selectedAction.actionName + " Targeting " + memberUI.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + memberUI.member.characterName);
                 break;
             default:
+                executeBtn.interactable = false;
                 ActorSelected(memberUI);
                 break;  
         }
@@ -152,10 +154,7 @@ public class BattleUI : MonoBehaviour
         actionDescription += "Target: " + actionUI.action.targetType + "\n";
         actionDescription += "Description: " + actionUI.action.actionDescription + "\n";
         bool canSelectAction = (selectedAction.mpCost < selectedActor.member.GetCurrentMP());
-        if (selectedActor.member.GetPartyType() == PartyType.ENEMY)
-        {
-            CheckIfCanExecuteTurn();
-        }else if(selectedActor.member.GetPartyType()==PartyType.PLAYER){
+        if(selectedActor.member.GetPartyType()==PartyType.PLAYER){
             if (!canSelectAction)
             {
                 executeBtn.interactable = false;
@@ -181,7 +180,7 @@ public class BattleUI : MonoBehaviour
         SetActionPanel(memberUI.member.actions);
         charaBodySprite.sprite = memberUI.member.fullBodySprite_Normal;
         SetBattleSelectionState(BattleSelectionState.ACTION);
-        executeBtn.interactable = false;
+        
 
         string actionDescription = "Select an action for " + memberUI.member.characterName;
         SetActionDescriptionText(actionDescription, true);
@@ -197,8 +196,6 @@ public class BattleUI : MonoBehaviour
             case (TargetType.SINGLE): //proceed to select a target
                 SetBattleSelectionState(BattleSelectionState.TARGET);
                 selectedActor.SetStateText(selectedAction.actionName + "- Select a Target");
-                executeBtn.interactable = false;
-                SetBattleSelectionState(BattleSelectionState.TARGET);
                 break;
             case (TargetType.ALL_OPPONENT): //confirm turn action selection
                 actorTxt = selectedAction.actionName + " Targeting all opponents";
@@ -312,7 +309,6 @@ public class BattleUI : MonoBehaviour
                 else
                 {
                     SetBattleSelectionState(BattleSelectionState.ACTOR);
-                    CheckIfCanExecuteTurn();
                 }
 
                 partyUI.SetParty();
