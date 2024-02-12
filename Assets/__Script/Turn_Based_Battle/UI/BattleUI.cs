@@ -208,12 +208,7 @@ public class BattleUI : MonoBehaviour
                 SetBattleSelectionState(BattleSelectionState.TARGET);
                 selectedActor.UpdateMemberUI(selectedAction.actionName + "- Select a Target");
                 break;
-            case (TargetType.ALL_OPPONENT): //confirm turn action selection
-                actorTxt = selectedAction.actionName + " Targeting all opponents";
-                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all opponents";
-                TargetsSelected(enemyUI.GetMemberUIs());
-                ConfirmTurnActionSelection(actorTxt,actionDescription);
-                break;
+            case (TargetType.ALL_OPPONENT):
             case (TargetType.ALL_PARTY)://confirm turn action selection
                 actorTxt = selectedAction.actionName + " Targeting all Party Members";
                 actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";

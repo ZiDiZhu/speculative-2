@@ -6,40 +6,26 @@ using UnityEngine.UI;
 //A container of an array of child images indicating the combo level
 public class ComboLightUI : MonoBehaviour
 {
+    public int startingLevel;
     public int numberOfLevels;
     public int currentLevel;
     public Image[] lights;
-    public Sprite lightOff;
-    public Sprite[] lightOn; //one for each level
-    public Color[] lightColor; //one for each level
 
     // Start is called before the first frame update
     void Start()
     {
-        SetLevel(0);
+        SetLevel(startingLevel);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public void SetLevel(int level)
     {
         currentLevel = level;
-        for (int i = 0; i < numberOfLevels; i++)
+        foreach (Image light in lights)
         {
-            if (i < level)
-            {
-                lights[i].sprite = lightOn[i];
-                lights[i].color = lightColor[i];
-            }
-            else
-            {
-                lights[i].sprite = lightOff;
-            }
+            light.color = Color.gray;
         }
+        lights[currentLevel].color = Color.white;
     }
     
     [ContextMenu("Reset")]
@@ -55,5 +41,21 @@ public class ComboLightUI : MonoBehaviour
         {
             SetLevel(currentLevel + 1);
         }
+    }
+    public void DecreaseLevel()
+    {
+        if (currentLevel > 0)
+        {
+            SetLevel(currentLevel - 1);
+        }
+    }
+
+    public bool IsMaxLevel()
+    {
+        return currentLevel == numberOfLevels;
+    }
+    public void ResetLevel()
+    {
+        SetLevel(startingLevel);
     }
 }

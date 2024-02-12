@@ -16,7 +16,7 @@ public class Nutrient : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             VesselPlayer vesselPlayer = other.gameObject.GetComponent<VesselPlayer>();
-            StartCoroutine(vesselPlayer.EatNutrient(this));
+            vesselPlayer.EatNutrient(this);
             Destroy(gameObject);
         }
         
