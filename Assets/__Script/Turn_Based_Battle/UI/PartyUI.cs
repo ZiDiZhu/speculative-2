@@ -15,13 +15,9 @@ public class PartyUI : MonoBehaviour
 
 
     public void AssignMembers(PartyManager target){
+        ClearPartyUI();
         party = target;
         partyMembers = party.GetAllPartyMembers();
-    }
-    
-    public void SetParty()
-    {
-        ClearPartyUI();
         foreach (Character member in partyMembers)
         {
             GameObject memberUIObject = Instantiate(memberUIPrefab, transform);
@@ -29,19 +25,29 @@ public class PartyUI : MonoBehaviour
             memberUI.SetMemberUI(member);
             memberUIs.Add(memberUI);
 
-            if(memberUI.member.characterState!=CharacterState.DEAD){
+            if (memberUI.member.characterState != CharacterState.DEAD)
+            {
                 if (partyType == PartyType.ENEMY)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
-                    memberUI.SetStateText(member.characterState.ToString());
+                    memberUI.UpdateMemberUI(member.characterState.ToString());
                 }
                 else if (partyType == PartyType.PLAYER)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
-                    memberUI.SetStateText("Ready");
+                    memberUI.UpdateMemberUI("Ready");
                 }
             }
 
+        }
+        UpdatePartyUI();
+    }
+    
+    public void UpdatePartyUI()
+    {
+        foreach (MemberUI memberUI in memberUIs)
+        {
+            memberUI.UpdateMemberUI();
         }
     }
 

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST, TIE}
-public delegate void BattleActionDelegate(Character actor, BattleAction action, Character target);
+public delegate void BattleActionDelegate(Character actor, BattleSkill action, Character target);
 
 public class BattleManager: MonoBehaviour
 {
@@ -72,7 +72,7 @@ public class BattleManager: MonoBehaviour
     // Compare the speed of the first action in each list and try execute the faster one
     // the equivalent of this method but with delay at each action is in BattleUI.cs
     //remember to update both if you change one
-    public string ExecuteTurn()
+    public string CheckIfCanExecute()
     {
         List<TurnBattleAction> playerActions = playerParty.turnBattleActions;
         List<TurnBattleAction> enemyActions = enemyParty.turnBattleActions;
@@ -114,17 +114,14 @@ public class BattleManager: MonoBehaviour
     //if not, return false and recusively call itself until it finds an action that can be executed
     public string TestExecuteTurnBattleAction(TurnBattleAction turnBattleAction){
 
-        BattleAction battleAction = turnBattleAction.battleAction;
+        BattleSkill battleAction = turnBattleAction.battleAction;
         Character actor = turnBattleAction.actor;
         Character target = turnBattleAction.target;
 
         //check if invalid - return false if the action cannot be executed.
         //should not happen normally cause UI will prevent the action from being selectable
-        if (target == null) //target is null - should not happen normally 
-        {
-            return actor.characterName + " can't Execute Action - Target is null!";
-        }
-        
+        if (target == null) return actor.characterName + " can't Execute Action - Target is null!";
+
         if (actor.characterState == CharacterState.DEAD) //target is dead
         {
             GetPartyManager(actor.GetPartyType()).DeleteTurnBattleActionsForActor(actor);
@@ -142,6 +139,27 @@ public class BattleManager: MonoBehaviour
         string output = turnBattleAction.Execute();
         
         return output;
+    }
+
+    public bool IsActionValid(TurnBattleAction turnBattleAction){
+        BattleSkill battleAction = turnBattleAction.battleAction;
+        Character actor = turnBattleAction.actor;
+        Character target = turnBattleAction.target;
+
+        if (target == null) return false;
+
+        if (actor.characterState == CharacterState.DEAD) //target is dead
+        {
+            return false;
+        }
+        if (battleAction.mpCost > actor.GetCurrentMP()) //not enough mp
+        {
+            return false;
+        }
+        if (target.characterState==CharacterState.DEAD){
+            return false;
+        }
+        return true;
     }
 
     

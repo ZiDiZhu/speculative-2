@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: AOE_Heal
   actionType: 1
-  targetType: 1
+  targetType: 3
   actionDescription: Heals all party members including self
   mpCost: 50
   multiplyDamage: 0.1

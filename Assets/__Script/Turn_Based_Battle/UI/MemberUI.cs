@@ -16,10 +16,9 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]private TMP_Text memberHP;
     [SerializeField]private TMP_Text memberMP;
     [SerializeField]private TMP_Text stateText; //to display what the member is doing. has typewriter effect.
+    [SerializeField]private TMP_Text hpChangeText;
     [SerializeField]private Slider hpSlider;
     [SerializeField]private  Slider mpSlider;
-    [SerializeField] private Image deathIndicator; //enable this when the character is dead
-    [SerializeField] private GameObject readyIndicator; //set this active when the character has selected an action]
 
     public bool isSelected = false;
     public bool hasSelectedAction = false;
@@ -33,65 +32,81 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void PartyMemberOnClick()
     {   
         BattleUI.instance.MemberUIOnClick(this);
+        //Debug.Log("MemberUIOnClick");
     }
 
     public void EnemyMemberOnClick()
     {
-        BattleUI.instance.MemberUIOnClick(this);
+        BattleUI.instance.EnemyMemberOnClick(this);
+        //Debug.Log("EnemyMemberOnClick");
     }
 
 
     public void Deselect(){
         isSelected = false;
-        portrait.color = Color.grey;
+        if (member.characterState == CharacterState.DEAD)
+        {
+            portrait.color = Color.red;
+        }
+        else
+        {
+            portrait.color = Color.grey;
+        }
     }
 
     public void Select(){
         isSelected = true;
         portrait.color = Color.white;
+        if(member.characterState == CharacterState.DEAD){
+            portrait.color = Color.red;
+        }else{
+            portrait.color = Color.white;
+        }
     }
 
 
     public void SetMemberUI(Character member)
     {
         this.member = member;
-        if (readyIndicator!=null)readyIndicator.SetActive(false);
-        if(member.pfpSprite!=null)portrait.sprite = member.fullBodySprite_Normal;
+        portrait.sprite = member.fullBodySprite_Normal;
         memberName.text = member.characterName;
-        memberHP.text = "HP: "+member.GetCurrentHP().ToString()+"/"+member.GetMaxHP().ToString();
-        memberMP.text = "MP: "+ member.GetCurrentMP().ToString()+"/"+member.GetMaxMP().ToString();
-        hpSlider.maxValue = member.GetMaxHP();
-        hpSlider.value = member.GetCurrentHP();
-        mpSlider.maxValue = member.GetMaxMP();
-        mpSlider.value = member.GetCurrentMP();
-        if(member.characterState==CharacterState.DEAD){
-            GetComponent<Button>().enabled = false;
-            GetComponent<Image>().enabled = false;
-            GetComponent<Button>().interactable = false;    
-            SetStateText("DEAD");
-            if(deathIndicator!=null)deathIndicator.enabled = true;
-            portrait.color = Color.red;
-        }else{
-            GetComponent<Button>().enabled = true;
-            GetComponent<Image>().enabled = true;
-            GetComponent<Button>().interactable = true;
-            if (deathIndicator != null) deathIndicator.enabled = false;
-        }
-    
-    } 
-
-    public void SetStateText(string txt){
-        stateText.GetComponent<TypewriterEffect>().Run(txt, stateText);
-        if(hasSelectedAction){
-            if (readyIndicator != null) readyIndicator.SetActive(true);
-        }else{
-            if (readyIndicator != null) readyIndicator.SetActive(false);
-        }
+        UpdateMemberUI(member.name + ": Ready");
     }
 
 
 
-    public void AddActor(Character actor, BattleAction action){
+    public void UpdateMemberUI()
+    {
+        UpdateHPandMP();
+        if (member.characterState == CharacterState.DEAD) OnCharacterKilled();
+        
+
+    }
+
+    public void UpdateMemberUI(string txt){
+        UpdateMemberUI();
+        stateText.GetComponent<TypewriterEffect>().Run(txt, stateText);
+    }
+
+    
+
+
+    void UpdateHPandMP(){
+        memberHP.text = "HP: " + member.GetCurrentHP().ToString() + "/" + member.GetMaxHP().ToString();
+        memberMP.text = "MP: " + member.GetCurrentMP().ToString() + "/" + member.GetMaxMP().ToString();
+        hpSlider.maxValue = member.GetMaxHP();
+        hpSlider.value = member.GetCurrentHP();
+        mpSlider.maxValue = member.GetMaxMP();
+        mpSlider.value = member.GetCurrentMP();
+    }
+
+    void OnCharacterKilled(){
+        portrait.color = Color.red;
+        stateText.GetComponent<TypewriterEffect>().Run("DEAD", stateText);
+    }
+
+
+    public void AddActor(Character actor, BattleSkill action){
         
         GameObject actorUI = Instantiate(actorTemplate,actorsContainer.transform);
         actorUI.SetActive(true);

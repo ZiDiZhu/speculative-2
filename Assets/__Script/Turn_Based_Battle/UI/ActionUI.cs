@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
-    public BattleAction action;
+    public BattleSkill action;
     public TMP_Text actionName;
     public TMP_Text actionCost;
     public TMP_Text targetTxt;
@@ -52,7 +52,7 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!isSelected) highlight.SetActive(false);
     }
 
-    public void SetAction(BattleAction action){
+    public void SetAction(BattleSkill action){
         this.action = action;
         GetComponent<Button>().onClick.AddListener(OnClick);
         actionName.text = action.actionName;

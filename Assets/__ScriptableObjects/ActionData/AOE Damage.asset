@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: AOE Damage
   actionType: 0
-  targetType: 3
-  additionalActions: []
+  targetType: 5
   actionDescription: Use the attack on all opponents. each target receives the attack
     individually.
   mpCost: 20

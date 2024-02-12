@@ -104,7 +104,7 @@ public class PartyManager : MonoBehaviour
     public void AddActionsForAllCharacters(PartyManager opponentParty){
         foreach(Character member in GetAlivePartyMembers()){
             Character target = opponentParty.GetRandomLivingCharacter();
-            BattleAction battleAction = member.GetRandomBattleAction(ActionType.ATTACK);
+            BattleSkill battleAction = member.GetRandomBattleAction(ActionType.ATTACK);
             TurnBattleAction turnBattleAction = new TurnBattleAction(member, battleAction, target);
             turnBattleActions.Add(turnBattleAction);
         }   

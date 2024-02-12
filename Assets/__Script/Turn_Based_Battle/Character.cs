@@ -11,7 +11,7 @@ public class Character : MonoBehaviour
     //visible basic stats
     public string characterName;
     [SerializeField][TextArea(10,15)] private string description;
-    public List<BattleAction> actions = new List<BattleAction>();
+    public List<BattleSkill> actions = new List<BattleSkill>();
     [SerializeField] private int maxHP;
     [SerializeField] private int currentHP;
     [SerializeField] private int maxMP;
@@ -67,9 +67,9 @@ public class Character : MonoBehaviour
         return transform.parent.GetComponent<PartyManager>().GetOppositePartyType();
     }
 
-    public BattleAction GetRandomBattleAction(ActionType actionType){
-        List<BattleAction> attackActions = new List<BattleAction>();
-        foreach(BattleAction action in actions){
+    public BattleSkill GetRandomBattleAction(ActionType actionType){
+        List<BattleSkill> attackActions = new List<BattleSkill>();
+        foreach(BattleSkill action in actions){
             if(action.actionType == actionType){
                 attackActions.Add(action);
             }
