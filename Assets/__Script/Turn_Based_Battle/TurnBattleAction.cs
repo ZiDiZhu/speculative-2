@@ -1,19 +1,23 @@
 //for queuing up and executing actioins at runtime
 // instantiated in the battle manager / battleUI
 //wrote it as a struct because it's easier to see in the inspector
+
+using System.Collections.Generic;
+using UnityEngine;
+
 [System.Serializable]
-public struct TurnBattleAction
+public class TurnBattleAction
 {
     //takes in these parameters
     public Character actor;
     public BattleSkill battleAction;
-    public Character target;
+    public List<Character> targets = new List<Character>();
 
     //Generated at creation
-    public int damage;
-    public float hitChance; //0 to 1. generate before battle, during the battle it uses this value to compare it to compare to a random value to determine hit or miss
-    public float critChance; //0 to 1
-    public int critHitAddDamage; //additional damage if the attack is a critical hit
+    
+    [SerializeField]private float hitChance; //0 to 1. generate before battle, during the battle it uses this value to compare it to compare to a random value to determine hit or miss
+    [SerializeField]private float critChance; //0 to 1
+    [SerializeField]private int critHitAddDamage; //additional damage if the attack is a critical hit
 
     public enum ACTION_INVALID_REASON //no cost, no effect
     {
@@ -40,38 +44,59 @@ public struct TurnBattleAction
     //Generated after executed
     public int actorHpChange;
     public int actorMpChange;
-    public int targetHpChange;
-    public int targetMpChange;
 
-    public TurnBattleAction(Character actor, BattleSkill battleAction, Character target)
+    public List<int> targetHpChange = new List<int>();
+    public List<int> targetMpChange;
+
+
+
+    public TurnBattleAction(Character actor, BattleSkill battleAction, List<Character> targets)
     {
         this.actor = actor;
         this.battleAction = battleAction;
-        this.target = target;
+
+        foreach(Character target in targets){
+            this.targets.Add(target);
+        }
+
+        int numTargets = targets.Count;
         
-        damage = actor.strength * 10 + battleAction.addDamage;
-        damage *= (int)battleAction.multiplyDamage;
-        hitChance = 1 - target.agility*0.1f + (actor.precision + actor.agility)* 0.05f - target.luck*0.01f;
-        critChance = (actor.precision + actor.luck)*0.25f - target.luck*0.25f;
+        
+        foreach(Character target in targets){
+            targetHpChange.Add(actor.strength * 10 + battleAction.addDamage);
+            hitChance += (1 - target.agility*0.1f + (actor.precision + actor.agility)* 0.05f - target.luck*0.01f);
+            critChance += ((actor.precision + actor.luck) * 0.25f - target.luck * 0.25f);
+        }
+
+        hitChance /= numTargets;
+        critChance /= numTargets;
         critHitAddDamage = (actor.luck + actor.strength)*2;
 
         actionInvalidReason = ACTION_INVALID_REASON.NULL;
         actionResult = ACTION_RESULT.WAITING;
-        actorHpChange = 0;
-        actorMpChange = 0;
-        targetHpChange = 0;
-        targetMpChange = 0;
     }
 
     public string Execute(){
-        string output = actor.characterName + " uses " + battleAction.actionName + " on " + target.characterName + ". \n";
+        string output = actor.characterName + " tries to use " + battleAction.actionName;
+        bool valid = IsActionValid();
+        if (!valid)
+        {
+            output = output + "Invalid action: " + actionInvalidReason.ToString();
+            return output;
+        }
+
         switch (battleAction.actionType)
         {
             case ActionType.ATTACK:
-                output += ExecuteAttack();
+                foreach(Character target in targets){
+                    output = output+ ExecuteAttack(target) + "\n";
+                }
                 break;
             case ActionType.HEAL:
-                output += ExecuteHeal();
+                foreach(Character target in targets){
+                    output = output + ExecuteHeal(target);
+                }
+                
                 break;
             default:    
                 break;
@@ -85,7 +110,7 @@ public struct TurnBattleAction
             actionInvalidReason = ACTION_INVALID_REASON.NULL_ACTOR;
             return false;
         }
-        if (target == null) 
+        if (targets == null) 
         {
             actionInvalidReason = ACTION_INVALID_REASON.NULL_TARGET;
             return false;
@@ -104,7 +129,7 @@ public struct TurnBattleAction
         switch (battleAction.targetType){
             case TargetType.ALL_OPPONENT:
             case TargetType.SINGLE_OPPONENT:
-                if (actor != target) 
+                if (actor.GetPartyType() == targets[0].GetPartyType()) 
                 {
                     actionInvalidReason = ACTION_INVALID_REASON.WRONG_TARGET_TYPE;
                     return false;
@@ -112,7 +137,7 @@ public struct TurnBattleAction
                 break;
             case TargetType.ALL_ALLY:
             case TargetType.SINGLE_ALLY:
-                if (actor.GetPartyType() != target.GetPartyType()) 
+                if (actor.GetPartyType() != targets[0].GetPartyType()) 
                 {
                     actionInvalidReason = ACTION_INVALID_REASON.WRONG_TARGET_TYPE;
                     return false;
@@ -123,34 +148,37 @@ public struct TurnBattleAction
     }
 
 
-    public string ExecuteAttack(){
+    public string ExecuteAttack(Character target){
         string output = "";
         int hitRoll = UnityEngine.Random.Range(0, 100);
+        int dealtDamage = targetHpChange[targets.IndexOf(target)];
         if (hitRoll< hitChance*100) //hit
         {
             int critHitRoll= UnityEngine.Random.Range(0, 100);
             if (critHitRoll < critChance*100) //crit hit
             {
-                damage += critHitAddDamage;
+                dealtDamage += critHitAddDamage;
                 output += " Critical Hit! ";
             }
-            if (damage < 0)
+            if (dealtDamage < 0)
             {
-                damage = 0;
+                dealtDamage = 0;
             }
-            damage += actor.damageAddBuff;
-            damage -= target.shieldBuff;
-            target.TakeDamage(damage);
+            dealtDamage += actor.damageAddBuff;
+            dealtDamage -= target.shieldBuff;
+            target.TakeDamage(dealtDamage);
         }
         else //miss
         {
             output += " Missed!";
+            dealtDamage = 0;
         }
-        output += target.characterName + " takes " + damage + " damage. ";
+        output += target.characterName + " takes " + dealtDamage + " damage. ";
+        targetHpChange[targets.IndexOf(target)] = dealtDamage;
         return output;
     }
 
-    public string ExecuteHeal(){
+    public string ExecuteHeal(Character target){
         string output = "";
         target.Heal(battleAction.addHealing);
         output += target.characterName + " heals " + battleAction.addHealing + " HP. ";

@@ -87,7 +87,6 @@ public class Character : MonoBehaviour
 
     public void Heal(int heal){
         currentHP += heal;
-        Debug.Log(characterName + " healed for " + heal + " HP.");
         if (currentHP > maxHP){
             currentHP = maxHP;
         }

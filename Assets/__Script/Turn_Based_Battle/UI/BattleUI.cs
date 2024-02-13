@@ -84,7 +84,8 @@ public class BattleUI : MonoBehaviour
                 selectedTarget = null;
                 break;
             case (BattleSelectionState.ACTION):
-                executeBtn.interactable = true;
+                if(selectedAction!=null)executeBtn.interactable = true;
+                SetExecuteButtonText("Select Action");
                 break;
             case (BattleSelectionState.TARGET):
                 executeBtn.interactable = false;
@@ -183,16 +184,16 @@ public class BattleUI : MonoBehaviour
         {
             if (!canSelectAction)
             {
-                executeBtn.interactable = false;
                 SetExecuteButtonText("Not Enough MP");
             }
             else
             {
                 executeBtn.interactable = true;
+                selectedAction = actionUI.action;
                 SetExecuteButtonText("Select " + selectedAction.actionName);
             }
         }
-
+        SetBattleSelectionState(BattleSelectionState.ACTION);
         SetActionDescriptionText(actionDescription, false);
     }
 
@@ -206,9 +207,14 @@ public class BattleUI : MonoBehaviour
             case (TargetType.SINGLE_ALLY):
             case (TargetType.SINGLE_OPPONENT): //proceed to select a target
                 SetBattleSelectionState(BattleSelectionState.TARGET);
-                selectedActor.UpdateMemberUI(selectedAction.actionName + "- Select a Target");
+                selectedActor.Prompt(selectedAction.actionName + "- Select a Target");
                 break;
             case (TargetType.ALL_OPPONENT):
+                actorTxt = selectedAction.actionName + " Targeting all Ennemies";
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
+                TargetsSelected(enemyUI.GetMemberUIs());
+                ConfirmTurnActionSelection(actorTxt, actionDescription);
+                break;
             case (TargetType.ALL_PARTY)://confirm turn action selection
                 actorTxt = selectedAction.actionName + " Targeting all Party Members";
                 actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
@@ -228,7 +234,7 @@ public class BattleUI : MonoBehaviour
 
 
     void ConfirmTurnActionSelection(string actorTxt, string actionDescription){
-        selectedActor.UpdateMemberUI(actorTxt);
+        selectedActor.Prompt(actorTxt);
         SetActionDescriptionText(actionDescription, true);
         selectedActor.hasSelectedAction = true;
         selectedAction = null;
@@ -247,36 +253,29 @@ public class BattleUI : MonoBehaviour
         ClearSelectedActionForCharacter(selectedActor.member); 
         if (selectedAction.targetType==TargetType.SINGLE_OPPONENT){
             selectedTarget = targetMemberUI;
-            targetMemberUI.AddActor(selectedActor.member, selectedAction);
-            TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, selectedTarget.member);
+            List<Character> target = new List<Character>();
+            target.Add(selectedTarget.member);
+            TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, target);
             battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
         }
 
-        ConfirmTurnActionSelection(selectedAction.actionName + " Targeting " + selectedActor.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + selectedTarget.member.characterName);
+        ConfirmTurnActionSelection(selectedAction.actionName + " Targeting " + selectedTarget.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + selectedTarget.member.characterName);
     }
 
     public void TargetsSelected(List<MemberUI> targetUI){
 
         ClearSelectedActionForCharacter(selectedActor.member); //remove indicator for previeus target
-        
+        List<Character> target = new List<Character>();
         foreach (MemberUI ui in targetUI)
         {
-            TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, ui.member);
-            battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
-            ui.AddActor(selectedActor.member, selectedAction);
+            target.Add(ui.member);
         }
+        TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, target);
+        battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
     }
 
     void ClearSelectedActionForCharacter(Character character)
     {
-        foreach (MemberUI ui in partyUI.GetMemberUIs())
-        {
-            ui.RemoveActor(selectedActor.member);
-        }
-        foreach (MemberUI ui in enemyUI.GetMemberUIs())
-        {
-            ui.RemoveActor(selectedActor.member);
-        }
         PartyManager party = battleManager.GetPartyManager(character.GetPartyType());
         party.DeleteTurnBattleActionsForActor(character);
         selectedActor.hasSelectedAction = false;
@@ -331,13 +330,15 @@ public class BattleUI : MonoBehaviour
     public IEnumerator ExecuteTurnWithDelay(float seconds){
         List<TurnBattleAction> playerActions = playerParty.turnBattleActions;
         List<TurnBattleAction> enemyActions = enemyParty.turnBattleActions;
+
+        playerParty.SortTurnBattleActionsBySpeed();
+        enemyParty.SortTurnBattleActionsBySpeed();
+
         while ((playerActions.Count > 0 || enemyActions.Count > 0) && !battleManager.IfBattleEnded())
         {
 
             PartyManager turnParty; //the party that will execute the action
             MemberUI actorUI, targetUI; //the UI of the actor and target of the action
-
-
             string output = "";
             //if both parties have actions, compare the speed of the first action in each list
             if (playerActions.Count > 0 && enemyActions.Count > 0) 
@@ -365,50 +366,47 @@ public class BattleUI : MonoBehaviour
             }
 
             
-
-            
-
             //This is gonna be the action that is executed
             TurnBattleAction turnBattleAction = turnParty.turnBattleActions[0];
             
 
             //Highlight actor 
-            if(turnParty.GetPartyType()==PartyType.PLAYER)partyUI.GetMemberUI(turnBattleAction.actor).Select();
-            else enemyUI.GetMemberUI(turnBattleAction.actor).Select();
-            //highlight target
-            if (turnBattleAction.target.GetPartyType() == PartyType.PLAYER) partyUI.GetMemberUI(turnBattleAction.target).Select();
-            else enemyUI.GetMemberUI(turnBattleAction.target).Select();
-    
+            if(turnParty.GetPartyType()==PartyType.PLAYER)actorUI = partyUI.GetMemberUI(turnBattleAction.actor);
+            else actorUI = enemyUI.GetMemberUI(turnBattleAction.actor);
+            actorUI.Select();
+            //highlight target(s)
+            foreach (Character target in turnBattleAction.targets)
+            {
+                if(target.GetPartyType()==PartyType.ENEMY)targetUI = enemyUI.GetMemberUI(target);
+                else targetUI = partyUI.GetMemberUI(target);
+                targetUI.Select();
+            }
 
-            //Get the target's HP before the action
-            int targetHpBefore = turnBattleAction.target.GetCurrentHP();
-
-            yield return new WaitForSeconds(seconds * 0.2f);
+            actorUI.Select();
 
             //Executes the action and returns a string with the result
-            output +=battleManager.TestExecuteTurnBattleAction(turnBattleAction) + "\n";
-
-            
-            //Get the target's HP after the action and display the damage/heal
-            //TODO: improve the logic of displaying the action taking effect
-            //Currently, it can only tell if action was valid and if it was a heal or damage
-            int targetHpAfter = turnBattleAction.target.GetCurrentHP(); 
+            output += turnBattleAction.Execute() + "\n";
+            Debug.Log(output);
             
 
-            //remove the action from queue            
-            turnParty.turnBattleActions.RemoveAt(0);
+            
 
             SetActionDescriptionText(output, true);
             
-            yield return new WaitForSeconds(seconds * 0.2f);
-            
-            GameObject actionfx = null;
+         
 
-            if (turnBattleAction.IsActionValid()){
-                
-                actionfx = Instantiate(turnBattleAction.actor.placeHolder_fx, fxParentTransform);
-                yield return new WaitForSeconds(seconds * 0.8f);
-                Destroy(actionfx);
+            if (turnBattleAction.actionResult!=TurnBattleAction.ACTION_RESULT.INVALID){
+                int count = 0;
+                foreach (Character target in turnBattleAction.targets)
+                {
+                    
+                    if(target.GetPartyType()==PartyType.ENEMY)targetUI = enemyUI.GetMemberUI(target);
+                    else targetUI = partyUI.GetMemberUI(target);
+                    StartCoroutine(actorUI.TakeActionAnimation(targetUI,fxParentTransform));
+                    StartCoroutine(targetUI.OnHPChange(turnBattleAction.targetHpChange[count]));
+                    yield return new WaitForSeconds(0.5f);
+                    count++;
+                }
             }else{
                 //invalid action
             }
@@ -416,8 +414,16 @@ public class BattleUI : MonoBehaviour
             enemyUI.UpdatePartyUI();
             partyUI.UpdatePartyUI();
 
-            yield return new WaitForSeconds(seconds*0.8f);
-            Destroy(actionfx);
+            actorUI.Deselect();
+            foreach (Character target in turnBattleAction.targets)
+            {
+                if(target.GetPartyType()==PartyType.ENEMY)targetUI = enemyUI.GetMemberUI(target);
+                else targetUI = partyUI.GetMemberUI(target);
+                targetUI.Deselect();
+            }
+
+            //remove the action from queue            
+            turnParty.turnBattleActions.RemoveAt(0);
         }
         if(battleManager.GetBattleState() ==BattleState.PLAYERTURN){
             SetActionDescriptionText("Your Turn", true);

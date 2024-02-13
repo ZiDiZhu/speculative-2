@@ -30,12 +30,12 @@ public class PartyUI : MonoBehaviour
                 if (partyType == PartyType.ENEMY)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.EnemyMemberOnClick);
-                    memberUI.UpdateMemberUI(member.characterState.ToString());
+                    memberUI.Prompt("Enemy");
                 }
                 else if (partyType == PartyType.PLAYER)
                 {
                     memberUI.GetComponent<Button>().onClick.AddListener(memberUI.PartyMemberOnClick);
-                    memberUI.UpdateMemberUI("Ready");
+                    memberUI.Prompt("Party");
                 }
             }
 

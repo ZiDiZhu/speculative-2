@@ -103,10 +103,24 @@ public class PartyManager : MonoBehaviour
     //Takes anthor party as a parameter to determine the target of the action
     public void AddActionsForAllCharacters(PartyManager opponentParty){
         foreach(Character member in GetAlivePartyMembers()){
-            Character target = opponentParty.GetRandomLivingCharacter();
             BattleSkill battleAction = member.GetRandomBattleAction(ActionType.ATTACK);
-            TurnBattleAction turnBattleAction = new TurnBattleAction(member, battleAction, target);
-            turnBattleActions.Add(turnBattleAction);
+            List<Character> targets = new List<Character>();
+            switch (battleAction.targetType)
+            {
+                case TargetType.SINGLE_OPPONENT:
+                    targets.Add(opponentParty.GetRandomLivingCharacter());
+                    TurnBattleAction turnAction = new TurnBattleAction(member, battleAction, targets);
+                    turnBattleActions.Add(turnAction);
+                    break;
+                case TargetType.ALL_OPPONENT:
+                    foreach(Character targetAll in opponentParty.GetAlivePartyMembers()){
+                        TurnBattleAction turnBattleActionAll = new TurnBattleAction(member, battleAction, opponentParty.GetAlivePartyMembers());
+                        turnBattleActions.Add(turnBattleActionAll);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }   
     }
 

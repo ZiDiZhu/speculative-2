@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 // to be attacked to each member's UI in the battle scene
 public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -23,9 +25,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool isSelected = false;
     public bool hasSelectedAction = false;
 
-    [SerializeField] private GameObject actorsContainer; //the container that holds all the other charas that will take action on this character
-    [SerializeField] private GameObject actorTemplate; //template - parent has image whic disply pfp of the "actor" that will take action on this character", its child has the tmptext that shows the action
-
     
     
     //invokes the BattleUI's MemberUIOnClick function when MemberUI is clicked
@@ -34,7 +33,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleUI.instance.MemberUIOnClick(this);
         //Debug.Log("MemberUIOnClick");
     }
-
     public void EnemyMemberOnClick()
     {
         BattleUI.instance.EnemyMemberOnClick(this);
@@ -53,7 +51,6 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             portrait.color = Color.grey;
         }
     }
-
     public void Select(){
         isSelected = true;
         portrait.color = Color.white;
@@ -70,9 +67,30 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         this.member = member;
         portrait.sprite = member.fullBodySprite_Normal;
         memberName.text = member.characterName;
-        UpdateMemberUI(member.name + ": Ready");
+        Prompt(member.name + ": Ready");
+        UpdateHPandMP();
     }
 
+    public IEnumerator OnHPChange(int hpCHnage)
+    {
+
+        if (hpCHnage>=0)hpChangeText.color = Color.green;
+        else hpChangeText.color = Color.red;
+
+        hpChangeText.text = hpCHnage.ToString();
+        yield return new WaitForSeconds(0.5f);
+        hpChangeText.text = "";
+        UpdateMemberUI();
+    }
+
+
+    public IEnumerator TakeActionAnimation(MemberUI targetUI, Transform fxtransform){
+        GameObject actionfx = Instantiate(member.placeHolder_fx, targetUI.transform.position, Quaternion.identity, fxtransform);
+        yield return new WaitForSeconds(0.5f);
+        Destroy(actionfx);
+    
+
+    }
 
 
     public void UpdateMemberUI()
@@ -80,15 +98,19 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         UpdateHPandMP();
         if (member.characterState == CharacterState.DEAD) OnCharacterKilled();
         
-
     }
-
-    public void UpdateMemberUI(string txt){
-        UpdateMemberUI();
+    public void Prompt(string txt){
         stateText.GetComponent<TypewriterEffect>().Run(txt, stateText);
     }
 
-    
+    public void UpdateHPChangeText(int change){
+        hpChangeText.text = change.ToString();
+        if(change > 0){
+            hpChangeText.color = Color.green;
+        }else{
+            hpChangeText.color = Color.red;
+        }
+    }
 
 
     void UpdateHPandMP(){
@@ -99,36 +121,18 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         mpSlider.maxValue = member.GetMaxMP();
         mpSlider.value = member.GetCurrentMP();
     }
-
     void OnCharacterKilled(){
         portrait.color = Color.red;
         stateText.GetComponent<TypewriterEffect>().Run("DEAD", stateText);
     }
 
 
-    public void AddActor(Character actor, BattleSkill action){
-        
-        GameObject actorUI = Instantiate(actorTemplate,actorsContainer.transform);
-        actorUI.SetActive(true);
-        actorUI.GetComponent<Image>().sprite = actor.pfpSprite;
-        actorUI.GetComponentInChildren<TMP_Text>().text = action.actionType.ToString();
-    }
-
-    //WARNING: using the sprite to identify the actor rn
-    public void RemoveActor(Character actor){
-        foreach(Transform child in actorsContainer.transform){
-            if(child.GetComponent<Image>().sprite == actor.pfpSprite){
-                Destroy(child.gameObject);
-            }
-        }
-    } 
 
     //hover to show the outline
     public void OnPointerEnter(PointerEventData eventData)
     {
         portrait.color = Color.white;
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
         if(!isSelected)portrait.color = Color.grey;

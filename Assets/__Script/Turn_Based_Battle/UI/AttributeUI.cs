@@ -13,7 +13,6 @@ public class AttributeUI : MonoBehaviour
 
     public void SetAttribute(int value, int max)
     {
-        text.text = value + "/" + max;
         slider.maxValue = max;
         slider.value = value;
     }
