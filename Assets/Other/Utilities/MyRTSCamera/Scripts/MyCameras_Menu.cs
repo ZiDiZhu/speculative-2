@@ -3,7 +3,7 @@ using UnityEditor;
 
 public class MyCameras_Menu
 {
-	[MenuItem("My Cameras/My RTS Camera")]
+	//[MenuItem("My Cameras/My RTS Camera")]
     public static void GetOrbitalCamera()
 	{
 		GameObject cameraHolder = new GameObject("RTSCamera", typeof(RTSCamera));

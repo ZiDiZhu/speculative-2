@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaea7e4e1add25740b942f9afc701cb8, type: 3}
   m_Name: Heal_Self
   m_EditorClassIdentifier: 
-  actionName: Basic_Heal
+  actionName: Heal_Self
   actionType: 1
-  targetType: 2
+  targetType: 0
   actionDescription: Heal a single target.
   mpCost: 10
   multiplyDamage: 0.1

@@ -251,13 +251,11 @@ public class BattleUI : MonoBehaviour
     {
         
         ClearSelectedActionForCharacter(selectedActor.member); 
-        if (selectedAction.targetType==TargetType.SINGLE_OPPONENT){
-            selectedTarget = targetMemberUI;
-            List<Character> target = new List<Character>();
-            target.Add(selectedTarget.member);
-            TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, target);
-            battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
-        }
+        selectedTarget = targetMemberUI;
+        List<Character> target = new List<Character>();
+        target.Add(selectedTarget.member);
+        TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, target);
+        battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
 
         ConfirmTurnActionSelection(selectedAction.actionName + " Targeting " + selectedTarget.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + selectedTarget.member.characterName);
     }
@@ -307,6 +305,7 @@ public class BattleUI : MonoBehaviour
                 break;
             case (BattleSelectionState.ACTION):
                 ActionConfirmed();
+                
                 break;
             case (BattleSelectionState.ACTOR):
                 if (battleManager.GetBattleState() == BattleState.WON)
@@ -387,8 +386,8 @@ public class BattleUI : MonoBehaviour
             //Executes the action and returns a string with the result
             output += turnBattleAction.Execute() + "\n";
             Debug.Log(output);
-            
 
+            actorUI.hasSelectedAction = false;
             
 
             SetActionDescriptionText(output, true);

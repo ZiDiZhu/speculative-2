@@ -71,12 +71,11 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         UpdateHPandMP();
     }
 
-    public IEnumerator OnHPChange(int hpCHnage)
+    public IEnumerator OnHPChange(int hpCHnage) 
     {
 
         if (hpCHnage>=0)hpChangeText.color = Color.green;
         else hpChangeText.color = Color.red;
-
         hpChangeText.text = hpCHnage.ToString();
         yield return new WaitForSeconds(0.5f);
         hpChangeText.text = "";

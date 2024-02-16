@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class NotePlayer : MonoBehaviour
 {
-    public NoteData note;
     public bool isPlaying = false;
 
     public double frequency = 440; // Currently Playing
@@ -31,11 +30,6 @@ public class NotePlayer : MonoBehaviour
     }
 
 
-    public void playNote(NoteData note){
-        isPlaying = true;
-        frequency = note.frequency;
-        StartCoroutine(SustainForSeconds(noteDuration));
-    }
 
     private System.Collections.IEnumerator SustainForSeconds(float duration)
     {
