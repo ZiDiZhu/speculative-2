@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public class NutrientTypeObjective
@@ -13,8 +14,18 @@ public class NutrientTypeObjective
 }
 
 public class VesselPlayer : MonoBehaviour
-{
-    public TMP_Text playerText;
+{   
+    int aminoAcidCount = 0;
+    int fattyAcidCount = 0;
+    int MonosachirideCount = 0;
+    int totalCount = 0;
+    int correctCount = 0;
+    
+    public int goalCorrectCount = 10;
+    public GameObject endScreen;
+    public GameObject pauseScreen;
+
+    public TMP_Text playerText, aminoAcidCountText, fattyAcidCountText, MonosachirideCountText, accuracyText;
     public float textDuration = 1.0f;
     public AudioSource SFXAudioSource;
 
@@ -23,56 +34,119 @@ public class VesselPlayer : MonoBehaviour
 
     public List<NutrientType> ingredientsList = new List<NutrientType>();
 
-    public NutrientType goalNutrient;
+    public NutrientType currentTargetNutrientType;
     public AudioClip goodSFX, badSFX, aminoSFX, monoSFX, fattySFX;
 
     private void Start()
     {
-        goalNutrient = GetRandomType();
-        goalUI.DisplayGoalNutrient(goalNutrient);
+        PauseGame();
+        currentTargetNutrientType = GetRandomType();
+        goalUI.DisplayGoalNutrient(currentTargetNutrientType);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Time.timeScale == 0)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
+    }
+
 
     public NutrientType GetRandomType(){
         return ingredientsList[UnityEngine.Random.Range(0, ingredientsList.Count)];
     }
 
     public void EatNutrient(Nutrient nutrient){
-        StartCoroutine(Eat(nutrient));
         
-    }
 
-
-    public IEnumerator Eat(Nutrient nutrient){
-
-        switch (nutrient.nutrientType){
-            case NutrientType.AMINO_ACIDS:SFXAudioSource.PlayOneShot(aminoSFX);break;
-            case NutrientType.MONOSACCHARIDES:SFXAudioSource.PlayOneShot(monoSFX);break;
-            case NutrientType.FATTY_ACID:SFXAudioSource.PlayOneShot(fattySFX);break;
-            
+        switch(nutrient.nutrientType){
+            case (NutrientType.AMINO_ACIDS):
+                aminoAcidCount++;
+                aminoAcidCountText.text = aminoAcidCount.ToString();
+                SFXAudioSource.PlayOneShot(aminoSFX);
+                break;  
+            case (NutrientType.MONOSACCHARIDES):
+                MonosachirideCount++;
+                MonosachirideCountText.text = MonosachirideCount.ToString();
+                SFXAudioSource.PlayOneShot(monoSFX);
+                break;
+            case (NutrientType.FATTY_ACID):
+                fattyAcidCount++;
+                fattyAcidCountText.text = fattyAcidCount.ToString();
+                SFXAudioSource.PlayOneShot(fattySFX);
+                break;
+        
         }
 
-        if (nutrient.nutrientType != goalNutrient)
+        totalCount++;
+
+        if (nutrient.nutrientType != currentTargetNutrientType)
         {
             comboLightUI.DecreaseLevel();
-            playerText.GetComponent<TypewriterEffect>().Run("Wrong TYPE",playerText);
+            StartCoroutine(WaitAndPrint("Wrong TYPE", textDuration));
             SFXAudioSource.PlayOneShot(badSFX);
-            
+
         }
         else
         {
+            correctCount++;
             comboLightUI.IncreaseLevel();
-            playerText.GetComponent<TypewriterEffect>().Run("YAY",playerText);
+            StartCoroutine(WaitAndPrint("YAY", textDuration));
             SFXAudioSource.PlayOneShot(goodSFX);
-            goalNutrient = GetRandomType();
-            goalUI.DisplayGoalNutrient(goalNutrient);
-
+            currentTargetNutrientType = GetRandomType();
+            goalUI.DisplayGoalNutrient(currentTargetNutrientType);
+            WaitAndPrint("Collect A "+ currentTargetNutrientType.ToString(), textDuration);
+            CheckWinCondition();
         }
-        
-        yield return new WaitForSeconds(textDuration);
+
+        accuracyText.text = "Accuracy: " + ((float)correctCount / (float)totalCount) * 100 + "%";
+
         playerText.text = "";
+    }
 
-        
+    public void PauseGame()
+    {
+        pauseScreen.SetActive(true);
+        Time.timeScale = 0;
+    }
 
+    public void ResumeGame()
+    {
+        pauseScreen.SetActive(false);
+        Time.timeScale = 1;
+    }   
+    
+    void CheckWinCondition()
+    {
+        if (correctCount >= goalCorrectCount)
+        {
+            EndGame();
+        }
+    }   
+
+
+
+    public void EndGame()
+    {
+        endScreen.SetActive(true);
+        endScreen.transform.GetChild(0).GetComponent<Image>().sprite = comboLightUI.lights[comboLightUI.currentLevel].sprite;
+        Time.timeScale = 0;
+    }
+    
+
+    IEnumerator WaitAndPrint(string txt,float waitTime)
+    {
+        playerText.GetComponent<TypewriterEffect>().Run(txt, playerText);
+        yield return new WaitForSeconds(waitTime);
+        playerText.text = "";
     }
 
 }
