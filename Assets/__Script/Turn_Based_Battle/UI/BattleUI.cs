@@ -43,8 +43,8 @@ public class BattleUI : MonoBehaviour
     private PartyManager playerParty;
     private PartyManager enemyParty;
 
-    //UI settings
-    [SerializeField]private int battleTurnDuration = 2; //duration of each turn in seconds
+    //UI settings>\
+    [SerializeField]private float battleTurnDuration = 2; //duration of each turn in seconds
     
     private void Awake()
     {
@@ -308,11 +308,11 @@ public class BattleUI : MonoBehaviour
                 
                 break;
             case (BattleSelectionState.ACTOR):
-                if (battleManager.GetBattleState() == BattleState.WON)
+                if (battleManager.battleState == BattleState.WON)
                 {
                     Debug.Log("You Win!");
                 }
-                else if (battleManager.GetBattleState() == BattleState.LOST)
+                else if (battleManager.battleState == BattleState.LOST)
                 {
                     Debug.Log("You Lose!");
                 }
@@ -327,6 +327,9 @@ public class BattleUI : MonoBehaviour
     //equivalent to ExecuteBtnOnClick() in BattleManager, but with a delay
     //remember to update both if you change one
     public IEnumerator ExecuteTurnWithDelay(float seconds){
+
+
+        enemyParty.AddActionsForAllCharacters(playerParty);
         List<TurnBattleAction> playerActions = playerParty.turnBattleActions;
         List<TurnBattleAction> enemyActions = enemyParty.turnBattleActions;
 
@@ -401,9 +404,9 @@ public class BattleUI : MonoBehaviour
                     
                     if(target.GetPartyType()==PartyType.ENEMY)targetUI = enemyUI.GetMemberUI(target);
                     else targetUI = partyUI.GetMemberUI(target);
-                    StartCoroutine(actorUI.TakeActionAnimation(targetUI,fxParentTransform));
+                    StartCoroutine(actorUI.TakeActionAnimation(targetUI,fxParentTransform,battleTurnDuration));
                     StartCoroutine(targetUI.OnHPChange(turnBattleAction.targetHpChange[count]));
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(battleTurnDuration);
                     count++;
                 }
             }else{
@@ -424,13 +427,13 @@ public class BattleUI : MonoBehaviour
             //remove the action from queue            
             turnParty.turnBattleActions.RemoveAt(0);
         }
-        if(battleManager.GetBattleState() ==BattleState.PLAYERTURN){
+        if(battleManager.battleState ==BattleState.PLAYERTURN){
             SetActionDescriptionText("Your Turn", true);
-        }else if(battleManager.GetBattleState() ==BattleState.WON){
+        }else if(battleManager.battleState ==BattleState.WON){
             SetActionDescriptionText("You Won", true);
             executeButtonText.GetComponent<TypewriterEffect>().Run("CONTINUE", executeButtonText);
         }
-        else if(battleManager.GetBattleState() ==BattleState.LOST){
+        else if(battleManager.battleState ==BattleState.LOST){
             SetActionDescriptionText("Game Over", true);
         }
     }
@@ -442,6 +445,7 @@ public class BattleUI : MonoBehaviour
             actionDescriptionText.text = txt;
         }
     }
+
     public void SetExecuteButtonText(string txt){
 
         if(executeButtonText.text!=txt){

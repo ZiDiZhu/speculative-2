@@ -24,7 +24,6 @@ public class DialogueUI : MonoBehaviour
     {
         if(responseHandler==null)responseHandler = GetComponent<ResponseHandler>();
         if(typewriterEffect==null)typewriterEffect = GetComponent<TypewriterEffect>();
-
         //responseHandler.AddResponseEvent();
         if (dialogueObject != null)
         { //start with a dialogue if assigned one in the inspector
@@ -64,7 +63,7 @@ public class DialogueUI : MonoBehaviour
     }
 
     public void ShowDialogue(DialogueObject dialogueObject){
-        if (isOpen&&!isNewDialogue) return;
+        if (isOpen||!isNewDialogue) return;
         isNewDialogue = false;
         dialogueBox.gameObject.SetActive(true);
         isOpen = true;

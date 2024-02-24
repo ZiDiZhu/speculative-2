@@ -11,7 +11,7 @@ public class BattleManager: MonoBehaviour
 {
     
     public static BattleManager instance { get; private set; } //singleton
-    [SerializeField]private BattleState battleState;
+    [SerializeField] public BattleState battleState { get; private set; }
     [SerializeField] private PartyManager playerParty;
     [SerializeField] private PartyManager enemyParty;
    
@@ -24,21 +24,7 @@ public class BattleManager: MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    public BattleState GetBattleState()
-    {
-        return battleState;
-    }
-    public void SetBattleState(BattleState state)
-    {
-        battleState = state;
-    }
-
-
+    // Returns the respective party manager
     public PartyManager GetPartyManager(PartyType type){
         if(type == PartyType.PLAYER){
             return playerParty;
@@ -70,9 +56,9 @@ public class BattleManager: MonoBehaviour
 
     //check for end game conditions. return true if the game reached an end state
     public bool IfBattleEnded(){
-        if(playerParty.GetAlivePartyMembers().Count == 0 && enemyParty.GetAlivePartyMembers().Count == 0) SetBattleState(BattleState.LOST);
-        else if (enemyParty.GetAlivePartyMembers().Count == 0) SetBattleState(BattleState.WON);
-        else if (playerParty.GetAlivePartyMembers().Count == 0) SetBattleState(BattleState.LOST);
+        if(playerParty.GetAlivePartyMembers().Count == 0 && enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.LOST;
+        else if (enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.WON;
+        else if (playerParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.LOST;
         if(battleState == BattleState.WON || battleState == BattleState.LOST || battleState == BattleState.TIE){
             Debug.Log("Battle Ended");
             return true;

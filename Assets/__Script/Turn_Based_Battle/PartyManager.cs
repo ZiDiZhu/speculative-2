@@ -103,7 +103,7 @@ public class PartyManager : MonoBehaviour
     //Takes anthor party as a parameter to determine the target of the action
     public void AddActionsForAllCharacters(PartyManager opponentParty){
         foreach(Character member in GetAlivePartyMembers()){
-            BattleSkill battleAction = member.GetRandomBattleAction(ActionType.ATTACK);
+            BattleSkill battleAction = member.GetRandomSkill();
             List<Character> targets = new List<Character>();
             switch (battleAction.targetType)
             {
@@ -113,10 +113,22 @@ public class PartyManager : MonoBehaviour
                     turnBattleActions.Add(turnAction);
                     break;
                 case TargetType.ALL_OPPONENT:
-                    foreach(Character targetAll in opponentParty.GetAlivePartyMembers()){
-                        TurnBattleAction turnBattleActionAll = new TurnBattleAction(member, battleAction, opponentParty.GetAlivePartyMembers());
-                        turnBattleActions.Add(turnBattleActionAll);
-                    }
+                    TurnBattleAction turnBattleActionAll = new TurnBattleAction(member, battleAction, opponentParty.GetAlivePartyMembers());
+                    turnBattleActions.Add(turnBattleActionAll);
+                    break;
+                case TargetType.SELF:
+                    targets.Add(member);
+                    TurnBattleAction turnBattleActionSelf = new TurnBattleAction(member, battleAction, targets);
+                    turnBattleActions.Add(turnBattleActionSelf);
+                    break;
+                case TargetType.SINGLE_ALLY:
+                    targets.Add(GetRandomLivingCharacter());
+                    TurnBattleAction turnBattleActionAlly = new TurnBattleAction(member, battleAction, targets);
+                    turnBattleActions.Add(turnBattleActionAlly);
+                    break;
+                case TargetType.ALL_ALLY:   
+                    TurnBattleAction turnBattleActionAllAlly = new TurnBattleAction(member, battleAction, GetAlivePartyMembers());
+                    turnBattleActions.Add(turnBattleActionAllAlly);
                     break;
                 default:
                     break;

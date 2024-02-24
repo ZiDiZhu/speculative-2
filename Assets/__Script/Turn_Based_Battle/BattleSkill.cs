@@ -17,25 +17,13 @@ public class BattleSkill : ScriptableObject
     [SerializeField][TextArea] public string actionDescription;
     public int mpCost;
 
-    public float multiplyDamage; 
-    public int addDamage; 
-    public int addHealing; 
+    public float multiplyDamage { get; set; } 
+    public int addDamage { get; set; }
+    public int addHealing   { get; set; }
 
 
     private void OnValidate()
     {
-        if (actionType == ActionType.ATTACK)
-        {
-            //TODO: only show addDamage
-        }else if (actionType == ActionType.HEAL)
-        {
-            //TODO: only show addHealing
-        }
-        else if (actionType == ActionType.BUFF)
-        {
-            
-        }
-
         actionName = this.name;
     }
 }

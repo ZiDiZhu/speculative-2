@@ -67,7 +67,12 @@ public class Character : MonoBehaviour
         return transform.parent.GetComponent<PartyManager>().GetOppositePartyType();
     }
 
-    public BattleSkill GetRandomBattleAction(ActionType actionType){
+
+    public BattleSkill GetRandomSkill(){
+        return actions[UnityEngine.Random.Range(0, actions.Count)];
+    }
+
+    public BattleSkill GetRandomSkillByType(ActionType actionType){
         List<BattleSkill> attackActions = new List<BattleSkill>();
         foreach(BattleSkill action in actions){
             if(action.actionType == actionType){

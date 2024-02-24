@@ -83,12 +83,10 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
 
-    public IEnumerator TakeActionAnimation(MemberUI targetUI, Transform fxtransform){
+    public IEnumerator TakeActionAnimation(MemberUI targetUI, Transform fxtransform, float seconds){
         GameObject actionfx = Instantiate(member.placeHolder_fx, targetUI.transform.position, Quaternion.identity, fxtransform);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(seconds);
         Destroy(actionfx);
-    
-
     }
 
 
