@@ -11,6 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Character member;
+    public GameObject memberModel;
 
     //public Image outline; //to indicate which member is selected
     [SerializeField]private Image portrait; 
@@ -85,7 +86,9 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public IEnumerator TakeActionAnimation(MemberUI targetUI, Transform fxtransform, float seconds){
         GameObject actionfx = Instantiate(member.placeHolder_fx, targetUI.transform.position, Quaternion.identity, fxtransform);
+        portrait.sprite = member.fullBodySprite_Action;
         yield return new WaitForSeconds(seconds);
+        portrait.sprite = member.fullBodySprite_Normal;
         Destroy(actionfx);
     }
 

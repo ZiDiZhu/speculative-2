@@ -45,6 +45,10 @@ public class BattleUI : MonoBehaviour
 
     //UI settings>\
     [SerializeField]private float battleTurnDuration = 2; //duration of each turn in seconds
+
+
+    
+
     
     private void Awake()
     {

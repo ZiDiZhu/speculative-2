@@ -9,9 +9,10 @@ public class PartyUI : MonoBehaviour
     public GameObject memberUIPrefab;
     public PartyManager party;
     [SerializeField] private List<MemberUI> memberUIs = new List<MemberUI>();
-    
     [SerializeField]private List<Character> partyMembers = new List<Character>();
     public PartyType partyType;
+
+    public GameObject characterModelPrefab;
 
 
     public void AssignMembers(PartyManager target){
