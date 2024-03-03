@@ -9,9 +9,11 @@ public class DialogueObject : ScriptableObject
     [SerializeField]private string speakerName; //the name of the speaker
     [SerializeField][TextArea] private string[] dialogue;
     [SerializeField] private Response[] responses;
+    [SerializeField] private Sprite speakerSprite; //the sprite of the speaker
 
     public string SpeakerName => speakerName; //reference to the speaker name
     public string[] Dialogue => dialogue; //reference to the dialogue array
     public Response[] Responses => responses; //reference to the responses array
     public bool HasResponses =>Responses !=null &&responses.Length > 0; //returns true if there are responses
+    public Sprite SpeakerSprite => speakerSprite; //reference to the speaker sprite
 }

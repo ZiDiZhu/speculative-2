@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class DialogueUI : MonoBehaviour
 {
+    [SerializeField] private Image speakerImage;
     [SerializeField] private RectTransform dialogueBox;
     [SerializeField] private Text textLabel;
+    
 
     public DialogueObject dialogueObject;
 
@@ -67,6 +69,7 @@ public class DialogueUI : MonoBehaviour
         isNewDialogue = false;
         dialogueBox.gameObject.SetActive(true);
         isOpen = true;
+        speakerImage.sprite = dialogueObject.SpeakerSprite;
         StartCoroutine(StepThroughDialogue(dialogueObject));
     }
     

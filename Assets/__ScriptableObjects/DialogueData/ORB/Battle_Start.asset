@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speakerName: 
   dialogue:
-  - You Ambushed the enemies..
-  - Battle Start!
+  - This is a Turn Based Battle Test....!!!!!
+  - hdjbchdaykgyewfyugiuedhuusaooOOOK START!!!
   responses: []
+  speakerSprite: {fileID: 21300000, guid: 19628ed9cf5f975479140f22283d87b2, type: 3}

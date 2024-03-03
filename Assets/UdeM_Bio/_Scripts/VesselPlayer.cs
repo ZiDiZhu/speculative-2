@@ -21,7 +21,6 @@ public class VesselPlayer : MonoBehaviour
     int totalCount = 0;
     int correctCount = 0;
     
-    public int goalCorrectCount = 10;
     public GameObject endScreen;
     public GameObject pauseScreen;
 
@@ -90,7 +89,11 @@ public class VesselPlayer : MonoBehaviour
 
         if (nutrient.nutrientType != currentTargetNutrientType)
         {
-            comboLightUI.DecreaseLevel();
+            if(comboLightUI.currentLevel > 2){
+                comboLightUI.SetLevel(2);
+            }else{
+                comboLightUI.DecreaseLevel();
+            }
             StartCoroutine(WaitAndPrint("Wrong TYPE", textDuration));
             SFXAudioSource.PlayOneShot(badSFX);
 
@@ -104,11 +107,10 @@ public class VesselPlayer : MonoBehaviour
             currentTargetNutrientType = GetRandomType();
             goalUI.DisplayGoalNutrient(currentTargetNutrientType);
             WaitAndPrint("Collect A "+ currentTargetNutrientType.ToString(), textDuration);
-            CheckWinCondition();
+            
         }
-
+        CheckEndCondition();
         accuracyText.text = "Accuracy: " + ((float)correctCount / (float)totalCount) * 100 + "%";
-
         playerText.text = "";
     }
 
@@ -124,22 +126,36 @@ public class VesselPlayer : MonoBehaviour
         Time.timeScale = 1;
     }   
     
-    void CheckWinCondition()
+    void CheckEndCondition()
     {
-        if (correctCount >= goalCorrectCount)
+        if(comboLightUI.IsMaxLevel())
         {
-            EndGame();
+            Win();
+        }
+
+        if(comboLightUI.currentLevel == 0){
+            Lose();
         }
     }   
 
 
 
-    public void EndGame()
+    public void Win()
     {
         endScreen.SetActive(true);
         endScreen.transform.GetChild(0).GetComponent<Image>().sprite = comboLightUI.lights[comboLightUI.currentLevel].sprite;
+        endScreen.transform.GetChild(1).GetComponent<TMP_Text>().text = "Score: "+(int)(correctCount/totalCount)+" %";
         Time.timeScale = 0;
     }
+
+    public void Lose()
+    {
+        endScreen.SetActive(true);
+        endScreen.transform.GetChild(0).GetComponent<Image>().sprite = comboLightUI.lights[comboLightUI.currentLevel].sprite;
+        endScreen.transform.GetChild(1).GetComponent<TMP_Text>().text = "Do Better Next Time";
+        Time.timeScale = 0;
+    }
+
     
 
     IEnumerator WaitAndPrint(string txt,float waitTime)

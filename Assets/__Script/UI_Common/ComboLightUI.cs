@@ -14,6 +14,7 @@ public class ComboLightUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        numberOfLevels = lights.Length-1;
         SetLevel(startingLevel);
     }
 
