@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scenes/VesselRunnerTest.unity
+    path: Assets/UdeM_Bio/BioPipe-Normal.unity
     guid: 4ca1401656b5e644284462ef03f42790
+  - enabled: 1
+    path: Assets/UdeM_Bio/BioPipe-Hard.unity
+    guid: 56b1afa30db05cf45a7e422de0b450a7
   m_configObjects: {}

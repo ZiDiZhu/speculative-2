@@ -144,7 +144,8 @@ public class VesselPlayer : MonoBehaviour
     {
         endScreen.SetActive(true);
         endScreen.transform.GetChild(0).GetComponent<Image>().sprite = comboLightUI.lights[comboLightUI.currentLevel].sprite;
-        endScreen.transform.GetChild(1).GetComponent<TMP_Text>().text = "Score: "+(int)(correctCount/totalCount)+" %";
+        endScreen.transform.GetChild(1).GetComponent<TMP_Text>().text = "Rating: "+ ConvertFloatToLetter(((float)correctCount / (float)totalCount));
+        
         Time.timeScale = 0;
     }
 
@@ -163,6 +164,29 @@ public class VesselPlayer : MonoBehaviour
         playerText.GetComponent<TypewriterEffect>().Run(txt, playerText);
         yield return new WaitForSeconds(waitTime);
         playerText.text = "";
+    }
+
+    public char ConvertFloatToLetter(float value)
+    {
+        // Clamp the value to ensure it's within the 0 to 1 range.
+        value = Mathf.Clamp01(value);
+
+        // Scale the clamped value to the range of 0 to 5 (inclusive) because there are 6 letters (A to F).
+        int scaledValue = Mathf.FloorToInt(value * 5.999f);
+
+        // Convert the scaled value to a corresponding letter.
+        char letter = (char)('F' - scaledValue);
+
+        return letter;
+    }
+    
+    [ContextMenu("Converty")]
+    public void ConvertFloatTest(){
+        Debug.Log(ConvertFloatToLetter(1.0f));
+        Debug.Log(ConvertFloatToLetter(0.9f));
+        Debug.Log(ConvertFloatToLetter(0.8f));
+        Debug.Log(ConvertFloatToLetter(0.5f));
+        Debug.Log(ConvertFloatToLetter(0.1f));
     }
 
 }

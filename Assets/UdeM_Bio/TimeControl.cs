@@ -12,10 +12,13 @@ public class TimeControl : MonoBehaviour
                 Time.timeScale = slowDownFactor;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale; // Adjust fixedDeltaTime to maintain smooth physics.
             }
-            else
+            else if(Input.GetKey(KeyCode.LeftControl))
             {
+                Time.timeScale = 2.0f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale; // Adjust fixedDeltaTime to maintain smooth physics.
+            }else{
                 Time.timeScale = 1.0f;
-                Time.fixedDeltaTime = 0.02f; // Reset fixedDeltaTime to default value.
+                Time.fixedDeltaTime = 0.02f * Time.timeScale; // Adjust fixedDeltaTime to maintain smooth physics.
             }
         }
         

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4286314523089759114
+--- !u!1001 &8395773111339851956
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 570765583295145202, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_text
-      value: Galactose
+      value: glucose
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_LocalScale.x
@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.67
+      value: 0.637
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_LocalPosition.y
@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.4
+      value: -0.46
       objectReference: {fileID: 0}
     - target: {fileID: 1613343423928445148, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_LocalRotation.w
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: ca520e302bcb01a4a8980004f8e00177, type: 3}
     - target: {fileID: 4044399403945435648, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: NutrientName
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4044399403945435648, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: nutrientType
@@ -83,10 +83,10 @@ PrefabInstance:
     - target: {fileID: 7317801849230620825, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 1ed1f6788719c864d81ac5f4e5db94fd, type: 3}
+      objectReference: {fileID: 21300000, guid: 9e7a616e26001644881fd4f84ba5b6e1, type: 3}
     - target: {fileID: 9142919757587483894, guid: 1f70626a4de524a49bbb8489888cde15, type: 3}
       propertyPath: m_Name
-      value: Galactose Variant
+      value: glucose
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
