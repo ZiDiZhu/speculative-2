@@ -9,18 +9,8 @@ public class Nutrient : MonoBehaviour
 {
     public NutrientType nutrientType;
     public NutrientName NutrientName;
+    public Sprite sprite;
     public AudioClip audioClip;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "Player")
-        {
-            VesselPlayer vesselPlayer = other.gameObject.GetComponent<VesselPlayer>();
-            vesselPlayer.EatNutrient(this);
-            Destroy(gameObject);
-        }
-        
-    }
 
 }
 

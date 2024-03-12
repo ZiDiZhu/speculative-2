@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613343423928445148}
   - component: {fileID: 4044399403945435648}
+  - component: {fileID: 6251419308892803612}
   - component: {fileID: 1887651155363589939}
   m_Layer: 0
   m_Name: Template_Nutrient
@@ -304,7 +305,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nutrientType: 3
   NutrientName: 10
+  sprite: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d287256a75cca9b41a0ee0a41990ddac, type: 3}
+--- !u!114 &6251419308892803612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9142919757587483894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2f8ca7cbdce36408756fafa6c04748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nutrient: {fileID: 0}
 --- !u!65 &1887651155363589939
 BoxCollider:
   m_ObjectHideFlags: 0

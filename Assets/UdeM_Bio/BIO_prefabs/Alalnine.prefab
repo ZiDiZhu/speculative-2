@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3889772616300496024}
   - component: {fileID: 7143263413500393570}
+  - component: {fileID: -6216392502110310285}
   - component: {fileID: 3915777858935125921}
   m_Layer: 0
   m_Name: Alalnine
@@ -304,7 +305,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nutrientType: 2
   NutrientName: 7
+  sprite: {fileID: 21300000, guid: 754151af18c506f4a9147211ebdbeb4f, type: 3}
   audioClip: {fileID: 8300000, guid: d287256a75cca9b41a0ee0a41990ddac, type: 3}
+--- !u!114 &-6216392502110310285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8997781648542193860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2f8ca7cbdce36408756fafa6c04748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nutrient: {fileID: 0}
 --- !u!65 &3915777858935125921
 BoxCollider:
   m_ObjectHideFlags: 0
