@@ -54,7 +54,7 @@ public class BattleManager: MonoBehaviour
         }
     }
 
-    //check for end game conditions. return true if the game reached an end state
+    //check for end game conditions. return true if the game reached an end currentState
     public bool IfBattleEnded(){
         if(playerParty.GetAlivePartyMembers().Count == 0 && enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.LOST;
         else if (enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.WON;

@@ -12,6 +12,14 @@ public class Nutrient : MonoBehaviour
     public Sprite sprite;
     public AudioClip audioClip;
 
+    public void CopyNutrient(Nutrient nutrient)
+    {
+        this.nutrientType = nutrient.nutrientType;
+        this.NutrientName = nutrient.NutrientName;
+        this.sprite = nutrient.sprite;
+        this.audioClip = nutrient.audioClip;
+    }
+
 }
 
 

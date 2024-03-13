@@ -1,10 +1,22 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DraggableNutrient : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Transform originalParent;
     private Vector3 originalPosition;
+    Nutrient nutrient;
+
+    private void Awake()
+    {
+        nutrient = GetComponent<Nutrient>();
+    }
+
+    private void Start()
+    {
+        originalParent = transform.parent;
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -14,20 +26,21 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             originalParent = transform.parent;
             originalPosition = transform.position;
             transform.SetParent(transform.parent.parent);
-            transform.SetAsFirstSibling();
+            transform.SetAsLastSibling(); //to make sure the dragged item is over all other items
         }
+        GetComponent<Image>().raycastTarget = false; //to make sure the raycast doesn't hit the image itself
         
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
+        GetComponent<Image>().raycastTarget = true;
 
     }
 
@@ -39,10 +52,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         SetParent(originalParent);
     }
 
-    private void Start()
-    {
-        originalParent = transform.parent;
-    }
+    
 
 
 }

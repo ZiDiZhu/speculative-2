@@ -31,4 +31,22 @@ public class Inventory: MonoBehaviour
         }
         return false;
     }
+
+    public bool HasNutrient(Nutrient item, int quantity)
+    {
+        if (items.ContainsKey(item) && items[item] >= quantity)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    [ContextMenu("Print Inventory Content")]
+    public void PrintInventoryContent(){
+        
+        foreach (KeyValuePair<Nutrient, int> item in items)
+        {
+            Debug.Log(item.Key.NutrientName + " : " + item.Value);
+        }
+    }
 }

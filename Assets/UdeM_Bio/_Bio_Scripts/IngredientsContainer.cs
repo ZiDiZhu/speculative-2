@@ -3,17 +3,18 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using static UnityEditor.Progress;
 
-public class SlotDropHandler : MonoBehaviour, IDropHandler
+public class IngredientsContainer : MonoBehaviour, IDropHandler
 {
     public Inventory inventory;
     public CraftingSystem craftingSystem;
-    public bool isInputSlot;
-    public bool isOutputSlot;
+    public bool isCraftingTable;
+    public bool isProductSlot;
+    public bool isInventory;
 
     public void OnDrop(PointerEventData eventData)
     {
         RectTransform invPanel = GetComponent<RectTransform>();
-        ItemDragHandler itemDragHandler = eventData.pointerDrag.GetComponent<ItemDragHandler>();
+        DraggableNutrient itemDragHandler = eventData.pointerDrag.GetComponent<DraggableNutrient>();
         if (!RectTransformUtility.RectangleContainsScreenPoint(invPanel, Input.mousePosition))
         {
             Debug.Log("Dropped outside inventory");
@@ -25,19 +26,47 @@ public class SlotDropHandler : MonoBehaviour, IDropHandler
         {
             itemDragHandler.SetParent(transform);
             Nutrient item = itemDragHandler.GetComponent<Nutrient>();
-            if (isInputSlot)
+            if (isInventory)
             {
                 inventory.AddNutrient(item, 1); // Assuming item is being added to the crafting input
                 Debug.Log("Added " + item.NutrientName + " to inventory");
                 CheckCraftingRecipes();
             }
-            else if (isOutputSlot)
+            else if (isCraftingTable)
             {
-                inventory.RemoveNutrient(item, 1); // Move item from output to ingredients
+                inventory.RemoveNutrient(item, 1); // Move item from inventory to crafting input
                 Debug.Log("Removed " + item.NutrientName + " from inventory");
+                CheckCraftingRecipes();
+            }
+            else if (isProductSlot)
+            {
+                Debug.Log("This is the Product slot");
             }
         }
     }
+
+    public void PrintContainerContent()
+    {
+        List<Nutrient> items = GetIngredientsInContainer();
+        foreach (Nutrient item in items)
+        {
+            Debug.Log(item.NutrientName);
+        }
+    }
+
+    public List<Nutrient> GetIngredientsInContainer(){
+        List<Nutrient> items = new List<Nutrient>();
+        foreach (Transform child in transform)
+        {
+            Nutrient item = child.GetComponent<Nutrient>();
+            if (item != null)
+            {
+                items.Add(item);
+            }
+        }
+        return items;
+    }
+
 
     private void CheckCraftingRecipes()
     {

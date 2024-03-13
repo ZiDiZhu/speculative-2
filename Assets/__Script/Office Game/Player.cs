@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
     }
 
 
-    //check player state and update animation
+    //check player currentState and update animation
     private void UpdateAnimation(){
         if (moveDirection.magnitude == 0)
         {
@@ -102,12 +102,12 @@ public class Player : MonoBehaviour
             if (carry.childCount == 0)
             {
                 state = PlayerState.IDLE;
-                anim.CrossFade("IDLE", 0.2f); // Smoothly transition to IDLE state
+                anim.CrossFade("IDLE", 0.2f); // Smoothly transition to IDLE currentState
             }
             else
             {
                 state = PlayerState.IDLE_CARRY;
-                anim.CrossFade("IDLE_CARRY", 0.2f); // Smoothly transition to IDLE_CARRY state
+                anim.CrossFade("IDLE_CARRY", 0.2f); // Smoothly transition to IDLE_CARRY currentState
             }
         }
         else
@@ -119,12 +119,12 @@ public class Player : MonoBehaviour
             if (carry.childCount == 0)
             {
                 state = PlayerState.WALK;
-                anim.CrossFade("WALK", 0.2f); // Smoothly transition to WALK state
+                anim.CrossFade("WALK", 0.2f); // Smoothly transition to WALK currentState
             }
             else
             {
                 state = PlayerState.WALK_CARRY;
-                anim.CrossFade("WALK_CARRY", 0.2f); // Smoothly transition to WALK_CARRY state
+                anim.CrossFade("WALK_CARRY", 0.2f); // Smoothly transition to WALK_CARRY currentState
             }
         }
     }
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
     public void Carry(Transform obj)
     {
         //pick up object
-        anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+        anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP currentState
         inputPromptDisplay.pickUp.SetActive(false);
         inputPromptDisplay.putDown.SetActive(true);
         StartCoroutine(WaitForPickup(0.8f,obj));
@@ -151,7 +151,7 @@ public class Player : MonoBehaviour
         //put down object
         if(carry.childCount!=0){
 
-            anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP state
+            anim.CrossFade("PICKUP", 0.1f); // Smoothly transition to PICKUP currentState
             inputPromptDisplay.putDown.SetActive(false);
             inputPromptDisplay.pickUp.SetActive(true);
             Transform ca = carry.GetChild(0);

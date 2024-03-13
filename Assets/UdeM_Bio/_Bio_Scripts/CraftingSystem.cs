@@ -1,31 +1,68 @@
 using static UnityEditor.Progress;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CraftingSystem: MonoBehaviour
 {
-    public Inventory playerInventory;
+    public IngredientsContainer ingredientsContainer, productoBox;
+    public GameObject productPrefab;
+
     public List<Recipe> recipes;
+
+    public void QuickCraft(){
+        List<Nutrient> ingredients = ingredientsContainer.GetIngredientsInContainer();
+        List<Recipe> validRecipes = ReturnValidRecipes(ingredients);
+        if (validRecipes.Count > 0)
+        {
+            CraftNutrient(validRecipes[0]);
+        }
+    
+    }
 
     public bool CraftNutrient(Recipe recipe)
     {
+        List<Nutrient> ingredients = ingredientsContainer.GetIngredientsInContainer();
+        if (recipe.requiredItems.Count != ingredients.Count)
+        {
+            return false;
+        }
         foreach (Nutrient item in recipe.requiredItems)
         {
-            if (!playerInventory.items.ContainsKey(item) || playerInventory.items[item] < 1) // Assuming each recipe needs one of each required item
+            if (!ingredients.Contains(item))
             {
-                return false; // Required item not found or not enough quantity
+                return false;
             }
         }
-
-        // Remove used items
-        foreach (Nutrient item in recipe.requiredItems)
-        {
-            playerInventory.RemoveNutrient(item, 1); // Assuming each recipe needs one of each required item
+        foreach (Transform child in ingredientsContainer.transform){
+            Destroy(child.gameObject);
         }
-
-        // Add the result item
-        playerInventory.AddNutrient(recipe.resultItem, 1);
-
+        GameObject product = Instantiate(productPrefab, productoBox.transform);
+        product.SetActive(true);
+        product.GetComponent<Nutrient>().CopyNutrient(recipe.resultItem);
+        product.GetComponent<Image>().sprite =recipe.resultItem.sprite;
         return true;
+    }
+
+    public List<Recipe> ReturnValidRecipes(List<Nutrient> ingredients){
+        
+        List<Recipe> validRecipes = new List<Recipe>();
+        foreach (Recipe recipe in recipes)
+        {
+            bool valid = true;
+            foreach (Nutrient item in recipe.requiredItems)
+            {
+                if (!ingredients.Contains(item))
+                {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid)
+            {
+                validRecipes.Add(recipe);
+            }
+        }
+        return validRecipes;
     }
 }

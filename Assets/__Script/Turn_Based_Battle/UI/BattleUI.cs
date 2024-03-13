@@ -162,7 +162,7 @@ public class BattleUI : MonoBehaviour
        
         partyUI.DeselectAll();
         memberUI.Select();
-        characterUI.SetCharacter(memberUI.member);
+        if(characterUI!=null)characterUI.SetCharacter(memberUI.member);
         selectedActor = memberUI;
         battleSelectionState = BattleSelectionState.ACTION;
         SetActionPanel(memberUI.member.actions);
