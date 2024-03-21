@@ -1,41 +1,146 @@
 fileFormatVersion: 2
 guid: a0193814cea8b4ef2936e4cdebe695e3
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Grass
-    2100002: Mud
-    2100004: Material
-    2100006: Wood.005
-    2100008: Dark Leaves.001
-    2100010: Wood.010
-    2100012: Leaves.002
-    2100014: Wood.008
-    2100016: Dark Leaves.005
-    2100018: Wood.006
-    2100020: Dark Leaves.003
-    2100022: Wood.007
-    2100024: Dark Leaves.004
-    2100026: Rocks.002
-    2100028: Wood.009
-    2100030: Birch.002
-    2100032: DarkSpots_Birch.002
-    2100034: Water
-    2100036: Wood
-    2100038: Dark Leaves
-    2100040: Leaves
-    2100042: Rocks
-    2100044: Birch
-    2100046: DarkSpots_Birch
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Plane
-    4300002: Terrain_1
-  externalObjects: {}
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Grass
+  - first:
+      21: 2100002
+    second: Mud
+  - first:
+      21: 2100004
+    second: Material
+  - first:
+      21: 2100006
+    second: Wood.005
+  - first:
+      21: 2100008
+    second: Dark Leaves.001
+  - first:
+      21: 2100010
+    second: Wood.010
+  - first:
+      21: 2100012
+    second: Leaves.002
+  - first:
+      21: 2100014
+    second: Wood.008
+  - first:
+      21: 2100016
+    second: Dark Leaves.005
+  - first:
+      21: 2100018
+    second: Wood.006
+  - first:
+      21: 2100020
+    second: Dark Leaves.003
+  - first:
+      21: 2100022
+    second: Wood.007
+  - first:
+      21: 2100024
+    second: Dark Leaves.004
+  - first:
+      21: 2100026
+    second: Rocks.002
+  - first:
+      21: 2100028
+    second: Wood.009
+  - first:
+      21: 2100030
+    second: Birch.002
+  - first:
+      21: 2100032
+    second: DarkSpots_Birch.002
+  - first:
+      21: 2100034
+    second: Water
+  - first:
+      21: 2100036
+    second: Wood
+  - first:
+      21: 2100038
+    second: Dark Leaves
+  - first:
+      21: 2100040
+    second: Leaves
+  - first:
+      21: 2100042
+    second: Rocks
+  - first:
+      21: 2100044
+    second: Birch
+  - first:
+      21: 2100046
+    second: DarkSpots_Birch
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: Plane
+  - first:
+      43: 4300002
+    second: Terrain_1
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Birch
+    second: {fileID: 2100000, guid: c2d15dc1730f0804088094a1f5eba32e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dark Leaves
+    second: {fileID: 2100000, guid: 587b1a45d69a0da4e83aaa55aa2ec5b4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkSpots_Birch
+    second: {fileID: 2100000, guid: 07457383596566f4aab1852161fe39c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grass
+    second: {fileID: 2100000, guid: fbfcc618f4046184bbd8edbef9abe8e2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Leaves
+    second: {fileID: 2100000, guid: 0c6a398ff32b5f74aa2e9e916f6e0374, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mud
+    second: {fileID: 2100000, guid: adad9f8db0290fe4d90af113f34acf67, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rocks
+    second: {fileID: 2100000, guid: 0a7bd6bfabc6d7a49a07a116ab995134, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Water
+    second: {fileID: 2100000, guid: bbbae4bfa0f5b7b4cb0fdb01d2814bd3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood
+    second: {fileID: 2100000, guid: c879f315f9e05ea47afb5508c40c6afd, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -44,6 +149,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -68,25 +174,36 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -95,10 +212,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -108,13 +225,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
