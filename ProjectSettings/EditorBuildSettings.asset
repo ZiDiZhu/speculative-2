@@ -6,24 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/UdeM_Bio/Bio2-Nutrients.unity
+    guid: bbd02fcef67568646b99fa74531deaad
+  - enabled: 1
     path: Assets/UdeM_Bio/BioPipe-Normal.unity
     guid: 4ca1401656b5e644284462ef03f42790
   - enabled: 1
     path: Assets/UdeM_Bio/BioPipe-Hard.unity
     guid: 56b1afa30db05cf45a7e422de0b450a7
-  - enabled: 1
+  - enabled: 0
     path: Assets/UdeM_Bio/Bio2-Reactor.unity
     guid: e43f74d3bac70e54cbd50a4a96ec65ae
-  - enabled: 1
-    path: Assets/UdeM_Bio/Bio2-Nutrients.unity
-    guid: bbd02fcef67568646b99fa74531deaad
-  - enabled: 1
+  - enabled: 0
     path: Assets/UdeM_Bio/Bio2-Bonds.unity
     guid: 8d7a2f0ed1549cf48bae3b1c8dd11f1e
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Modeling_Scenes/Orb_Hub.unity
     guid: 52bfb16c2dbd34546bab0fb9cd16fb10
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Modeling_Scenes/NeoAtlantis.unity
     guid: 433fdb9f4dd0be94cb5606bc768fc8b6
   m_configObjects: {}

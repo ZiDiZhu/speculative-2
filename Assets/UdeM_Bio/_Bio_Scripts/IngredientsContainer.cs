@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
 
 public class IngredientsContainer : MonoBehaviour, IDropHandler
 {

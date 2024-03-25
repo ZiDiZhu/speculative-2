@@ -6,6 +6,7 @@ public class CameraSwitch : MonoBehaviour
     public Camera cam1;
     public Camera cam2;
     public Camera cam3;
+    public Camera playerCam;
 
     public Camera currentCam;
 
@@ -14,30 +15,36 @@ public class CameraSwitch : MonoBehaviour
 
     private void Start()
     {
-        Cam2();
+        PlayerCam();
     }
     public void Cam1()
     {
-        currentCam = cam1;
-        cam1.enabled = true;
-        cam2.enabled = false;
-        cam3.enabled = false;
+        SetActiveCamera(cam1);
     }
 
     public void Cam2()
     {
-        currentCam = cam2;
-        cam1.enabled = false;
-        cam2.enabled = true;
-        cam3.enabled = false;
+        SetActiveCamera(cam2);
     }
 
     public void Cam3()
     {
-        currentCam = cam3;
+        SetActiveCamera(cam3);
+    }
+
+    public void PlayerCam(){
+        SetActiveCamera(playerCam);
+    }
+
+    public void SetActiveCamera(Camera cam){
         cam1.enabled = false;
         cam2.enabled = false;
-        cam3.enabled = true;
+        cam3.enabled = false;
+        playerCam.enabled = false;
+        if (cam != null){
+            cam.enabled = true;
+            currentCam = cam;
+        }
     }
 
 
@@ -53,6 +60,8 @@ public class CameraSwitch : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Cam3();
+        }else if(Input.GetKeyDown(KeyCode.P)){
+            PlayerCam();
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
