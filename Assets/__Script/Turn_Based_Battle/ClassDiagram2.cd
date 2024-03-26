@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Character3DAvatar" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\3DView\Character3DAvatar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleManager">
+    <Position X="7.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAAAgAAICQAEA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleSkill">
+    <Position X="12.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAAAAAAAIAAAAAAAAEEABABgAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Character">
+    <Position X="14.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAQAAgBAAACCAIkAIiQCBgBAAAQAAQACQiIJSAAQ=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\Character.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PartyManager">
+    <Position X="11" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQgBAAAAAAAAAAAAAAAACKAAEIoAACgAICIAEA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\PartyManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TurnBattleAction">
+    <Position X="9.25" Y="2.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="TurnBattleAction.ACTION_INVALID_REASON" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\TurnBattleAction.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="TurnBattleAction.ACTION_RESULT" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\TurnBattleAction.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CQACAQCAAAAAAAQASIAAKAAEAAAAAACAAABAEAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\TurnBattleAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ActionUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAQAAAAAAAEAAAEAAIDAAAgAAAAAABAAQAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\ActionUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AttributeUI" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\AttributeUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleUI" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAABABJASAAACAAQAICEMUAIABEEAwIIhiYBAAQAOg=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\BattleUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharaBioUI" Collapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIACQAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\CharaBioUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterUI" Collapsed="true">
+    <Position X="5.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAAAACAAkCBDggBAAAQAQYBAAAAAAIIAQACAAEg=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\CharacterUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MemberUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAIAUGIABACEAAAAhAiAAAAAgAAAQDAAAQQgIARA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\MemberUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PartyUI" Collapsed="true">
+    <Position X="4.75" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAABIgAAAAAAQAgEAgCCAAAAAIAAAAAAIAgAABAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\UI\PartyUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="BattleState">
+    <Position X="9.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAgAgAAAAAAAABCAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ActionType">
+    <Position X="12.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TargetType">
+    <Position X="7.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAKAAAAAAAEAAAAABAAUAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CharacterState">
+    <Position X="11" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\Character.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PartyType">
+    <Position X="7.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\PartyManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="BattleActionDelegate">
+    <Position X="12.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -12,9 +12,11 @@ public class TurnBattleAction
     public Character actor;
     public BattleSkill battleAction;
     public List<Character> targets = new List<Character>();
+    public ACTION_INVALID_REASON actionInvalidReason;
+    public ACTION_RESULT actionResult;
 
     //Generated at creation
-    
+
     [SerializeField]private float hitChance; //0 to 1. generate before battle, during the battle it uses this value to compare it to compare to a random value to determine hit or miss
     [SerializeField]private float critChance; //0 to 1
     [SerializeField]private int critHitAddDamage; //additional damage if the attack is a critical hit
@@ -38,8 +40,7 @@ public class TurnBattleAction
         CRIT
     }
 
-    public ACTION_INVALID_REASON actionInvalidReason;
-    public ACTION_RESULT actionResult;
+    
 
     //Generated after executed
     public int actorHpChange;

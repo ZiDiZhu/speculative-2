@@ -24,6 +24,7 @@ public class BattleManager: MonoBehaviour
         }
     }
 
+
     // Returns the respective party manager
     public PartyManager GetPartyManager(PartyType type){
         if(type == PartyType.PLAYER){
