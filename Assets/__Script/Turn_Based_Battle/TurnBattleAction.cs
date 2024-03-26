@@ -4,6 +4,8 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using static BattleSkill;
+using static Character;
 
 [System.Serializable]
 public class TurnBattleAction
@@ -30,7 +32,6 @@ public class TurnBattleAction
         ACTOR_DEAD,
         WRONG_TARGET_TYPE
     }
-    
     public enum ACTION_RESULT 
     {
         WAITING,
@@ -40,7 +41,6 @@ public class TurnBattleAction
         CRIT
     }
 
-    
 
     //Generated after executed
     public int actorHpChange;
@@ -48,7 +48,6 @@ public class TurnBattleAction
 
     public List<int> targetHpChange = new List<int>();
     public List<int> targetMpChange;
-
 
 
     public TurnBattleAction(Character actor, BattleSkill battleAction, List<Character> targets)
@@ -78,7 +77,7 @@ public class TurnBattleAction
     }
 
     public string Execute(){
-        string output = actor.characterName + " tries to use " + battleAction.actionName;
+        string output = actor.characterName + " tries to use " + battleAction.skillName;
         bool valid = IsActionValid();
         if (!valid)
         {
@@ -121,7 +120,7 @@ public class TurnBattleAction
             actionInvalidReason = ACTION_INVALID_REASON.ACTOR_DEAD;
             return false;
         }
-        if (battleAction.mpCost > actor.GetCurrentMP()) 
+        if (battleAction.mpCost > actor.currentMP) 
         {
             actionInvalidReason = ACTION_INVALID_REASON.NOT_ENOUGH_MP;
             return false;

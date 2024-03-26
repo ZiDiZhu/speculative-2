@@ -1,15 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using static PartyManager;
 
-public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST, TIE}
 public delegate void BattleActionDelegate(Character actor, BattleSkill action, Character target);
 
 public class BattleManager: MonoBehaviour
 {
-    
+
+    public enum BattleState { PLAYERTURN, ENEMYTURN, WON, LOST, TIE }
+
     public static BattleManager instance { get; private set; } //singleton
     [SerializeField] public BattleState battleState { get; private set; }
     [SerializeField] private PartyManager playerParty;
@@ -23,7 +21,6 @@ public class BattleManager: MonoBehaviour
             instance = this;
         }
     }
-
 
     // Returns the respective party manager
     public PartyManager GetPartyManager(PartyType type){
@@ -56,7 +53,7 @@ public class BattleManager: MonoBehaviour
     }
 
     //check for end game conditions. return true if the game reached an end currentState
-    public bool IfBattleEnded(){
+    public bool CheckEndCondition(){
         if(playerParty.GetAlivePartyMembers().Count == 0 && enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.LOST;
         else if (enemyParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.WON;
         else if (playerParty.GetAlivePartyMembers().Count == 0) battleState = BattleState.LOST;

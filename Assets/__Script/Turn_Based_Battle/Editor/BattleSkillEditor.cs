@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using static BattleSkill;
 
 [CustomEditor(typeof(BattleSkill))]
 public class BattleSkillEditor : Editor
@@ -8,7 +9,7 @@ public class BattleSkillEditor : Editor
     {
         BattleSkill skill = (BattleSkill)target;
 
-        skill.actionName = EditorGUILayout.TextField("Action Name", skill.actionName);
+        skill.skillName = EditorGUILayout.TextField("Action Name", skill.skillName);
         skill.actionType = (ActionType)EditorGUILayout.EnumPopup("Action Type", skill.actionType);
         skill.targetType = (TargetType)EditorGUILayout.EnumPopup("Target Type", skill.targetType);
         skill.actionDescription = EditorGUILayout.TextArea(skill.actionDescription, GUILayout.MaxHeight(75));

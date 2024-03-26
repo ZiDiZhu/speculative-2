@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static Character;
 using static UnityEngine.GraphicsBuffer;
 
 // to be attacked to each member's UI in the battle scene
@@ -114,12 +115,12 @@ public class MemberUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 
     void UpdateHPandMP(){
-        memberHP.text = "HP: " + member.GetCurrentHP().ToString() + "/" + member.GetMaxHP().ToString();
-        memberMP.text = "MP: " + member.GetCurrentMP().ToString() + "/" + member.GetMaxMP().ToString();
-        hpSlider.maxValue = member.GetMaxHP();
-        hpSlider.value = member.GetCurrentHP();
-        mpSlider.maxValue = member.GetMaxMP();
-        mpSlider.value = member.GetCurrentMP();
+        memberHP.text = "HP: " + member.currentHP.ToString() + "/" + member.maxHP.ToString();
+        memberMP.text = "MP: " + member.currentMP.ToString() + "/" + member.maxMP.ToString();
+        hpSlider.maxValue = member.maxHP;
+        hpSlider.value = member.currentHP;
+        mpSlider.maxValue = member.maxMP;
+        mpSlider.value = member.currentMP;
     }
     void OnCharacterKilled(){
         portrait.color = Color.red;

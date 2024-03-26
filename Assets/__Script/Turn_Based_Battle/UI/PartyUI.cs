@@ -1,7 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Character;
+using static PartyManager;
 
 public class PartyUI : MonoBehaviour
 {

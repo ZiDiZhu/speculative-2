@@ -8,42 +8,90 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BattleManager">
-    <Position X="7.5" Y="1" Width="1.5" />
+    <Position X="7.5" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="BattleManager.BattleState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAAAgAAICQAEA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAQBAAAAAAAgAAICQAEA=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BattleSkill">
-    <Position X="12.75" Y="4.25" Width="1.5" />
+    <Position X="12.75" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="BattleSkill.ActionType">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="BattleSkill.TargetType">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IBAAAAAAAIAAAAAAAAEEABABgAAEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>IBAAAAAAAIAAAAAAAAEAAFABgAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Character">
-    <Position X="14.5" Y="1" Width="1.5" />
+    <Position X="14.5" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Character.CharacterState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\Character.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>QAABAQAAgBAAACCAIkAIiQCBgBAAAQAAQACQiIJSAAQ=</HashCode>
+      <HashCode>QAABAQAAAAAAACCAIkAICQCBgBAAAQAAQAAQiIJSAAQ=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\Character.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PartyManager">
     <Position X="11" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="PartyManager.PartyType">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\__Script\Turn_Based_Battle\PartyManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAQgBAAAAAAAAAAAAAAAACKAAEIoAACgAICIAEA=</HashCode>
+      <HashCode>AAAAAAQgAAAAAAAAAAAAAAAAACIAAEIoAAAgAACIAEA=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\PartyManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TurnBattleAction">
     <Position X="9.25" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
-      <Enum Name="TurnBattleAction.ACTION_INVALID_REASON" Collapsed="true">
+      <Enum Name="TurnBattleAction.ACTION_INVALID_REASON">
         <TypeIdentifier>
           <NewMemberFileName>Assets\__Script\Turn_Based_Battle\TurnBattleAction.cs</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
-      <Enum Name="TurnBattleAction.ACTION_RESULT" Collapsed="true">
+      <Enum Name="TurnBattleAction.ACTION_RESULT">
         <TypeIdentifier>
           <NewMemberFileName>Assets\__Script\Turn_Based_Battle\TurnBattleAction.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -99,49 +147,14 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="PartyUI" Collapsed="true">
-    <Position X="4.75" Y="1" Width="2" />
+    <Position X="5" Y="1" Width="2" />
     <TypeIdentifier>
       <HashCode>IAAABIgAAAAAAQAgEAgCCAAAAAIAAAAAAIAgAABAAAA=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\UI\PartyUI.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="BattleState">
-    <Position X="9.25" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAgAgAAAAAAAABCAA=</HashCode>
-      <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="ActionType">
-    <Position X="12.75" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAIAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="TargetType">
-    <Position X="7.5" Y="4.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAKAAAAAAAEAAAAABAAUAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\__Script\Turn_Based_Battle\BattleSkill.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="CharacterState">
-    <Position X="11" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAA=</HashCode>
-      <FileName>Assets\__Script\Turn_Based_Battle\Character.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="PartyType">
-    <Position X="7.5" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\__Script\Turn_Based_Battle\PartyManager.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
   <Delegate Name="BattleActionDelegate">
-    <Position X="12.75" Y="2.75" Width="1.5" />
+    <Position X="12.75" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Assets\__Script\Turn_Based_Battle\BattleManager.cs</FileName>

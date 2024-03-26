@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static BattleManager;
+using static BattleSkill;
+using static PartyManager;
 
 
 public class BattleUI : MonoBehaviour
@@ -47,9 +50,6 @@ public class BattleUI : MonoBehaviour
     [SerializeField]private float battleTurnDuration = 2; //duration of each turn in seconds
 
 
-    
-
-    
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -178,12 +178,12 @@ public class BattleUI : MonoBehaviour
     {
         selectedAction = actionUI.action;
         string actionDescription = "";
-        actionDescription += actionUI.action.actionName + "\n";
+        actionDescription += actionUI.action.skillName + "\n";
         actionDescription += "MP Cost: " + actionUI.action.mpCost + "\n";
         actionDescription += "Type: " + actionUI.action.actionType + "\n";
         actionDescription += "Target: " + actionUI.action.targetType + "\n";
         actionDescription += "Description: " + actionUI.action.actionDescription + "\n";
-        bool canSelectAction = (selectedAction.mpCost < selectedActor.member.GetCurrentMP());
+        bool canSelectAction = (selectedAction.mpCost < selectedActor.member.currentMP);
         if (selectedActor.member.GetPartyType() == PartyType.PLAYER)
         {
             if (!canSelectAction)
@@ -194,7 +194,7 @@ public class BattleUI : MonoBehaviour
             {
                 executeBtn.interactable = true;
                 selectedAction = actionUI.action;
-                SetExecuteButtonText("Select " + selectedAction.actionName);
+                SetExecuteButtonText("Select " + selectedAction.skillName);
             }
         }
         SetBattleSelectionState(BattleSelectionState.ACTION);
@@ -211,23 +211,23 @@ public class BattleUI : MonoBehaviour
             case (TargetType.SINGLE_ALLY):
             case (TargetType.SINGLE_OPPONENT): //proceed to select a target
                 SetBattleSelectionState(BattleSelectionState.TARGET);
-                selectedActor.Prompt(selectedAction.actionName + "- Select a Target");
+                selectedActor.Prompt(selectedAction.skillName + "- Select a Target");
                 break;
             case (TargetType.ALL_OPPONENT):
-                actorTxt = selectedAction.actionName + " Targeting all Ennemies";
-                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
+                actorTxt = selectedAction.skillName + " Targeting all Ennemies";
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.skillName + " on all party members.";
                 TargetsSelected(enemyUI.GetMemberUIs());
                 ConfirmTurnActionSelection(actorTxt, actionDescription);
                 break;
             case (TargetType.ALL_PARTY)://confirm turn action selection
-                actorTxt = selectedAction.actionName + " Targeting all Party Members";
-                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all party members.";
+                actorTxt = selectedAction.skillName + " Targeting all Party Members";
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.skillName + " on all party members.";
                 TargetsSelected(partyUI.GetMemberUIs());
                 ConfirmTurnActionSelection(actorTxt, actionDescription);
                 break;
             case (TargetType.ALL_ALLY)://confirm turn action selection
-                actorTxt = selectedAction.actionName + " Targeting all ally";
-                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on all ally.";
+                actorTxt = selectedAction.skillName + " Targeting all ally";
+                actionDescription = selectedActor.member.characterName + " will perform " + selectedAction.skillName + " on all ally.";
                 List<MemberUI> allyUIs = partyUI.GetMemberUIs();
                 allyUIs.Remove(selectedActor);  
                 TargetsSelected(allyUIs);
@@ -261,7 +261,7 @@ public class BattleUI : MonoBehaviour
         TurnBattleAction turnBattleAction = new TurnBattleAction(selectedActor.member, selectedAction, target);
         battleManager.AddTurnBattleAction(selectedActor.member.GetPartyType(), turnBattleAction);
 
-        ConfirmTurnActionSelection(selectedAction.actionName + " Targeting " + selectedTarget.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.actionName + " on " + selectedTarget.member.characterName);
+        ConfirmTurnActionSelection(selectedAction.skillName + " Targeting " + selectedTarget.member.characterName, selectedActor.member.characterName + " will perform " + selectedAction.skillName + " on " + selectedTarget.member.characterName);
     }
 
     public void TargetsSelected(List<MemberUI> targetUI){
@@ -340,7 +340,7 @@ public class BattleUI : MonoBehaviour
         playerParty.SortTurnBattleActionsBySpeed();
         enemyParty.SortTurnBattleActionsBySpeed();
 
-        while ((playerActions.Count > 0 || enemyActions.Count > 0) && !battleManager.IfBattleEnded())
+        while ((playerActions.Count > 0 || enemyActions.Count > 0) && !battleManager.CheckEndCondition())
         {
 
             PartyManager turnParty; //the party that will execute the action
@@ -377,7 +377,7 @@ public class BattleUI : MonoBehaviour
             
 
             //Highlight actor 
-            if(turnParty.GetPartyType()==PartyType.PLAYER)actorUI = partyUI.GetMemberUI(turnBattleAction.actor);
+            if(turnParty.partyType==PartyType.PLAYER)actorUI = partyUI.GetMemberUI(turnBattleAction.actor);
             else actorUI = enemyUI.GetMemberUI(turnBattleAction.actor);
             actorUI.Select();
             //highlight target(s)

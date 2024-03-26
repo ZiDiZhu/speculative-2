@@ -55,7 +55,7 @@ public class ActionUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void SetAction(BattleSkill action){
         this.action = action;
         GetComponent<Button>().onClick.AddListener(OnClick);
-        actionName.text = action.actionName;
+        actionName.text = action.skillName;
         string targetString = "Cost: ";
         targetString = "-" + action.mpCost.ToString()+" mp";
         if(action.addHealing<0){
